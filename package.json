@@ -10,6 +10,11 @@
     "start": "cross-env NODE_ENV=production node ./server.js"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@emotion/server": "^11.10.0",
+    "@mantine/core": "^5.1.1",
+    "@mantine/hooks": "^5.1.1",
+    "@mantine/remix": "^5.1.1",
     "@prisma/client": "^4.2.1",
     "@remix-run/express": "^1.6.7",
     "@remix-run/node": "^1.6.7",

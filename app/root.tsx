@@ -1,3 +1,5 @@
+import { MantineProvider } from "@mantine/core";
+import { StylesPlaceholder } from "@mantine/remix";
 import type { MetaFunction } from "@remix-run/node";
 import {
   Links,
@@ -10,23 +12,26 @@ import {
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "New Remix App",
+  title: "Saas",
   viewport: "width=device-width,initial-scale=1",
 });
 
 export default function App() {
   return (
-    <html lang="en">
+    <MantineProvider theme={{}} withGlobalStyles withNormalizeCSS>
+      <html lang="en">
       <head>
         <Meta />
         <Links />
+        <StylesPlaceholder />
       </head>
       <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+      <Outlet />
+      <ScrollRestoration />
+      <Scripts />
+      <LiveReload />
       </body>
-    </html>
+      </html>
+    </MantineProvider>
   );
 }
