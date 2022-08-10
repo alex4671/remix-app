@@ -36,7 +36,7 @@ export default function App() {
         <StylesPlaceholder/>
       </head>
       <body>
-      <Container size={"xl"} px={12} sx={{border: "1px solid red"}}>
+      <Container size={"xl"} px={12}>
         <Outlet/>
       </Container>
       <ScrollRestoration/>

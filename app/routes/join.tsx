@@ -1,12 +1,10 @@
-import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, Link, useActionData, useSearchParams, useTransition } from "@remix-run/react";
-
-import { createUserSession, getUserId } from "~/server/session.server";
-
-import { createUser, getUserByEmail } from "~/models/user.server";
-import { validateEmail } from "~/utils/utils";
-import { Anchor, Button, Container, PasswordInput, Text, TextInput, Title } from "@mantine/core";
+import type {ActionFunction, LoaderFunction, MetaFunction} from "@remix-run/node";
+import {json, redirect} from "@remix-run/node";
+import {Form, Link, useActionData, useSearchParams, useTransition} from "@remix-run/react";
+import {createUserSession, getUserId} from "~/server/session.server";
+import {createUser, getUserByEmail} from "~/models/user.server";
+import {validateEmail} from "~/utils/utils";
+import {Anchor, Button, Container, PasswordInput, Text, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -15,13 +13,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({});
 };
 
-interface ActionData {
-  errors: {
-    email?: string;
-    password?: string;
-  };
-}
-
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const email = formData.get("email");
@@ -29,21 +20,21 @@ export const action: ActionFunction = async ({ request }) => {
   const redirectTo = formData.get("redirectTo");
 
   if (!validateEmail(email)) {
-    return json<ActionData>(
+    return json(
       { errors: { email: "Email is invalid" } },
       { status: 400 }
     );
   }
 
   if (typeof password !== "string") {
-    return json<ActionData>(
+    return json(
       { errors: { password: "Password is required" } },
       { status: 400 }
     );
   }
 
   if (password.length < 8) {
-    return json<ActionData>(
+    return json(
       { errors: { password: "Password is too short" } },
       { status: 400 }
     );
@@ -51,7 +42,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
-    return json<ActionData>(
+    return json(
       { errors: { email: "A user already exists with this email" } },
       { status: 400 }
     );
@@ -79,9 +70,8 @@ export default function Join() {
 
   const isLoading = transition.state === "submitting" || transition.state === "loading"
 
-
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
-  const actionData = useActionData() as ActionData;
+  const actionData = useActionData<typeof action>();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -154,8 +144,6 @@ export default function Join() {
           Sign up
         </Button>
         <input type="hidden" name="redirectTo" value={redirectTo} />
-
-
       </Form>
     </Container>
   );

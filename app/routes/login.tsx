@@ -1,11 +1,10 @@
-import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, Link, useActionData, useSearchParams, useTransition } from "@remix-run/react";
-
-import { createUserSession, getUserId } from "~/server/session.server";
-import { verifyLogin } from "~/models/user.server";
-import { validateEmail } from "~/utils/utils";
-import { Anchor, Button, Checkbox, Container, Group, PasswordInput, Text, TextInput, Title } from "@mantine/core";
+import type {ActionFunction, LoaderFunction, MetaFunction} from "@remix-run/node";
+import {json, redirect} from "@remix-run/node";
+import {Form, Link, useActionData, useSearchParams, useTransition} from "@remix-run/react";
+import {createUserSession, getUserId} from "~/server/session.server";
+import {verifyLogin} from "~/models/user.server";
+import {validateEmail} from "~/utils/utils";
+import {Anchor, Button, Checkbox, Container, Group, PasswordInput, Text, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -13,13 +12,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (userId) return redirect("/");
   return json({});
 };
-
-interface ActionData {
-  errors?: {
-    email?: string;
-    password?: string;
-  };
-}
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -29,21 +21,21 @@ export const action: ActionFunction = async ({ request }) => {
   const remember = formData.get("remember");
 
   if (!validateEmail(email)) {
-    return json<ActionData>(
+    return json(
       { errors: { email: "Email is invalid" } },
       { status: 400 }
     );
   }
 
   if (typeof password !== "string") {
-    return json<ActionData>(
+    return json(
       { errors: { password: "Password is required" } },
       { status: 400 }
     );
   }
 
   if (password.length < 8) {
-    return json<ActionData>(
+    return json(
       { errors: { password: "Password is too short" } },
       { status: 400 }
     );
@@ -52,7 +44,7 @@ export const action: ActionFunction = async ({ request }) => {
   const user = await verifyLogin(email, password);
 
   if (!user) {
-    return json<ActionData>(
+    return json(
       { errors: { email: "Invalid email or password" } },
       { status: 400 }
     );
@@ -78,7 +70,7 @@ export default function LoginPage() {
   const isLoading = transition.state === "submitting" || transition.state === "loading"
 
   const redirectTo = searchParams.get("redirectTo") || "/";
-  const actionData = useActionData() as ActionData;
+  const actionData = useActionData<typeof action>();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -100,7 +92,6 @@ export default function LoginPage() {
         Please, login!
       </Title>
       <Form method="post">
-
         <TextInput
           ref={emailRef}
           id="email"
@@ -160,8 +151,6 @@ export default function LoginPage() {
           Sign in
         </Button>
         <input type="hidden" name="redirectTo" value={redirectTo} />
-
-
       </Form>
     </Container>
   );
