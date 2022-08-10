@@ -99,34 +99,23 @@ export default function LoginPage() {
           name="email"
           type="email"
           autoComplete="email"
-          aria-invalid={actionData?.errors?.email ? true : undefined}
-          aria-describedby="email-error"
           label="Email"
           required
           defaultValue={"alex@alex.com"}
+          error={actionData?.errors?.email}
+          pb={actionData?.errors?.email ? 0 : 20}
         />
-        {actionData?.errors?.email && (
-          <Text color={"red"} id="email-error">
-            {actionData.errors.email}
-          </Text>
-        )}
         <PasswordInput
           label="Password"
           required
-          mt="md"
           id="password"
           ref={passwordRef}
           name="password"
           autoComplete="current-password"
-          aria-invalid={actionData?.errors?.password ? true : undefined}
-          aria-describedby="password-error"
           defaultValue={"alexalex"}
+          error={actionData?.errors?.password}
+          pb={actionData?.errors?.password ? 0 : 20}
         />
-        {actionData?.errors?.password && (
-          <Text color={"red"} id="password-error">
-            {actionData.errors.password}
-          </Text>
-        )}
         <Group position="apart" mt="md" align={"flex-start"}>
           <Checkbox
             label="Remember me"

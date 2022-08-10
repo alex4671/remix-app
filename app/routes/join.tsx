@@ -100,21 +100,15 @@ export default function Join() {
           name="email"
           type="email"
           autoComplete="email"
-          aria-invalid={actionData?.errors?.email ? true : undefined}
-          aria-describedby="email-error"
           label="Email"
           required
           defaultValue={"test@test.com"}
+          error={actionData?.errors?.email}
+          pb={actionData?.errors?.email ? 0 : 20}
         />
-        {actionData?.errors?.email && (
-          <Text color={"red"} id="email-error">
-            {actionData.errors.email}
-          </Text>
-        )}
         <PasswordInput
           label="Password"
           required
-          mt="md"
           id="password"
           ref={passwordRef}
           name="password"
@@ -122,12 +116,9 @@ export default function Join() {
           aria-invalid={actionData?.errors?.password ? true : undefined}
           aria-describedby="password-error"
           defaultValue={"testtest"}
+          error={actionData?.errors?.password}
+          pb={actionData?.errors?.password ? 0 : 20}
         />
-        {actionData?.errors?.password && (
-          <Text color={"red"} id="password-error">
-            {actionData.errors.password}
-          </Text>
-        )}
         <Text mt={12}>
           Already have an account?{" "}
           <Anchor
