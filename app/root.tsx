@@ -2,10 +2,13 @@ import {Container, MantineProvider} from "@mantine/core";
 import {StylesPlaceholder} from "@mantine/remix";
 import type {LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
-import {Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch} from "@remix-run/react";
+import type {ShouldReloadFunction} from "@remix-run/react";
+import {Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData} from "@remix-run/react";
 import {getUser} from "~/server/session.server";
 import {colors} from "~/utils/colors";
 import {ErrorPage} from "~/components/ErrorPage";
+import {ColorSwitch} from "~/components/ColorSwitch";
+import {getTheme} from "~/utils/theme";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -14,15 +17,25 @@ export const meta: MetaFunction = () => ({
 });
 
 export async function loader({request}: LoaderArgs) {
+  const [{theme}, user] = await Promise.all([
+    getTheme(request),
+    getUser(request)
+  ])
   return json({
-    user: await getUser(request),
+    theme,
+    user
   });
 }
 
+export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => submission?.action === "/api/set-theme";
+
 export default function App() {
+  const { theme } = useLoaderData<typeof loader>()
+
   return (
     <MantineProvider
       theme={{
+        colorScheme: theme,
         fontFamily: "Inter, sans-serif",
         primaryShade: {light: 5, dark: 8},
         colors: {...colors},
@@ -38,6 +51,7 @@ export default function App() {
       </head>
       <body>
       <Container size={"xl"} px={12}>
+        <ColorSwitch/>
         <Outlet/>
       </Container>
       <ScrollRestoration/>
