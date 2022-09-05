@@ -11,7 +11,7 @@ export const action: ActionFunction = async ({ request }) => {
     {},
     {
       headers: {
-        'set-cookie': await setTheme({ theme }),
+        'Set-Cookie': await setTheme({ theme }),
       },
     },
   )

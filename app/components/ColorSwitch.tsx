@@ -1,6 +1,6 @@
 import {ActionIcon, Group} from "@mantine/core";
-import {IconMoon, IconSun} from "@tabler/icons";
 import {useFetcher, useMatches} from "@remix-run/react";
+import {IconMoon, IconSun} from "@tabler/icons";
 
 export const ColorSwitch = () => {
   const {theme} = useMatches()[0].data

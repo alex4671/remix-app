@@ -8,6 +8,11 @@ const themeCookie = createCookie('theme', {
 
 const DEFAULT_THEME = 'light'
 
+export enum Theme {
+  DARK = 'dark',
+  LIGHT = 'light',
+}
+
 export async function getTheme(request: Request) {
   return (
     (await themeCookie.parse(request.headers.get('cookie'))) ?? {

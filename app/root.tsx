@@ -30,7 +30,7 @@ export async function loader({request}: LoaderArgs) {
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => submission?.action === "/api/set-theme";
 
 export default function App() {
-  const { theme } = useLoaderData<typeof loader>()
+  const { theme, user } = useLoaderData<typeof loader>()
 
   return (
     <MantineProvider
