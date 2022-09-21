@@ -1,4 +1,4 @@
-import {Container, MantineProvider} from "@mantine/core";
+import {Container, createEmotionCache, MantineProvider} from "@mantine/core";
 import {StylesPlaceholder} from "@mantine/remix";
 import type {LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
@@ -16,6 +16,8 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
+createEmotionCache({key: "mantine"});
+
 export async function loader({request}: LoaderArgs) {
   const [{theme}, user] = await Promise.all([
     getTheme(request),
@@ -27,17 +29,17 @@ export async function loader({request}: LoaderArgs) {
   });
 }
 
-export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => submission?.action === "/api/set-theme";
+export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => submission?.action === "/api/set-theme";
 
 export default function App() {
-  const { theme, user } = useLoaderData<typeof loader>()
+  const {theme, user} = useLoaderData<typeof loader>()
 
   return (
     <MantineProvider
       theme={{
         colorScheme: theme,
         fontFamily: "Inter, sans-serif",
-        primaryShade: {light: 5, dark: 8},
+        // primaryShade: {light: 5, dark: 8},
         colors: {...colors},
       }}
       withGlobalStyles
@@ -45,9 +47,9 @@ export default function App() {
     >
       <html lang="en">
       <head>
+        <StylesPlaceholder/>
         <Meta/>
         <Links/>
-        <StylesPlaceholder/>
       </head>
       <body>
       <Container size={"xl"} px={12}>
