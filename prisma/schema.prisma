@@ -13,6 +13,9 @@ model User {
 
   password Password?
 
+  payment        UserPayment?
+  paymentHistory UserPaymentHistory[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -22,4 +25,43 @@ model Password {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
+}
+
+model UserPayment {
+  id                    String   @id @default(uuid())
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String   @unique
+  subscriptionId        String
+  subscriptionPlanId    String
+  subscriptionEndDate   DateTime
+  subscriptionStatus    String
+  subscriptionUpdateUrl String
+  subscriptionCancelUrl String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model UserPaymentHistory {
+  id                    String    @id @default(uuid())
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+  status                String
+  subscriptionId        String
+  subscriptionPaymentId String    @unique
+  subscriptionPlanId    String
+  currency              String?
+  amount                String?
+  amountTax             String?
+  paddleFee             String?
+  paymentMethod         String?
+  receiptUrl            String?
+  attemptNumber         String?
+  nextRetryDate         DateTime?
+  refundReason          String?
+  refundType            String?
+  customerName          String?
+  userCountry           String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
 }
