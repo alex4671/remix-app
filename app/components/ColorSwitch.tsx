@@ -1,13 +1,14 @@
 import {ActionIcon, Group} from "@mantine/core";
-import {useFetcher, useMatches} from "@remix-run/react";
+import {useFetcher, useMatches, useSubmit} from "@remix-run/react";
 import {IconLogout, IconMoon, IconSun} from "@tabler/icons";
 
 export const ColorSwitch = () => {
   const {theme} = useMatches()[0].data
   const fetcher = useFetcher()
+  const submit = useSubmit()
 
   const handleLogout = () => {
-    fetcher.submit(null, { method: "post", action: "/logout" });
+    submit(null, { method: "post", action: "/logout" });
   };
 
   return (
