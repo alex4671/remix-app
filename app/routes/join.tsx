@@ -102,7 +102,7 @@ export default function Join() {
           autoComplete="email"
           label="Email"
           required
-          defaultValue={"test@test.com"}
+          defaultValue={"alex@alex.com"}
           error={actionData?.errors?.email}
           pb={actionData?.errors?.email ? 0 : 20}
         />
@@ -115,7 +115,7 @@ export default function Join() {
           autoComplete="current-password"
           aria-invalid={actionData?.errors?.password ? true : undefined}
           aria-describedby="password-error"
-          defaultValue={"testtest"}
+          defaultValue={"alexalex"}
           error={actionData?.errors?.password}
           pb={actionData?.errors?.password ? 0 : 20}
         />

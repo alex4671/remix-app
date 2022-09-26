@@ -1,4 +1,25 @@
-import type { MantineThemeColorsOverride } from "@mantine/core";
+import type {MantineThemeColorsOverride} from "@mantine/core";
+
+
+// import type {Tuple, DefaultMantineColor} from '@mantine/core';
+//
+// type ExtendedCustomColors = 'slate'
+//   | 'zinc'
+//   | 'neutral'
+//   | 'stone'
+//   | 'amber'
+//   | 'emerald'
+//   | 'sky'
+//   | 'purple'
+//   | 'fuchsia'
+//   | 'rose'
+//   | DefaultMantineColor;
+//
+// declare module '@mantine/core' {
+//   export interface MantineThemeColorsOverride {
+//     colors: Record<ExtendedCustomColors, Tuple<string, 10>>;
+//   }
+// }
 
 export const colors: MantineThemeColorsOverride = {
   slate: [

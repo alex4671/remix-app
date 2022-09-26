@@ -7,7 +7,12 @@ import dayjs from "dayjs";
 export type { User } from "@prisma/client";
 
 export async function getUserById(id: User["id"]) {
-  return prisma.user.findUnique({ where: { id } });
+  return prisma.user.findUnique({
+    where: { id },
+    include: {
+      payment: true
+    }
+  });
 }
 
 export async function getUserByEmail(email: User["email"]) {

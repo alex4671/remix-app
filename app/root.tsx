@@ -29,7 +29,12 @@ export async function loader({request}: LoaderArgs) {
   });
 }
 
-export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => submission?.action === "/api/set-theme";
+export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => {
+  // only refetch if changing theme, logout and login
+  return submission?.action === "/api/set-theme"
+    || submission?.action === "/logout"
+    || Boolean(submission?.action.includes("/login"))
+};
 
 export default function App() {
   const {theme, user} = useLoaderData<typeof loader>()
@@ -39,6 +44,7 @@ export default function App() {
       theme={{
         colorScheme: theme,
         fontFamily: "Inter, sans-serif",
+        headings: { fontFamily: "Inter, sans-serif" },
         // primaryShade: {light: 5, dark: 8},
         colors: {...colors},
       }}
@@ -53,7 +59,7 @@ export default function App() {
       </head>
       <body>
       <Container size={"xl"} px={12}>
-        <ColorSwitch/>
+        {user && <ColorSwitch/>}
         <Outlet/>
       </Container>
       <ScrollRestoration/>
@@ -64,6 +70,28 @@ export default function App() {
     </MantineProvider>
   );
 }
+
+export function ErrorBoundary({error}: { error: Error }) {
+  console.error("error", error);
+
+  return (
+    <MantineProvider withGlobalStyles withNormalizeCSS>
+      <html>
+      <head>
+        <title>Error!</title>
+        <Meta/>
+        <Links/>
+        <StylesPlaceholder/>
+      </head>
+      <body>
+      <ErrorPage/>
+      <Scripts/>
+      </body>
+      </html>
+    </MantineProvider>
+  );
+}
+
 
 export function CatchBoundary() {
   const caught = useCatch();

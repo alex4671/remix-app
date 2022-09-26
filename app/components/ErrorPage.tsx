@@ -42,13 +42,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const ErrorPage = ({status}: {status: number}) => {
+export const ErrorPage = ({status}: {status?: number}) => {
   const {classes} = useStyles();
 
   return (
     <div className={classes.root}>
       <Container>
-        <div className={classes.label}>{status}</div>
+        {status ? <div className={classes.label}>{status}</div> : null}
         <Title className={classes.title}>Something bad just happened...</Title>
         <Text size="lg" align="center" className={classes.description}>
           Our servers could not handle your request. Don&apos;t worry, our development team was
