@@ -8,7 +8,7 @@ import {getUser} from "~/server/session.server";
 import {colors} from "~/utils/colors";
 import {ErrorPage} from "~/components/ErrorPage";
 import {getTheme} from "~/utils/theme";
-import {Navbar} from "~/components/ Navbar";
+import {Navbar} from "~/components/Navbar/Navbar";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",

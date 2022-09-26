@@ -2,6 +2,7 @@ import { useMatches } from "@remix-run/react";
 import { useMemo } from "react";
 
 import type { User } from "~/models/user.server";
+import {Theme} from "~/utils/theme";
 
 const DEFAULT_REDIRECT = "/";
 
@@ -48,12 +49,26 @@ function isUser(user: any): user is User {
   return user && typeof user === "object" && typeof user.email === "string";
 }
 
+function isTheme(theme: any): theme is Theme {
+  return theme && typeof theme === "string"
+}
+
 export function useOptionalUser(): User | undefined {
   const data = useMatchesData("root");
   if (!data || !isUser(data.user)) {
     return undefined;
   }
   return data.user;
+}
+
+// todo check this
+export function useAppTheme(): Theme | undefined {
+  const data = useMatchesData("root");
+
+  if (!data || !isTheme(data.theme)) {
+    return undefined
+  }
+  return data.theme
 }
 
 export function useUser(): User {
