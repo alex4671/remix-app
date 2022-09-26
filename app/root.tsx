@@ -7,8 +7,8 @@ import {Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, u
 import {getUser} from "~/server/session.server";
 import {colors} from "~/utils/colors";
 import {ErrorPage} from "~/components/ErrorPage";
-import {ColorSwitch} from "~/components/ColorSwitch";
 import {getTheme} from "~/utils/theme";
+import {Navbar} from "~/components/ Navbar";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -59,7 +59,7 @@ export default function App() {
       </head>
       <body>
       <Container size={"xl"} px={12}>
-        {user && <ColorSwitch/>}
+        {user && <Navbar />}
         <Outlet/>
       </Container>
       <ScrollRestoration/>
