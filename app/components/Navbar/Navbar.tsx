@@ -1,9 +1,11 @@
 import {ColorSwitch} from "~/components/Navbar/ColorSwitch";
 import {IconBolt, IconLogout} from "@tabler/icons";
-import {ActionIcon, Group, Indicator} from "@mantine/core";
+import {ActionIcon, Group, Indicator, Text} from "@mantine/core";
 import {useNavigate, useSubmit} from "@remix-run/react";
+import {useUser} from "~/utils/utils";
 
 export const Navbar = () => {
+  const user = useUser()
   const submit = useSubmit()
   const navigate = useNavigate();
 
@@ -27,6 +29,7 @@ export const Navbar = () => {
         </Indicator>
       </Group>
       <Group position={"right"}>
+        <Text>{user.email}</Text>
         <ColorSwitch/>
         <ActionIcon title="Logout" onClick={handleLogout}>
           <IconLogout size={18}/>

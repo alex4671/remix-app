@@ -34,6 +34,7 @@ export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => {
   return submission?.action === "/api/set-theme"
     || submission?.action === "/logout"
     || Boolean(submission?.action.includes("/login"))
+    || Boolean(submission?.action.includes("/join"))
 };
 
 export default function App() {

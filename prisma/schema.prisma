@@ -31,7 +31,7 @@ model UserPayment {
   id                    String   @id @default(uuid())
   user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                String   @unique
-  subscriptionId        String
+  subscriptionId        String   @unique
   subscriptionPlanId    String
   subscriptionEndDate   DateTime
   subscriptionStatus    String
