@@ -29,7 +29,7 @@ export const Navbar = () => {
         </Indicator>
       </Group>
       <Group position={"right"}>
-        <Text>{user.email}</Text>
+        <Text>{user.email} ({user.isConfirmed ? "Confirmed" : "Unconfirmed"})</Text>
         <ColorSwitch/>
         <ActionIcon title="Logout" onClick={handleLogout}>
           <IconLogout size={18}/>

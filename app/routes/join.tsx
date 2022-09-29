@@ -2,10 +2,11 @@ import type {ActionFunction, LoaderFunction, MetaFunction} from "@remix-run/node
 import {json, redirect} from "@remix-run/node";
 import {Form, Link, useActionData, useSearchParams, useTransition} from "@remix-run/react";
 import {createUserSession, getUserId} from "~/server/session.server";
-import {createUser, getUserByEmail} from "~/models/user.server";
+import {createUser, generateInviteLink, getUserByEmail} from "~/models/user.server";
 import {validateEmail} from "~/utils/utils";
 import {Anchor, Button, Container, PasswordInput, Text, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
+import {postmarkClient} from "~/server/postmark.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -49,6 +50,17 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const user = await createUser(email, password);
+
+
+  const inviteLink = await generateInviteLink(request, user.id)
+  await postmarkClient.sendEmail({
+    "From": "hi@alexkulchenko.com",
+    "To": email,
+    "Subject": "Hello from Postmark",
+    "HtmlBody": `<strong>Hello</strong> dear App user. Here you invite link <a href='${inviteLink}'>Token</a>`,
+    "TextBody": "Hello from Postmark!",
+    "MessageStream": "outbound"
+  })
 
   return createUserSession({
     request,

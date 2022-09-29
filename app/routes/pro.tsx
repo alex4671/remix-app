@@ -1,12 +1,10 @@
-import {useLoaderData} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
-import {Anchor, Button, Paper, ScrollArea, SegmentedControl, Stack, Table, Text, Title} from "@mantine/core";
+import {Button, SegmentedControl, Stack, Text} from "@mantine/core";
 import type {LoaderArgs} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {paddle} from "~/server/paddle.server";
 import {useState} from "react";
 import {upperFirst} from "@mantine/hooks";
-import dayjs from "dayjs";
 import {useUser} from "~/utils/utils";
 import {requireUser} from "~/server/session.server";
 
@@ -48,7 +46,11 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({data})
 }
 
+
 export default function Pro() {
+  // const data = useActionData<typeof action>()
+
+
   // const {data} = useLoaderData<typeof loader>()
   const user = useUser()
 

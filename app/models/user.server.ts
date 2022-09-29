@@ -1,8 +1,16 @@
-import type { Password, User } from "@prisma/client";
+import type {Password, User} from "@prisma/client";
 import bcrypt from "bcryptjs";
 import {prisma} from "~/server/db.server";
-import {getUserId} from "~/server/session.server";
+import {getUserId, requireUserId} from "~/server/session.server";
 import dayjs from "dayjs";
+import {sign, verify} from "jsonwebtoken";
+
+export interface Token {
+  userId: string
+}
+
+export const APP_SECRET = 'appsecret321'
+
 
 export type { User } from "@prisma/client";
 
@@ -175,7 +183,7 @@ export const getUserPaymentData = async (request: Request) => {
 export const getUserPaymentTransactionsData = async (request: Request) => {
   const userId = await getUserId(request)
 
-  return await prisma.userPaymentHistory.findMany({
+  return prisma.userPaymentHistory.findMany({
       where: {
         userId
       },
@@ -192,3 +200,51 @@ export const getUserPaymentTransactionsData = async (request: Request) => {
   )
 }
 
+export const generateInviteLink = async (request: Request, userId: string): Promise<string> => {
+
+  const token = sign({userId}, APP_SECRET)
+
+  const {origin} = new URL(request.url)
+
+  return `${origin}/invite/${token}`
+}
+
+export const validateInviteLink = async (request: Request, token: string): Promise<boolean> => {
+  const userId = await requireUserId(request)
+
+  const verifiedToken = verify(token, APP_SECRET) as Token
+
+  const isVerified = verifiedToken.userId === userId
+
+  if (isVerified) {
+    await confirmUserEmail(userId)
+  }
+
+  return isVerified;
+}
+
+const confirmUserEmail = (userId: string) => {
+  return prisma.user.update({
+    where: {
+      id: userId
+    },
+    data: {
+      isConfirmed: true
+    }
+  })
+}
+
+export const isUserConfirmed = async (request: Request) => {
+  const userId = await requireUserId(request)
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId
+    },
+    select: {
+      isConfirmed: true
+    }
+  })
+
+  return user?.isConfirmed
+}
