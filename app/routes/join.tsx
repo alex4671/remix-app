@@ -53,14 +53,17 @@ export const action: ActionFunction = async ({ request }) => {
 
 
   const inviteLink = await generateInviteLink(request, user.id)
-  await postmarkClient.sendEmail({
-    "From": "hi@alexkulchenko.com",
-    "To": email,
-    "Subject": "Hello from Postmark",
-    "HtmlBody": `<strong>Hello</strong> dear App user. Here you invite link <a href='${inviteLink}'>Token</a>`,
-    "TextBody": "Hello from Postmark!",
-    "MessageStream": "outbound"
-  })
+
+  console.log("inviteLink", inviteLink)
+
+  // await postmarkClient.sendEmail({
+  //   "From": "hi@alexkulchenko.com",
+  //   "To": email,
+  //   "Subject": "Hello from Postmark",
+  //   "HtmlBody": `<strong>Hello</strong> dear App user. Here you invite link <a href='${inviteLink}'>Token</a>`,
+  //   "TextBody": "Hello from Postmark!",
+  //   "MessageStream": "outbound"
+  // })
 
   return createUserSession({
     request,
