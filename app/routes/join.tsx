@@ -52,7 +52,7 @@ export const action: ActionFunction = async ({ request }) => {
   const user = await createUser(email, password);
 
 
-  const inviteLink = await generateInviteLink(request, user.id)
+  const inviteLink = await generateInviteLink(request.url, user.id)
 
   console.log("inviteLink", inviteLink)
 

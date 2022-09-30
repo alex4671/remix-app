@@ -200,11 +200,11 @@ export const getUserPaymentTransactionsData = async (request: Request) => {
   )
 }
 
-export const generateInviteLink = async (request: Request, userId: string): Promise<string> => {
+export const generateInviteLink = async (url: string, userId: string): Promise<string> => {
 
   const token = sign({userId}, APP_SECRET)
 
-  const {origin} = new URL(request.url)
+  const {origin} = new URL(url)
 
   return `${origin}/invite/${token}`
 }
