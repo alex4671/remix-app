@@ -1,6 +1,6 @@
 import {Container, Title} from "@mantine/core";
 import type {LoaderArgs} from "@remix-run/node";
-import {json} from "@remix-run/node";
+import {json, redirect} from "@remix-run/node";
 import invariant from "tiny-invariant";
 import {useLoaderData} from "@remix-run/react";
 import {validateInviteLink} from "~/models/user.server";
@@ -10,11 +10,17 @@ export async function loader({request, params}: LoaderArgs) {
   // await isUserConfirmed(request)
   invariant(params.inviteId, "Id must be provided")
 
-  const isValidInvite = await validateInviteLink(request, params.inviteId)
+  try {
+    const isValidInvite = await validateInviteLink(request, params.inviteId)
 
-  console.log("isValidInvite", isValidInvite)
+    console.log("isValidInvite", isValidInvite)
 
-  return json({isValidInvite})
+    return json({isValidInvite})
+  } catch (e) {
+    console.log("error", e)
+  }
+
+  return redirect("/")
 }
 
 export default function Invite() {
