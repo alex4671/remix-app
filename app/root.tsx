@@ -3,12 +3,24 @@ import {StylesPlaceholder} from "@mantine/remix";
 import type {LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import type {ShouldReloadFunction} from "@remix-run/react";
-import {Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData} from "@remix-run/react";
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useCatch,
+  useLoaderData,
+  useTransition
+} from "@remix-run/react";
 import {getUser} from "~/server/session.server";
 import {colors} from "~/utils/colors";
 import {ErrorPage} from "~/components/ErrorPage";
 import {getTheme} from "~/utils/theme";
 import {Navbar} from "~/components/Navbar/Navbar";
+import {LoadingProgress} from "~/components/LoadingProgress";
+import {NavigationProgress} from "@mantine/nprogress";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -39,7 +51,7 @@ export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => {
 
 export default function App() {
   const {theme, user} = useLoaderData<typeof loader>()
-
+  const transition = useTransition()
   return (
     <MantineProvider
       theme={{
@@ -59,6 +71,8 @@ export default function App() {
         <Links/>
       </head>
       <body>
+      <NavigationProgress color={"lime"} autoReset />
+      <LoadingProgress state={transition.state}/>
       <Container size={"xl"} px={12}>
         {user && <Navbar />}
         <Outlet/>
