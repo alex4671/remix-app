@@ -1,15 +1,21 @@
 import {Link, Outlet, useLocation} from "@remix-run/react";
 import {Grid, Stack, NavLink, Title} from "@mantine/core";
 import {IconAlertCircle, IconCreditCard, IconUser, IconUsers} from "@tabler/icons";
-import type { LoaderArgs} from "@remix-run/node";
+import type { LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Settings"
+  };
+};
+
 
 export async function loader({request}: LoaderArgs) {
   await requireUser(request)
   return json({});
 }
-
 
 export default function Settings() {
   const location = useLocation();

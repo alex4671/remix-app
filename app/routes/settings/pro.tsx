@@ -2,27 +2,27 @@ import usePaddle from "~/hooks/usePaddle";
 import {
   Anchor,
   Badge,
-  Button, Checkbox,
-  Group,
+  Button,
+  Checkbox,
   NumberInput,
   Paper,
   Radio,
   SegmentedControl,
   Stack,
   Table,
-  Text, TextInput
+  Text,
+  TextInput
 } from "@mantine/core";
-import type {ActionArgs, LoaderArgs} from "@remix-run/node";
+import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {paddle} from "~/server/paddle.server";
 import {useState} from "react";
 import {upperFirst} from "@mantine/hooks";
 import {useUser} from "~/utils/utils";
 import {requireUser} from "~/server/session.server";
-import {Form, useActionData, useFetcher, useLoaderData} from "@remix-run/react";
+import {useActionData, useFetcher, useLoaderData} from "@remix-run/react";
 import {IconCurrencyDollar} from "@tabler/icons";
 import dayjs from "dayjs";
-import {showNotification} from "@mantine/notifications";
 import {LoadingProgress} from "~/components/LoadingProgress";
 
 
@@ -36,6 +36,12 @@ const planPrices: Record<string, string> = {
   "26607": "1$/day",
   "26608": "24$/month",
   "26609": "230$/year"
+};
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Pro"
+  };
 };
 
 

@@ -1,4 +1,12 @@
 import {Paper, Title, Text, Button, Group} from "@mantine/core";
+import type {MetaFunction} from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Danger"
+  };
+};
+
 
 export default function Danger() {
   return (
