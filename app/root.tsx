@@ -21,6 +21,7 @@ import {getTheme} from "~/utils/theme";
 import {Navbar} from "~/components/Navbar/Navbar";
 import {LoadingProgress} from "~/components/LoadingProgress";
 import {NavigationProgress} from "@mantine/nprogress";
+import {NotificationsProvider} from "@mantine/notifications";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -57,7 +58,7 @@ export default function App() {
       theme={{
         colorScheme: theme,
         fontFamily: "Inter, sans-serif",
-        headings: { fontFamily: "Inter, sans-serif" },
+        headings: {fontFamily: "Inter, sans-serif"},
         // primaryShade: {light: 5, dark: 8},
         colors: {...colors},
       }}
@@ -71,12 +72,14 @@ export default function App() {
         <Links/>
       </head>
       <body>
-      <NavigationProgress color={"lime"} autoReset />
+      <NavigationProgress color={"lime"} autoReset/>
       <LoadingProgress state={transition.state}/>
-      <Container size={"xl"} px={12}>
-        {user && <Navbar />}
-        <Outlet/>
-      </Container>
+      <NotificationsProvider position={"top-center"}>
+        <Container size={"xl"} px={12}>
+          {user && <Navbar/>}
+          <Outlet/>
+        </Container>
+      </NotificationsProvider>
       <ScrollRestoration/>
       <Scripts/>
       <LiveReload/>

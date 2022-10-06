@@ -1,31 +1,10 @@
 import {ColorSwitch} from "~/components/Navbar/ColorSwitch";
-import {IconBolt, IconLogout, IconReload} from "@tabler/icons";
-import {ActionIcon, createStyles, Group, Indicator, Text, Tooltip} from "@mantine/core";
-import {Link, useLocation, useNavigate, useSubmit} from "@remix-run/react";
-import {useUser} from "~/utils/utils";
-import {useState} from "react";
-
-
-const links =  [
-  {
-    "link": "/about",
-    "label": "Home"
-  },
-  {
-    "link": "/learn",
-    "label": "Features"
-  },
-  {
-    "link": "/pricing",
-    "label": "Pricing"
-  }
-]
+import {IconBolt} from "@tabler/icons";
+import {ActionIcon, createStyles, Group, Indicator} from "@mantine/core";
+import {Link, useLocation, useNavigate} from "@remix-run/react";
+import {NavbarMenu} from "~/components/Navbar/NavbarMenu";
 
 const useStyles = createStyles((theme) => ({
-  links: {
-    width: 260,
-  },
-
   link: {
     display: 'block',
     lineHeight: 1,
@@ -37,7 +16,7 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 500,
 
     '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[1],
     },
   },
 
@@ -52,16 +31,11 @@ const useStyles = createStyles((theme) => ({
 
 export const Navbar = () => {
   const { classes, cx } = useStyles();
-  const user = useUser()
-  const submit = useSubmit()
+
   const navigate = useNavigate();
   const location = useLocation();
 
   const isPro = false
-
-  const handleLogout = () => {
-    submit(null, {method: "post", action: "/logout"});
-  };
 
   const handleLogoRedirect = () => {
     navigate("/");
@@ -75,43 +49,38 @@ export const Navbar = () => {
             <IconBolt size={32} strokeWidth={1.5}/>
           </ActionIcon>
         </Indicator>
-        <Group className={classes.links} spacing={5}>
+        <Group spacing={5}>
           <Link
             to={"/"}
+            prefetch="intent"
             className={cx(classes.link, { [classes.linkActive]: location.pathname === "/" })}
           >
             Home
           </Link>
           <Link
-            to={"pro"}
-            className={cx(classes.link, { [classes.linkActive]: location.pathname === "/pro" })}
-          >
-            Pro
-          </Link>
-          <Link
-            to={"settings"}
-            className={cx(classes.link, { [classes.linkActive]: location.pathname === "/settings" })}
+            to={"settings/account"}
+            prefetch="intent"
+            className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("/settings/") })}
           >
             Settings
           </Link>
         </Group>
       </Group>
       <Group position={"right"}>
-        <Tooltip label={"Unconfirmed"} disabled={user.isConfirmed}>
-          <Text>{user.email}</Text>
-        </Tooltip>
-        {!user.isConfirmed ? (
-          <Tooltip label="Resend confirmation">
-            <ActionIcon>
-              <IconReload size={18}/>
-            </ActionIcon>
-          </Tooltip>
 
-        ) : null}
+        {/*<Tooltip label={"Unconfirmed"} disabled={user.isConfirmed}>*/}
+        {/*  <Text>{user.email}</Text>*/}
+        {/*</Tooltip>*/}
+        {/*{!user.isConfirmed ? (*/}
+        {/*  <Tooltip label="Resend confirmation">*/}
+        {/*    <ActionIcon>*/}
+        {/*      <IconReload size={18}/>*/}
+        {/*    </ActionIcon>*/}
+        {/*  </Tooltip>*/}
+
+        {/*) : null}*/}
         <ColorSwitch/>
-        <ActionIcon title="Logout" onClick={handleLogout}>
-          <IconLogout size={18}/>
-        </ActionIcon>
+        <NavbarMenu/>
       </Group>
     </Group>
   )
