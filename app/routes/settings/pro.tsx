@@ -19,10 +19,11 @@ import {useState} from "react";
 import {upperFirst} from "@mantine/hooks";
 import {useUser} from "~/utils/utils";
 import {requireUser} from "~/server/session.server";
-import {Form, useActionData, useLoaderData} from "@remix-run/react";
+import {Form, useActionData, useFetcher, useLoaderData} from "@remix-run/react";
 import {IconCurrencyDollar} from "@tabler/icons";
 import dayjs from "dayjs";
 import {showNotification} from "@mantine/notifications";
+import {LoadingProgress} from "~/components/LoadingProgress";
 
 
 const plans: Record<string, string> = {
@@ -156,7 +157,7 @@ export const action = async ({request}: ActionArgs) => {
 export default function Pro() {
   const data = useActionData<typeof action>()
 
-  console.log("data", data)
+  const fetcher = useFetcher()
 
   // if (data?.intent === "removeModifier") {
   //   showNotification({
@@ -207,7 +208,7 @@ export default function Pro() {
         <Anchor component={"a"} target={"_blank"} href={t.receipt_url}>Receipt</Anchor>
       </td>
       <td>
-        <Form method={"post"}>
+        <fetcher.Form method={"post"}>
           <input type="hidden" name="orderId" value={t.order_id}/>
           <Button
             compact
@@ -220,7 +221,7 @@ export default function Pro() {
           >
             Refund
           </Button>
-        </Form>
+        </fetcher.Form>
       </td>
     </tr>
   ));
@@ -236,7 +237,7 @@ export default function Pro() {
       </td>
       <td>{m.description}</td>
       <td>
-        <Form method={"post"}>
+        <fetcher.Form method={"post"}>
           <input type="hidden" name="modifierId" value={m.modifier_id}/>
           <Button
             color={"red"}
@@ -248,7 +249,7 @@ export default function Pro() {
           >
             Remove
           </Button>
-        </Form>
+        </fetcher.Form>
       </td>
     </tr>
   ));
@@ -256,6 +257,7 @@ export default function Pro() {
 
   return (
     <>
+      <LoadingProgress state={fetcher.state}/>
       <Paper shadow="0" p="md" mb={6} withBorder>
         <Stack align="flex-start">
           <Text>Selected plan: <Text component="span" weight={700}>{upperFirst(plans[selectedPlan])}</Text></Text>
@@ -278,7 +280,7 @@ export default function Pro() {
         </Stack>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
-        <Form method={"post"}>
+        <fetcher.Form method={"post"}>
           <Stack align="flex-start">
             <Text>Pay extra</Text>
             <NumberInput
@@ -305,11 +307,11 @@ export default function Pro() {
 
 
           </Stack>
-        </Form>
+        </fetcher.Form>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
         <Text>Modifiers</Text>
-        <Form method={"post"}>
+        <fetcher.Form method={"post"}>
           <Stack my={12} align="flex-start">
             <Radio.Group
               name="modifierType"
@@ -342,7 +344,7 @@ export default function Pro() {
               Submit
             </Button>
           </Stack>
-        </Form>
+        </fetcher.Form>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
         <Text>Price with modifiers: {priceWithModifiers}</Text>
@@ -385,7 +387,7 @@ export default function Pro() {
         </Stack>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
-        <Form method={"post"}>
+        <fetcher.Form method={"post"}>
           <Stack align="flex-start">
             <Button
               color={isPaused ? "green" : "red"}
@@ -396,7 +398,7 @@ export default function Pro() {
               {isPaused ? "Resume subscription" : "Pause subscription"}
             </Button>
           </Stack>
-        </Form>
+        </fetcher.Form>
       </Paper>
     </>
   )
