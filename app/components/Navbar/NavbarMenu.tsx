@@ -1,4 +1,4 @@
-import {Avatar, createStyles, Group, Menu, Text, UnstyledButton} from "@mantine/core";
+import {Avatar, createStyles, Group, Indicator, Menu, Text, UnstyledButton} from "@mantine/core";
 import {
   IconChevronDown,
   IconHeart,
@@ -18,7 +18,6 @@ const useStyles = createStyles((theme) => ({
   user: {
     color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
     padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
-    borderRadius: theme.radius.sm,
     transition: 'background-color 100ms ease',
 
     '&:hover': {
@@ -41,6 +40,9 @@ export const NavbarMenu = () => {
     submit(null, {method: "post", action: "/logout"});
   };
 
+  // @ts-ignore
+  const isPro = user?.payment
+
   return (
     <Menu
       width={260}
@@ -54,9 +56,15 @@ export const NavbarMenu = () => {
           className={cx(classes.user, {[classes.userActive]: userMenuOpened})}
         >
           <Group spacing={7}>
-            <Avatar
-              src={user.avatarUrl}
-              alt={user.email} radius="xl" size={24}/>
+            <Indicator size={8} offset={1} color="grape" disabled={!isPro}>
+              <Avatar
+                src={user.avatarUrl}
+                alt={user.email}
+                radius="xl"
+                size={24}
+              />
+            </Indicator>
+
             <Text weight={500} size="sm" sx={{lineHeight: 1}} mr={3}>
               {user.email}
             </Text>
