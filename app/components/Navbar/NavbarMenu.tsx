@@ -55,7 +55,7 @@ export const NavbarMenu = () => {
         >
           <Group spacing={7}>
             <Avatar
-              src={"https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"}
+              src={user.avatarUrl}
               alt={user.email} radius="xl" size={24}/>
             <Text weight={500} size="sm" sx={{lineHeight: 1}} mr={3}>
               {user.email}

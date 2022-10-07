@@ -48,6 +48,7 @@ export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => {
     || submission?.action === "/logout"
     || Boolean(submission?.action.includes("/login"))
     || Boolean(submission?.action.includes("/join"))
+    || submission?.action === "/settings/account"
 };
 
 export default function App() {
@@ -61,6 +62,7 @@ export default function App() {
         headings: {fontFamily: "Inter, sans-serif"},
         // primaryShade: {light: 5, dark: 8},
         colors: {...colors},
+        defaultRadius: "0"
       }}
       withGlobalStyles
       withNormalizeCSS

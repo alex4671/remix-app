@@ -119,6 +119,22 @@ export async function updatePassword(
   return updatedUser;
 }
 
+export async function updateAvatar(id: User["id"], avatarUrl: User["avatarUrl"]) {
+  return prisma.user.update({
+    where: { id },
+    data: { avatarUrl }
+  });
+}
+
+export async function deleteAvatar(id: User["id"]) {
+  return prisma.user.update({
+    where: {id},
+    data: {
+      avatarUrl: null
+    }
+  })
+}
+
 
 export const getUserPaymentStatus = async (request: Request) => {
   const userId = await getUserId(request)

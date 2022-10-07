@@ -2,7 +2,7 @@ import { useMatches } from "@remix-run/react";
 import { useMemo } from "react";
 
 import type { User } from "~/models/user.server";
-import {Theme} from "~/utils/theme";
+import type {Theme} from "~/utils/theme";
 
 const DEFAULT_REDIRECT = "/";
 
@@ -83,4 +83,10 @@ export function useUser(): User {
 
 export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
+}
+
+export const getFileKey = (fileUrl: string) => {
+  const url = new URL(fileUrl)
+
+  return url.pathname.substring(1)
 }
