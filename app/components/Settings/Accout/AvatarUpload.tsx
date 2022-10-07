@@ -31,6 +31,7 @@ export const AvatarUpload = () => {
                 {(props) =>
                   <Button
                     variant="outline"
+                    color={"gray"}
                     leftIcon={<IconUpload size={"14"}/>}
                     {...props}
                   >
@@ -41,9 +42,23 @@ export const AvatarUpload = () => {
           </Box>
           <Box py={12}>
             <Group>
-              <Button type={"submit"} color={"grape"} name={"intent"} value={"upload"}>Upload</Button>
-              <Button type={"submit"} color={"red"} name={"intent"} value={"delete"}
-                      onClick={handleRemoveAvatar}>Delete</Button>
+              <Button
+                type={"submit"}
+                color={"grape"}
+                name={"intent"}
+                value={"upload"}
+              >
+                Upload
+              </Button>
+              <Button
+                type={"submit"}
+                color={"red"}
+                name={"intent"}
+                value={"delete"}
+                onClick={handleRemoveAvatar}
+              >
+                Delete
+              </Button>
             </Group>
           </Box>
         </Box>
