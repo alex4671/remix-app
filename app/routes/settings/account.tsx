@@ -1,13 +1,11 @@
-import {Avatar, Button, FileButton, Group, Paper, Stack, Title} from "@mantine/core";
 import type {ActionFunction, MetaFunction} from "@remix-run/node";
-import {useState} from "react";
-import {Form, useFetcher} from "@remix-run/react";
-import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
 import {json} from "@remix-run/node";
-import {requireUser, requireUserId} from "~/server/session.server";
-import {deleteAvatar, updateAvatar} from "~/models/user.server";
-import {IconUpload} from "@tabler/icons";
-import {getFileKey, useUser} from "~/utils/utils";
+import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
+import {requireUser} from "~/server/session.server";
+import {deleteAvatar, updateAvatar, updatePassword, verifyLogin} from "~/models/user.server";
+import {getFileKey} from "~/utils/utils";
+import {AvatarUpload} from "~/components/Settings/Accout/AvatarUpload";
+import {ChangePassword} from "~/components/Settings/Accout/ChangePassword";
 
 export const meta: MetaFunction = () => {
   return {
@@ -62,45 +60,48 @@ export const action: ActionFunction = async ({request}) => {
     }
   }
 
+  if (intent === "changePassword") {
+    try {
+      const password = formData.get("password");
+      const newPassword = formData.get("newPassword");
+
+      // invariant(email, "Email must be set")
+      // invariant(password, "Password must be set")
+      // invariant(newPassword, "New password must be set")
+
+      if (!password || !newPassword) {
+        return json({intent, success: false, message: "Password and new password must be set"})
+      }
+
+      if (password === newPassword) {
+        return json({intent, success: false, message: "Old and new password can't be same"})
+      }
+
+      const isValid = await verifyLogin(user.email, String(password))
+
+      if (!isValid) {
+        return json({intent, success: false, message: "Wrong old password"})
+      }
+
+
+      await updatePassword(user.email, String(password), String(newPassword))
+
+      return json({intent, success: true, message: "Password updated"});
+
+    } catch (e) {
+      return json({success: false})
+    }
+  }
+
 
 }
 
 
 export default function Account() {
-  const user = useUser()
-  const [_, setFile] = useState<File | null>(null);
-  const [selectedAvatar, setSelectedAvatar] = useState(user.avatarUrl)
-
-  const handleSelectFile = (file: File) => {
-    setFile(file)
-    setSelectedAvatar(URL.createObjectURL(file))
-  }
-
-  const handleRemoveAvatar = () => {
-    setSelectedAvatar(null)
-  }
-
   return (
-    <Paper shadow="0" p="md" withBorder mb={12}>
-      <Title order={2}>Account Settings</Title>
-      <Form method={"post"} encType={"multipart/form-data"}>
-        <Stack align="flex-start">
-          <Avatar src={selectedAvatar} alt="it's me" radius="xl" size={72}/>
-          <FileButton onChange={handleSelectFile} accept="image/png,image/jpeg" name={"file"}>
-            {(props) =>
-              <Button
-                variant="outline"
-                leftIcon={<IconUpload size={"14"} />}
-                {...props}
-              >
-                Select avatar
-              </Button>}
-          </FileButton>
-          <Group>
-            <Button type={"submit"} color={"green"} name={"intent"} value={"upload"}>Upload</Button>
-            <Button type={"submit"} color={"red"} name={"intent"} value={"delete"} onClick={handleRemoveAvatar}>Delete</Button>
-          </Group>
-        </Stack>
-      </Form>
-    </Paper>)
+    <>
+      <AvatarUpload/>
+      <ChangePassword/>
+    </>
+  )
 }
