@@ -1,5 +1,7 @@
-import {Paper, Title, Text, Button, Group} from "@mantine/core";
-import type {MetaFunction} from "@remix-run/node";
+import type {ActionArgs, MetaFunction} from "@remix-run/node";
+import {DeleteAccount} from "~/components/Settings/Danger/DeletaAccount";
+import {logout, requireUserId} from "~/server/session.server";
+import {deleteUserById} from "~/models/user.server";
 
 export const meta: MetaFunction = () => {
   return {
@@ -7,15 +9,20 @@ export const meta: MetaFunction = () => {
   };
 };
 
+export const action = async ({ request }: ActionArgs) => {
+  const userId = await requireUserId(request)
+
+  await deleteUserById(userId)
+  // todo delete all user data
+  console.log("Account deleted...");
+
+  return logout(request);
+};
 
 export default function Danger() {
   return (
-    <Paper shadow="0" p="md" withBorder mb={12}>
-      <Title order={2}>Delete Account</Title>
-      <Text color={"dimmed"}>Delete account and all associated data</Text>
-      <Group my={12}>
-        <Button color={"red"}>Delete</Button>
-      </Group>
-    </Paper>
+    <>
+      <DeleteAccount/>
+    </>
   )
 }

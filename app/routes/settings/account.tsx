@@ -1,4 +1,4 @@
-import type {ActionFunction, MetaFunction} from "@remix-run/node";
+import type {ActionArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
 import {requireUser} from "~/server/session.server";
@@ -13,7 +13,7 @@ export const meta: MetaFunction = () => {
   };
 };
 
-export const action: ActionFunction = async ({request}) => {
+export const action = async ({request}: ActionArgs) => {
   const user = await requireUser(request)
   const {
     CLOUDFLARE_PUBLIC_FILE_URL,
