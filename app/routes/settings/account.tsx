@@ -4,12 +4,12 @@ import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
 import {requireUser} from "~/server/session.server";
 import {deleteAvatar, updateAvatar, updatePassword, verifyLogin} from "~/models/user.server";
 import {getFileKey} from "~/utils/utils";
-import {AvatarUpload} from "~/components/Settings/Accout/AvatarUpload";
-import {ChangePassword} from "~/components/Settings/Accout/ChangePassword";
+import {AvatarUpload} from "~/components/Settings/Account/AvatarUpload";
+import {ChangePassword} from "~/components/Settings/Account/ChangePassword";
 
 export const meta: MetaFunction = () => {
   return {
-    title: "Account"
+    title: "Settings | Account"
   };
 };
 

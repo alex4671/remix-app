@@ -44,7 +44,7 @@ export const AvatarUpload = () => {
             <Group>
               <Button
                 type={"submit"}
-                color={"grape"}
+                color={"emerald"}
                 name={"intent"}
                 value={"upload"}
               >

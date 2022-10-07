@@ -5,7 +5,7 @@ import {deleteUserById} from "~/models/user.server";
 
 export const meta: MetaFunction = () => {
   return {
-    title: "Danger"
+    title: "Settings | Danger"
   };
 };
 

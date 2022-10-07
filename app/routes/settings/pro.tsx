@@ -7,6 +7,7 @@ import {
   NumberInput,
   Paper,
   Radio,
+  ScrollArea,
   SegmentedControl,
   Stack,
   Table,
@@ -40,7 +41,7 @@ const planPrices: Record<string, string> = {
 
 export const meta: MetaFunction = () => {
   return {
-    title: "Pro"
+    title: "Settings | Pro"
   };
 };
 
@@ -354,30 +355,33 @@ export default function Pro() {
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
         <Text>Price with modifiers: {priceWithModifiers}</Text>
-        <Table>
-          <thead>
-          <tr>
-            <th>Currency/Amount</th>
-            <th>Is recurring</th>
-            <th>Description</th>
-            <th>Remove</th>
-          </tr>
-          </thead>
-          <tbody>{modifiersRow}</tbody>
-          <tfoot>
-          <tr>
-            <th>{priceWithModifiers}</th>
-            <th></th>
-            <th></th>
-            <th></th>
-          </tr>
-          </tfoot>
-        </Table>
+        <ScrollArea>
+          <Table sx={{minWidth: 600}}>
+            <thead>
+            <tr>
+              <th>Currency/Amount</th>
+              <th>Is recurring</th>
+              <th>Description</th>
+              <th>Remove</th>
+            </tr>
+            </thead>
+            <tbody>{modifiersRow}</tbody>
+            <tfoot>
+            <tr>
+              <th>{priceWithModifiers}</th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+            </tfoot>
+          </Table>
+        </ScrollArea>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
-        <Stack align="flex-start">
-          <Text>Transactions</Text>
-          <Table>
+
+        <Text>Transactions</Text>
+        <ScrollArea>
+          <Table sx={{minWidth: 600}}>
             <thead>
             <tr>
               <th>Date</th>
@@ -390,7 +394,8 @@ export default function Pro() {
             </thead>
             <tbody>{rows}</tbody>
           </Table>
-        </Stack>
+        </ScrollArea>
+
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
         <fetcher.Form method={"post"}>

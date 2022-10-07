@@ -21,7 +21,7 @@ export const ChangePassword = () => {
             </Stack>
           </Box>
           <Box py={12}>
-            <Button type={"submit"} name="intent" color={"grape"} value="changePassword">Update password</Button>
+            <Button type={"submit"} name="intent" color={"emerald"} value="changePassword">Update password</Button>
           </Box>
         </Box>
       </Form>
