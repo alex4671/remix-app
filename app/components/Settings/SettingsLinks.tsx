@@ -36,7 +36,6 @@ export const SettingsLinks = () => {
         color="dark"
         variant="filled"
         prefetch={"intent"}
-        disabled
       />
       <NavLink
         component={Link}
