@@ -4,6 +4,7 @@ import {
   Badge,
   Button,
   Checkbox,
+  Group,
   NumberInput,
   Paper,
   Radio,
@@ -54,7 +55,6 @@ export const loader = async ({request}: LoaderArgs) => {
   // const test = await paddle.updateUser({subscription_id: 336541, pause: false})
   //
   // console.log("test", test)
-
   // const data = await paddle.getWebhookHistory({})
   const modifiers = await paddle.listModifiers({subscription_id: "332688"})
   // const data = await paddle.deleteModifier({modifier_id: 344501})
@@ -200,6 +200,23 @@ export default function Pro() {
     })
   }
 
+  const handleCancelSubscription = () => {
+    paddle.Checkout.open({
+      override: userSubscription[0].cancel_url,
+      successCallback: checkoutComplete,
+      closeCallback: checkoutClosed
+    })
+  }
+
+  const handleUpdateSubscription = () => {
+    paddle.Checkout.open({
+      override: userSubscription[0].update_url,
+      successCallback: checkoutComplete,
+      closeCallback: checkoutClosed
+    })
+  }
+
+
   const isPaused = !!userSubscription[0].paused_at
   console.log("userSubscription", userSubscription)
 
@@ -285,6 +302,32 @@ export default function Pro() {
             Pay {upperFirst(planPrices[selectedPlan])}
           </Button>
         </Stack>
+      </Paper>
+      <Paper shadow="0" p="md" my={6} withBorder>
+        <fetcher.Form method={"post"}>
+          <Group>
+            <Button
+              color={"emerald"}
+              onClick={handleUpdateSubscription}
+            >
+              Update subscription
+            </Button>
+            <Button
+              color={isPaused ? "green" : "red"}
+              type={"submit"}
+              name={"intent"}
+              value={"pause"}
+            >
+              {isPaused ? "Resume subscription" : "Pause subscription"}
+            </Button>
+            <Button
+              color={"red"}
+              onClick={handleCancelSubscription}
+            >
+              Cancel subscription
+            </Button>
+          </Group>
+        </fetcher.Form>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
         <fetcher.Form method={"post"}>
@@ -396,20 +439,6 @@ export default function Pro() {
           </Table>
         </ScrollArea>
 
-      </Paper>
-      <Paper shadow="0" p="md" my={6} withBorder>
-        <fetcher.Form method={"post"}>
-          <Stack align="flex-start">
-            <Button
-              color={isPaused ? "green" : "red"}
-              type={"submit"}
-              name={"intent"}
-              value={"pause"}
-            >
-              {isPaused ? "Resume subscription" : "Pause subscription"}
-            </Button>
-          </Stack>
-        </fetcher.Form>
       </Paper>
     </>
   )
