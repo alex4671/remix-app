@@ -50,6 +50,7 @@ export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => {
     || Boolean(submission?.action.includes("/join"))
     || submission?.action === "/settings/account"
     || submission?.action === "/settings/danger"
+    || submission?.action === undefined
 };
 
 export default function App() {
