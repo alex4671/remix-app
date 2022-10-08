@@ -46,7 +46,7 @@ export const AvatarUpload = () => {
                 type={"submit"}
                 color={"emerald"}
                 name={"intent"}
-                value={"upload"}
+                value={"uploadAvatar"}
               >
                 Upload
               </Button>
@@ -54,7 +54,7 @@ export const AvatarUpload = () => {
                 type={"submit"}
                 color={"red"}
                 name={"intent"}
-                value={"delete"}
+                value={"deleteAvatar"}
                 onClick={handleRemoveAvatar}
               >
                 Delete

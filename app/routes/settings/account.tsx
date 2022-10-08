@@ -23,7 +23,7 @@ export const action = async ({request}: ActionArgs) => {
   const formData = await request.formData();
   const intent = formData.get("intent");
 
-  if (intent === "upload") {
+  if (intent === "uploadAvatar") {
     const file = formData.get("file") as File;
     console.log("file", file)
     const key = `avatars/${user.id}/${Date.now()}--${file.name}`
@@ -46,7 +46,7 @@ export const action = async ({request}: ActionArgs) => {
     }
   }
 
-  if (intent === "delete") {
+  if (intent === "deleteAvatar") {
     try {
       await deleteAvatar(user.id)
 

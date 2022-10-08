@@ -397,7 +397,7 @@ export default function Pro() {
         </fetcher.Form>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
-        <Text>Price with modifiers: {priceWithModifiers}</Text>
+        <Text>Price with modifiers: {priceWithModifiers + (userSubscription?.[0]?.next_payment?.amount ?? 0)}</Text>
         <ScrollArea>
           <Table sx={{minWidth: 600}}>
             <thead>

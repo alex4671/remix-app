@@ -70,7 +70,6 @@ export const NavbarMenu = () => {
                 size={24}
               />
             </Indicator>
-
             <Text weight={500} size="sm" sx={{lineHeight: 1}} mr={3} className={classes.userEmail}>
               {user.email}
             </Text>
@@ -99,10 +98,10 @@ export const NavbarMenu = () => {
         <Menu.Divider/>
 
         <Menu.Label>Danger zone</Menu.Label>
-        <Menu.Item icon={<IconPlayerPause size={14} stroke={1.5}/>} disabled>
+        <Menu.Item component={Link} to={"/settings/pro"} icon={<IconPlayerPause size={14} stroke={1.5}/>}>
           Pause subscription
         </Menu.Item>
-        <Menu.Item color="red" icon={<IconTrash size={14} stroke={1.5}/>} disabled>
+        <Menu.Item component={Link} to={"/settings/danger"} color="red" icon={<IconTrash size={14} stroke={1.5}/>}>
           Delete account
         </Menu.Item>
         <Menu.Item icon={<IconLogout size={14} stroke={1.5}/>} onClick={handleLogout}>Logout</Menu.Item>

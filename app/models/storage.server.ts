@@ -8,7 +8,7 @@ const {
   CLOUDFLARE_PUBLIC_FILE_URL,
 } = process.env;
 
-// if (!BUCKET_NAME && !FILE_VIEW_URL) {
+// if (!BUCKET_NAME && !CLOUDFLARE_PUBLIC_FILE_URL) {
 //   throw new Error(`Storage is missing required configuration.`)
 // }
 
@@ -20,7 +20,7 @@ export  const  generateSignedUrl = async (contentType: string, key: string) => {
     ContentType: contentType,
     ACL: "public-read",
   });
-  // Create the presigned URL.
+
   return await getSignedUrl(client, command, {
     expiresIn: 3600,
   })
@@ -48,9 +48,6 @@ export async function deleteFileFromS3(key: string) {
 
 export async function listS3Files() {
   const data = await client.send(new ListObjectsV2Command({Bucket: BUCKET_NAME}));
-  // console.log('data?.Contents', data?.Contents?.map(item => `${CLOUDFLARE_PUBLIC_FILE_URL}/${item.Key}`.split('.').pop()))
-
 
   return data?.Contents?.map(item => `${CLOUDFLARE_PUBLIC_FILE_URL}/${item.Key}`)
-
 }
