@@ -23,10 +23,10 @@ export default function Settings() {
     <>
       <Title order={1} my={24}>Settings</Title>
       <Grid>
-        <Grid.Col sm={12} md={2}>
+        <Grid.Col xs={12} sm={2}>
           <SettingsLinks/>
         </Grid.Col>
-        <Grid.Col sm={12} md={10}>
+        <Grid.Col xs={12} sm={10}>
           <Outlet/>
         </Grid.Col>
       </Grid>
