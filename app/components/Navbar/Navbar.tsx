@@ -7,7 +7,7 @@ export const Navbar = () => {
   return (
     <Group my={12} position={"apart"}>
       <NavbarLinks />
-      <Group>
+      <Group spacing={6}>
         <ColorSwitch/>
         <NavbarMenu/>
       </Group>

@@ -28,6 +28,12 @@ const useStyles = createStyles((theme) => ({
   userActive: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
   },
+
+  userEmail: {
+    [theme.fn.smallerThan('sm')]: {
+      display: 'none',
+    },
+  }
 }));
 
 export const NavbarMenu = () => {
@@ -65,7 +71,7 @@ export const NavbarMenu = () => {
               />
             </Indicator>
 
-            <Text weight={500} size="sm" sx={{lineHeight: 1}} mr={3}>
+            <Text weight={500} size="sm" sx={{lineHeight: 1}} mr={3} className={classes.userEmail}>
               {user.email}
             </Text>
             <IconChevronDown size={12} stroke={1.5}/>
