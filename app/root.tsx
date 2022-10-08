@@ -64,7 +64,8 @@ export default function App() {
         headings: {fontFamily: "Inter, sans-serif"},
         // primaryShade: {light: 5, dark: 8},
         colors: {...colors},
-        defaultRadius: "0"
+        defaultRadius: "0",
+        // activeStyles: { transform: 'scale(0.95)', transition: "transform 0.03s ease-in-out" }
       }}
       withGlobalStyles
       withNormalizeCSS
@@ -76,7 +77,7 @@ export default function App() {
         <Links/>
       </head>
       <body>
-      <NavigationProgress color={"lime"} autoReset/>
+      <NavigationProgress color={"emerald"} autoReset/>
       <LoadingProgress state={transition.state}/>
       <NotificationsProvider position={"top-center"}>
         <Container size={"xl"} px={12}>

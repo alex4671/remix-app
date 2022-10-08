@@ -7,10 +7,10 @@ const useStyles = createStyles((theme) => ({
   link: {
     display: 'block',
     lineHeight: 1,
-    padding: '8px 12px',
+    padding: '8px 16px',
     textDecoration: 'none',
     color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
-    fontSize: theme.fontSizes.sm,
+    fontSize: theme.fontSizes.lg,
     fontWeight: 500,
 
     '&:hover': {
@@ -25,8 +25,8 @@ const useStyles = createStyles((theme) => ({
 
   linkActive: {
     '&, &:hover': {
-      backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background,
-      color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
+      backgroundColor: theme.colorScheme === 'dark' ?  theme.colors.dark[4] : theme.colors.emerald[0],
+      color: theme.colors.emerald[6],
     },
   },
 
@@ -97,7 +97,7 @@ export const NavbarLinks = () => {
         <ActionIcon size="xl" variant="transparent" mr={"xs"} onClick={handleLogoRedirect}>
           <IconBolt size={32} strokeWidth={1.5}/>
         </ActionIcon>
-        <Group spacing={5} className={classes.links}>
+        <Group spacing={5} className={classes.links} ml={12}>
           {items}
         </Group>
         <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />

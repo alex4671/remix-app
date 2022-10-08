@@ -6,6 +6,7 @@ import {deleteAvatar, updateAvatar, updatePassword, verifyLogin} from "~/models/
 import {getFileKey} from "~/utils/utils";
 import {AvatarUpload} from "~/components/Settings/Account/AvatarUpload";
 import {ChangePassword} from "~/components/Settings/Account/ChangePassword";
+import {UserInfo} from "~/components/Settings/Account/UserInfo";
 
 export const meta: MetaFunction = () => {
   return {
@@ -101,6 +102,7 @@ export const action = async ({request}: ActionArgs) => {
 export default function Account() {
   return (
     <>
+      <UserInfo/>
       <AvatarUpload/>
       <ChangePassword/>
     </>

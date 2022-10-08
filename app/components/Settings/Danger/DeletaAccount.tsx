@@ -2,6 +2,7 @@ import {Form} from "@remix-run/react";
 import {Box, Button, Group, Paper, Text, TextInput, Title} from "@mantine/core";
 import {useUser} from "~/utils/utils";
 import {useInputState} from "@mantine/hooks";
+import {IconAlertCircle} from "@tabler/icons";
 
 export const DeleteAccount = () => {
   const user = useUser();
@@ -22,7 +23,7 @@ export const DeleteAccount = () => {
                 value={value}
                 onChange={setValue}
               />
-              <Button type="submit" color={"red"} disabled={isBtnDisabled}>Delete account</Button>
+              <Button type="submit" color={"red"} disabled={isBtnDisabled} leftIcon={<IconAlertCircle size={"16"}/>}>Delete account</Button>
             </Group>
           </Box>
         </Box>

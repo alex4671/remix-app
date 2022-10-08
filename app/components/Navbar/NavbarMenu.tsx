@@ -70,7 +70,7 @@ export const NavbarMenu = () => {
                 size={24}
               />
             </Indicator>
-            <Text weight={500} size="sm" sx={{lineHeight: 1}} mr={3} className={classes.userEmail}>
+            <Text weight={500} size="md" mr={3} className={classes.userEmail}>
               {user.email}
             </Text>
             <IconChevronDown size={12} stroke={1.5}/>
