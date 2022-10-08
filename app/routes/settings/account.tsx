@@ -25,7 +25,7 @@ export const action = async ({request}: ActionArgs) => {
 
   if (intent === "uploadAvatar") {
     const file = formData.get("file") as File;
-    console.log("file", file)
+
     const key = `avatars/${user.id}/${Date.now()}--${file.name}`
 
     try {
@@ -93,6 +93,7 @@ export const action = async ({request}: ActionArgs) => {
     }
   }
 
+  return json({success: false})
 
 }
 

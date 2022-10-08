@@ -220,6 +220,19 @@ export default function Pro() {
   const isPaused = !!userSubscription[0].paused_at
   console.log("userSubscription", userSubscription)
 
+  const getNextPayment = () => {
+    if (userSubscription?.[0]?.next_payment?.amount === 0) {
+      return 0
+    } else {
+      return priceWithModifiers + (userSubscription?.[0]?.next_payment?.amount ?? 0)
+    }
+
+  }
+
+  const priceWithModifiers = modifiers.reduce((acc, item) => acc + parseInt(item.amount), 0)
+
+
+
   const rows = transactions.map((t) => (
     <tr key={t.order_id}>
       <td>{dayjs(t.created_at).format("MMM D, YY H:mm")}</td>
@@ -249,8 +262,6 @@ export default function Pro() {
       </td>
     </tr>
   ));
-
-  const priceWithModifiers = modifiers.reduce((acc, item) => acc + parseInt(item.amount), 0)
 
 
   const modifiersRow = modifiers.map((m) => (
@@ -304,8 +315,9 @@ export default function Pro() {
         </Stack>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
+        <Text>Next payment: {getNextPayment()}</Text>
         <fetcher.Form method={"post"}>
-          <Group>
+          <Group mt={12}>
             <Button
               color={"emerald"}
               onClick={handleUpdateSubscription}
@@ -360,7 +372,7 @@ export default function Pro() {
         </fetcher.Form>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
-        <Text>Modifiers</Text>
+        <Text>Add modifiers</Text>
         <fetcher.Form method={"post"}>
           <Stack my={12} align="flex-start">
             <Radio.Group
@@ -397,7 +409,7 @@ export default function Pro() {
         </fetcher.Form>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
-        <Text>Price with modifiers: {priceWithModifiers + (userSubscription?.[0]?.next_payment?.amount ?? 0)}</Text>
+        <Text>Modifiers</Text>
         <ScrollArea>
           <Table sx={{minWidth: 600}}>
             <thead>
