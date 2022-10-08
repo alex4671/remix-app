@@ -8,10 +8,10 @@ import {validateInviteLink} from "~/models/user.server";
 
 export async function loader({request, params}: LoaderArgs) {
   // await isUserConfirmed(request)
-  invariant(params.inviteId, "Id must be provided")
+  invariant(params.token, "Id must be provided")
 
   try {
-    const isValidInvite = await validateInviteLink(request, params.inviteId)
+    const isValidInvite = await validateInviteLink(request, params.token)
 
     console.log("isValidInvite", isValidInvite)
 

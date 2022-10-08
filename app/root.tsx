@@ -100,10 +100,10 @@ export function ErrorBoundary({error}: { error: Error }) {
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <html>
       <head>
+        <StylesPlaceholder/>
         <title>Error!</title>
         <Meta/>
         <Links/>
-        <StylesPlaceholder/>
       </head>
       <body>
       <ErrorPage/>
@@ -122,10 +122,10 @@ export function CatchBoundary() {
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <html>
       <head>
+        <StylesPlaceholder/>
         <title>Oops!</title>
         <Meta/>
         <Links/>
-        <StylesPlaceholder/>
       </head>
       <body>
       <ErrorPage status={caught.status}/>

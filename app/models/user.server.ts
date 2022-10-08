@@ -5,10 +5,15 @@ import {getUserId, requireUserId} from "~/server/session.server";
 import dayjs from "dayjs";
 import {sign, verify} from "jsonwebtoken";
 
-export interface Token {
+interface InviteToken {
   userId: string
 }
 
+interface ResetToken {
+  email: string
+}
+
+// todo move to env
 export const APP_SECRET = 'appsecret321'
 
 
@@ -35,6 +40,23 @@ export async function createUser(email: User["email"], password: string) {
       email,
       password: {
         create: {
+          hash: hashedPassword,
+        },
+      },
+    },
+  });
+}
+
+export async function resetPassword(email: User["email"], newPassword: string) {
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  return prisma.user.update({
+    where: {
+      email
+    },
+    data: {
+      password: {
+        update: {
           hash: hashedPassword,
         },
       },
@@ -217,18 +239,17 @@ export const getUserPaymentTransactionsData = async (request: Request) => {
 }
 
 export const generateInviteLink = async (url: string, userId: string): Promise<string> => {
-
   const token = sign({userId}, APP_SECRET)
 
   const {origin} = new URL(url)
 
-  return `${origin}/invite/${token}`
+  return `${origin}/cb/invite/${token}`
 }
 
 export const validateInviteLink = async (request: Request, token: string): Promise<boolean> => {
   const userId = await requireUserId(request)
 
-  const verifiedToken = verify(token, APP_SECRET) as Token
+  const verifiedToken = verify(token, APP_SECRET) as InviteToken
 
   const isVerified = verifiedToken.userId === userId
 
@@ -237,6 +258,24 @@ export const validateInviteLink = async (request: Request, token: string): Promi
   }
 
   return isVerified;
+}
+
+export const generateResetToken = async (url: string, email: string): Promise<string> => {
+  const token = sign({email}, APP_SECRET)
+
+  const {origin} = new URL(url)
+
+  return `${origin}/cb/reset/${token}`
+}
+
+export const validateResetToken = async (token: string): Promise<string | undefined> => {
+  const verifiedToken = verify(token, APP_SECRET) as ResetToken
+
+  const user = await getUserByEmail(verifiedToken.email)
+
+  return user?.email;
+
+
 }
 
 const confirmUserEmail = (userId: string) => {
