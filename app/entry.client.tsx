@@ -1,14 +1,10 @@
-import { RemixBrowser } from "@remix-run/react";
-import { ClientProvider } from "@mantine/remix";
-
-import { hydrateRoot } from "react-dom/client";
+import {RemixBrowser} from '@remix-run/react';
+import {hydrateRoot} from "react-dom/client";
 
 hydrateRoot(
   document,
-  <ClientProvider>
-    <RemixBrowser />
-  </ClientProvider>
-);
+  <RemixBrowser />
+)
 
 // import React, {startTransition} from "react";
 // import {RemixBrowser} from '@remix-run/react';
