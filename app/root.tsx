@@ -1,6 +1,6 @@
 import {Container, createEmotionCache, MantineProvider} from "@mantine/core";
 import {StylesPlaceholder} from "@mantine/remix";
-import type {LoaderArgs, MetaFunction} from "@remix-run/node";
+import type {LinksFunction, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import type {ShouldReloadFunction} from "@remix-run/react";
 import {
@@ -22,6 +22,13 @@ import {Navbar} from "~/components/Navbar/Navbar";
 import {LoadingProgress} from "~/components/LoadingProgress";
 import {NavigationProgress} from "@mantine/nprogress";
 import {NotificationsProvider} from "@mantine/notifications";
+import favicon from "./favicon.svg";
+
+export const links: LinksFunction = () => {
+  return [
+    { rel: "icon", href: favicon },
+  ];
+};
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
