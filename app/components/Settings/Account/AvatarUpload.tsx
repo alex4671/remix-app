@@ -2,8 +2,10 @@ import {Avatar, Box, Button, FileButton, Group, Paper, Text, Title} from "@manti
 import {Form, useActionData} from "@remix-run/react";
 import {IconExclamationMark, IconUpload} from "@tabler/icons";
 import {useUser} from "~/utils/utils";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {showNotification} from "@mantine/notifications";
+
+const UPLOAD_SIZE_LIMIT = 3145728
 
 export const AvatarUpload = () => {
   const actionData = useActionData()
@@ -12,6 +14,8 @@ export const AvatarUpload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [selectedAvatar, setSelectedAvatar] = useState(user.avatarUrl)
 
+  const resetRef = useRef<() => void>(null);
+
   useEffect(() => {
     if (actionData?.success) {
       setFile(null)
@@ -19,11 +23,12 @@ export const AvatarUpload = () => {
   }, [actionData])
 
   const handleSelectFile = (file: File) => {
-    if (file.size < 3145728) {
+    if (file?.size < UPLOAD_SIZE_LIMIT) {
       setFile(file)
       setSelectedAvatar(URL.createObjectURL(file))
     } else {
       setFile(null)
+      resetRef.current?.();
       showNotification({
         title: "Max avatar size is 3mb",
         message: undefined,
@@ -36,6 +41,7 @@ export const AvatarUpload = () => {
 
   const handleRemoveAvatar = () => {
     setSelectedAvatar(null)
+    resetRef.current?.();
   }
 
   return (
@@ -47,7 +53,7 @@ export const AvatarUpload = () => {
           <Box my={12}>
             <Group>
               <Avatar src={selectedAvatar} alt={user.email} radius="xl" size={36}/>
-              <FileButton onChange={handleSelectFile} accept="image/png,image/jpeg" name={"file"}>
+              <FileButton resetRef={resetRef} onChange={handleSelectFile} accept="image/png,image/jpeg" name={"file"}>
                 {(props) =>
                   <Button
                     variant="outline"

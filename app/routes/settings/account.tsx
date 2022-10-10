@@ -27,7 +27,7 @@ export const action = async ({request}: ActionArgs) => {
   if (intent === "uploadAvatar") {
     const file = formData.get("file") as File;
 
-    const key = `avatars/${user.id}/${Date.now()}--${file.name}`
+    const key = `${user.id}/avatar/${Date.now()}--${file.name}`
 
     try {
       const signedUrl = await generateSignedUrl(file.type, key)

@@ -13,7 +13,7 @@ const {
 // }
 
 
-export  const  generateSignedUrl = async (contentType: string, key: string) => {
+export const generateSignedUrl = async (contentType: string, key: string) => {
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
     Key: key,
@@ -27,7 +27,7 @@ export  const  generateSignedUrl = async (contentType: string, key: string) => {
 }
 
 
-export async function deleteFileFromS3(key: string) {
+export const deleteFileFromS3 = async (key: string) => {
   if (!key) {
     return;
   }
@@ -46,7 +46,7 @@ export async function deleteFileFromS3(key: string) {
   }
 }
 
-export async function listS3Files() {
+export const listS3Files = async () => {
   const data = await client.send(new ListObjectsV2Command({Bucket: BUCKET_NAME}));
 
   return data?.Contents?.map(item => `${CLOUDFLARE_PUBLIC_FILE_URL}/${item.Key}`)
