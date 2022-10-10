@@ -220,15 +220,6 @@ export default function Pro() {
   const isPaused = !!userSubscription[0].paused_at
   console.log("userSubscription", userSubscription)
 
-  const getNextPayment = () => {
-    if (userSubscription?.[0]?.next_payment?.amount === 0) {
-      return 0
-    } else {
-      return priceWithModifiers + (userSubscription?.[0]?.next_payment?.amount ?? 0)
-    }
-
-  }
-
   const priceWithModifiers = modifiers.reduce((acc, item) => acc + parseInt(item.amount), 0)
 
 
@@ -315,7 +306,7 @@ export default function Pro() {
         </Stack>
       </Paper>
       <Paper shadow="0" p="md" my={6} withBorder>
-        <Text>Next payment: {getNextPayment()}</Text>
+        <Text>Next payment: {isPaused ? "Paused" : dayjs(userSubscription?.[0]?.next_payment?.date).format("MMM, D")}. {userSubscription?.[0]?.next_payment?.amount ?? 0}$</Text>
         <fetcher.Form method={"post"}>
           <Group mt={12}>
             <Button
