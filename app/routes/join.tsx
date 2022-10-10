@@ -142,11 +142,12 @@ export default function Join() {
               pathname: "/login",
               search: searchParams.toString()
             }}
+            color={"emerald"}
           >
             Login
           </Anchor>
         </Text>
-        <Button fullWidth mt="xl" type={"submit"} loading={isLoading} color={"zinc"} variant={"filled"}>
+        <Button fullWidth mt="xl" type={"submit"} loading={isLoading} color={"emerald"} variant={"filled"}>
           Sign up
         </Button>
         <input type="hidden" name="redirectTo" value={redirectTo} />

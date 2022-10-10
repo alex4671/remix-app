@@ -85,13 +85,13 @@ export default function Forgot() {
           pb={actionData?.errors?.email ? 0 : 20}
         />
         <Group position="apart" mt="lg">
-          <Anchor component={Link} to={"/login"} color="dimmed" size="sm">
+          <Anchor component={Link} to={"/login"} color={"emerald"} size="sm">
             <Center inline>
               <IconArrowLeft size={12} stroke={1.5} />
               <Box ml={5}>Back to login page</Box>
             </Center>
           </Anchor>
-          <Button type={"submit"} loading={isLoading} color={"zinc"} variant={"filled"}>Reset password</Button>
+          <Button type={"submit"} loading={isLoading} color={"emerald"} variant={"filled"}>Reset password</Button>
         </Group>
       </Form>
     </Container>

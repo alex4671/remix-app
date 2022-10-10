@@ -1,7 +1,7 @@
 import {ActionIcon, Burger, createStyles, Group, Paper, Transition} from "@mantine/core";
 import {IconBolt} from "@tabler/icons";
 import {Link, useLocation, useNavigate} from "@remix-run/react";
-import {useDisclosure} from "@mantine/hooks";
+import {useClickOutside, useDisclosure} from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -45,7 +45,7 @@ const useStyles = createStyles((theme) => ({
     zIndex: 2,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
-    borderBottom: `1px solid ${theme.colors.gray[3]}`,
+    borderBottom: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[1]}`,
     boxShadow: theme.shadows.xl,
     overflow: 'hidden',
 
@@ -68,11 +68,13 @@ const useStyles = createStyles((theme) => ({
 export const NavbarLinks = () => {
   const { classes, cx } = useStyles();
   const [opened, { toggle, close }] = useDisclosure(false);
+  const ref = useClickOutside(() => close());
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogoRedirect = () => {
     navigate("/");
+    close()
   };
 
   const links = [
@@ -94,7 +96,7 @@ export const NavbarLinks = () => {
 
   return (
     <>
-      <Group spacing={0}>
+      <Group spacing={0} ref={ref}>
         <ActionIcon size="xl" variant="transparent" mr={"xs"} onClick={handleLogoRedirect}>
           <IconBolt size={32} strokeWidth={1.5}/>
         </ActionIcon>

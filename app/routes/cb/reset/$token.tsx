@@ -104,7 +104,7 @@ export default function Invite() {
                   <Box ml={5}>Back to login page</Box>
                 </Center>
               </Anchor>
-              <Button type={"submit"} loading={isLoading} color={"zinc"} variant={"filled"}>Save new password</Button>
+              <Button type={"submit"} loading={isLoading} color={"emerald"} variant={"filled"}>Save new password</Button>
             </Group>
           </Form>
         </Container>

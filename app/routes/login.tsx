@@ -122,7 +122,7 @@ export default function LoginPage() {
             id="remember"
             name="remember"
           />
-          <Anchor component={Link} to={"/forgot"} size={"sm"}>Forgot password</Anchor>
+          <Anchor component={Link} to={"/forgot"} size={"sm"} color={"emerald"}>Forgot password</Anchor>
         </Group>
         <Text mt={12}>
           Don't have an account?{" "}
@@ -132,11 +132,12 @@ export default function LoginPage() {
               pathname: "/join",
               search: searchParams.toString()
             }}
+            color={"emerald"}
           >
             Sign up
           </Anchor>
         </Text>
-        <Button fullWidth mt="xl" type={"submit"} loading={isLoading} color={"zinc"} variant={"filled"}>
+        <Button fullWidth mt="xl" type={"submit"} loading={isLoading} color={"emerald"} variant={"filled"}>
           Sign in
         </Button>
         <input type="hidden" name="redirectTo" value={redirectTo} />
