@@ -25,7 +25,7 @@ import {requireUser} from "~/server/session.server";
 import {useActionData, useFetcher, useLoaderData} from "@remix-run/react";
 import {IconCurrencyDollar} from "@tabler/icons";
 import dayjs from "dayjs";
-import {LoadingProgress} from "~/components/LoadingProgress";
+import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 
 
 const plans: Record<string, string> = {

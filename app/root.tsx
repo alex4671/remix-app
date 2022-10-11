@@ -19,7 +19,7 @@ import {colors} from "~/utils/colors";
 import {ErrorPage} from "~/components/ErrorPage";
 import {getTheme} from "~/utils/theme";
 import {Navbar} from "~/components/Navbar/Navbar";
-import {LoadingProgress} from "~/components/LoadingProgress";
+import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {NavigationProgress} from "@mantine/nprogress";
 import {NotificationsProvider} from "@mantine/notifications";
 import favicon from "./favicon.svg";
