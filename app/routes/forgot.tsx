@@ -44,7 +44,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export const meta: MetaFunction = () => {
   return {
-    title: "Forgot Password"
+    title: "Reset Password"
   };
 };
 

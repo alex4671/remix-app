@@ -65,6 +65,8 @@ export default function App() {
   const transition = useTransition()
   return (
     <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
       theme={{
         colorScheme: theme,
         fontFamily: "Inter, sans-serif",
@@ -74,8 +76,6 @@ export default function App() {
         defaultRadius: "0",
         // activeStyles: { transform: 'scale(0.95)', transition: "transform 0.03s ease-in-out" }
       }}
-      withGlobalStyles
-      withNormalizeCSS
     >
       <html lang="en">
       <head>

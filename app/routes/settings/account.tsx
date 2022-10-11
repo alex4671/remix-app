@@ -7,6 +7,7 @@ import {getFileKey} from "~/utils/utils";
 import {AvatarUpload} from "~/components/Settings/Account/AvatarUpload";
 import {ChangePassword} from "~/components/Settings/Account/ChangePassword";
 import {UserInfo} from "~/components/Settings/Account/UserInfo";
+import invariant from "tiny-invariant";
 
 export const meta: MetaFunction = () => {
   return {
@@ -20,6 +21,7 @@ export const action = async ({request}: ActionArgs) => {
     CLOUDFLARE_PUBLIC_FILE_URL,
   } = process.env;
 
+  invariant(CLOUDFLARE_PUBLIC_FILE_URL, "CLOUDFLARE_PUBLIC_FILE_URL must be set")
 
   const formData = await request.formData();
   const intent = formData.get("intent");

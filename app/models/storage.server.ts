@@ -1,6 +1,7 @@
 import {DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand} from "@aws-sdk/client-s3";
 import {client} from "~/server/s3.server";
 import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
+import invariant from "tiny-invariant";
 
 
 const {
@@ -8,9 +9,8 @@ const {
   CLOUDFLARE_PUBLIC_FILE_URL,
 } = process.env;
 
-// if (!BUCKET_NAME && !CLOUDFLARE_PUBLIC_FILE_URL) {
-//   throw new Error(`Storage is missing required configuration.`)
-// }
+invariant(BUCKET_NAME, "BUCKET_NAME must be set")
+invariant(CLOUDFLARE_PUBLIC_FILE_URL, "CLOUDFLARE_PUBLIC_FILE_URL must be set")
 
 
 export const generateSignedUrl = async (contentType: string, key: string) => {
