@@ -19,6 +19,7 @@ export const AvatarUpload = () => {
   useEffect(() => {
     if (actionData?.success) {
       setFile(null)
+      resetRef.current?.();
     }
   }, [actionData])
 
