@@ -18,6 +18,13 @@ import {
 import {showNotification} from "@mantine/notifications";
 import {IconCheck, IconCopy, IconDots, IconNote, IconReport, IconSend, IconTrash} from "@tabler/icons";
 import {useState} from "react";
+import type {MetaFunction} from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Settings | Team"
+  };
+};
 
 const members = [
   {id: "1", name: "Alex Kul", email: "alex@alex.com", role: 'Admin'},
@@ -40,6 +47,9 @@ const invitations = [
     inviteLink: "http://localhost:3000/invite/4553455-2344234-rewerrwe"
   },
 ];
+
+
+
 export default function Team() {
   const [inviteLink, setInviteLink] = useState<string | null>(null)
 

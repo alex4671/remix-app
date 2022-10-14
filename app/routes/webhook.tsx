@@ -22,29 +22,30 @@ export const action = async ({request}: ActionArgs) => {
 
   const event = payload as PaddleWebhook;
   if (event.alert_name === 'subscription_created') {
-    await subscriptionCreated(event)
     console.log("subscription_created", event.subscription_id);
+    await subscriptionCreated(event)
   }
   if (event.alert_name === 'subscription_updated') {
-    await subscriptionUpdated(event)
     console.log("subscription_updated", event.subscription_id);
+    await subscriptionUpdated(event)
   }
   if (event.alert_name === 'subscription_cancelled') {
-    await subscriptionCanceled(event)
     console.log("subscription_cancelled", event.subscription_id);
+    await subscriptionCanceled(event)
   }
   if (event.alert_name === 'subscription_payment_succeeded') {
-    await subscriptionPaymentSucceeded(event)
     console.log("subscription_payment_succeeded", event.subscription_id);
+    await subscriptionPaymentSucceeded(event)
   }
   if (event.alert_name === 'subscription_payment_failed') {
-    await subscriptionPaymentFailed(event)
     console.log("subscription_payment_failed", event.subscription_id);
+    await subscriptionPaymentFailed(event)
   }
   if (event.alert_name === 'subscription_payment_refunded') {
-    await subscriptionPaymentRefunded(event)
     console.log("subscription_payment_refunded", event.subscription_id);
+    await subscriptionPaymentRefunded(event)
   }
+
 
   return json({success: true}, 200);
 };

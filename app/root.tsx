@@ -63,6 +63,7 @@ export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => {
 export default function App() {
   const {theme, user} = useLoaderData<typeof loader>()
   const transition = useTransition()
+
   return (
     <MantineProvider
       withGlobalStyles

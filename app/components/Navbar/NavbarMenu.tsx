@@ -13,6 +13,7 @@ import {
 import {useState} from "react";
 import {useUser} from "~/utils/utils";
 import {Link, useSubmit} from "@remix-run/react";
+import dayjs from "dayjs";
 
 const useStyles = createStyles((theme) => ({
   user: {
@@ -47,7 +48,7 @@ export const NavbarMenu = () => {
   };
 
   // @ts-ignore
-  const isPro = user?.payment
+  const isPro = dayjs().isBefore(dayjs(user?.payment?.subscriptionEndDate))
 
   return (
     <Menu

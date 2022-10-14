@@ -51,7 +51,6 @@ export const subscriptionCreated = (paddle: SubscriptionCreatedWebhook) => {
 };
 
 export const subscriptionUpdated = (paddle: SubscriptionUpdatedWebhook) => {
-  // @ts-ignore
   const {subscription_id, status, subscription_plan_id, update_url, next_bill_date, cancel_url} = paddle;
 
   return prisma.userPayment.update({
@@ -62,7 +61,7 @@ export const subscriptionUpdated = (paddle: SubscriptionUpdatedWebhook) => {
       subscriptionStatus: status,
       subscriptionPlanId: subscription_plan_id,
       subscriptionEndDate: new Date(next_bill_date),
-      subscriptionUpdateUrl: update_url!,
+      subscriptionUpdateUrl: update_url,
       subscriptionCancelUrl: cancel_url,
     },
   });
@@ -103,7 +102,7 @@ export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSu
     email
   } = paddle;
 
-
+  console.log("email", email)
   // user payment first because sometimes subscriptionCreated not fired????
   await prisma.userPaymentHistory.create({
     data: {
@@ -126,7 +125,6 @@ export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSu
       }
     }
   })
-
 
   await prisma.userPayment.update({
     where: {

@@ -208,6 +208,7 @@ export const getUserPaymentData = async (request: Request) => {
     select: {
       payment: {
         select: {
+          subscriptionId: true,
           subscriptionStatus: true,
           subscriptionEndDate: true,
           subscriptionCancelUrl: true,

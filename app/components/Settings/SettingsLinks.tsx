@@ -29,6 +29,16 @@ export const SettingsLinks = () => {
       />
       <NavLink
         component={Link}
+        to="./old"
+        label="Pro Old"
+        icon={<IconCreditCard size={16} stroke={1.5}/>}
+        active={location.pathname.includes("old")}
+        color="dark"
+        variant="filled"
+        prefetch={"intent"}
+      />
+      <NavLink
+        component={Link}
         to="./team"
         label="Team"
         icon={<IconUsers size={16} stroke={1.5}/>}

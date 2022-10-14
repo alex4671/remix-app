@@ -62,9 +62,6 @@ const useStyles = createStyles((theme) => ({
 
 }));
 
-
-
-
 export const NavbarLinks = () => {
   const { classes, cx } = useStyles();
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -80,6 +77,7 @@ export const NavbarLinks = () => {
   const links = [
     {to: "/", isActive: location.pathname === "/", name: "Home"},
     {to: "settings/account", isActive: location.pathname.includes("/settings/"), name: "Settings"},
+    {to: "pro", isActive: location.pathname === "/pro", name: "Pro"},
   ]
 
   const items = links.map(link => (
