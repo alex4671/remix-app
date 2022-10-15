@@ -38,6 +38,19 @@ export const meta: MetaFunction = () => ({
 
 createEmotionCache({key: "mantine"});
 
+export const unstable_shouldReload: ShouldReloadFunction = ({params, submission, url}) => {
+  // only refetch if changing theme, logout and login
+
+  return submission?.action === "/api/set-theme"
+    || submission?.action === "/logout"
+    || Boolean(submission?.action.includes("/login"))
+    || Boolean(submission?.action.includes("/join"))
+    || submission?.action === "/settings/account"
+    || submission?.action === "/settings/danger"
+    || submission?.action === undefined
+};
+
+
 export async function loader({request}: LoaderArgs) {
   const [{theme}, user] = await Promise.all([
     getTheme(request),
@@ -49,16 +62,6 @@ export async function loader({request}: LoaderArgs) {
   });
 }
 
-export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => {
-  // only refetch if changing theme, logout and login
-  return submission?.action === "/api/set-theme"
-    || submission?.action === "/logout"
-    || Boolean(submission?.action.includes("/login"))
-    || Boolean(submission?.action.includes("/join"))
-    || submission?.action === "/settings/account"
-    || submission?.action === "/settings/danger"
-    || submission?.action === undefined
-};
 
 export default function App() {
   const {theme, user} = useLoaderData<typeof loader>()

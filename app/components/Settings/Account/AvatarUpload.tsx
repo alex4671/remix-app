@@ -1,6 +1,6 @@
-import {Avatar, Box, Button, FileButton, Group, Paper, Text, ThemeIcon, Title, Tooltip} from "@mantine/core";
+import {Avatar, Box, Button, FileButton, Group, Paper, Text, Title} from "@mantine/core";
 import {Form, useActionData} from "@remix-run/react";
-import {IconExclamationMark, IconInfoCircle, IconLetterI, IconUpload} from "@tabler/icons";
+import {IconExclamationMark, IconUpload} from "@tabler/icons";
 import {useUser} from "~/utils/utils";
 import {useEffect, useRef, useState} from "react";
 import {showNotification} from "@mantine/notifications";
@@ -57,8 +57,8 @@ export const AvatarUpload = () => {
           </Group>
           <Box my={12}>
             <Group>
-              <Avatar src={selectedAvatar} alt={user.email} radius="xl" size={36}/>
-              <FileButton resetRef={resetRef} onChange={handleSelectFile} accept="image/png,image/jpeg" name={"file"}>
+              <Avatar src={selectedAvatar} alt={user.email} size={48}/>
+              <FileButton resetRef={resetRef} onChange={handleSelectFile} accept="image/png, image/gif, image/jpeg, image/svg+xml, image/webp" name={"file"}>
                 {(props) =>
                   <Button
                     variant="outline"

@@ -1,19 +1,25 @@
-import type {ActionArgs, MetaFunction} from "@remix-run/node";
+import type {ActionArgs, MetaFunction, LoaderArgs} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
 import {requireUser} from "~/server/session.server";
-import {deleteAvatar, updateAvatar, updatePassword, verifyLogin} from "~/models/user.server";
+import {deleteAvatar, generateInviteLink, updateAvatar, updatePassword, verifyLogin} from "~/models/user.server";
 import {getFileKey} from "~/utils/utils";
 import {AvatarUpload} from "~/components/Settings/Account/AvatarUpload";
 import {ChangePassword} from "~/components/Settings/Account/ChangePassword";
 import {UserInfo} from "~/components/Settings/Account/UserInfo";
 import invariant from "tiny-invariant";
+import {useLoaderData} from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return {
     title: "Settings | Account"
   };
 };
+
+export async function loader({request}: LoaderArgs) {
+  const user = await requireUser(request)
+  return json({user});
+}
 
 export const action = async ({request}: ActionArgs) => {
   const user = await requireUser(request)
@@ -96,15 +102,30 @@ export const action = async ({request}: ActionArgs) => {
     }
   }
 
+  if (intent === "sendInvite") {
+    try {
+      const inviteLink = await generateInviteLink(request.url, user.id)
+
+      console.log("inviteLink", inviteLink)
+
+      return json({success: true})
+    } catch (e) {
+      return json({success: false})
+    }
+  }
+
+
   return json({success: false})
 
 }
 
 
 export default function Account() {
+  const {user} = useLoaderData<typeof loader>()
+
   return (
     <>
-      <UserInfo/>
+      <UserInfo email={user.email} isConfirmed={user.isConfirmed}/>
       <AvatarUpload/>
       <ChangePassword/>
     </>

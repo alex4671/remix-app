@@ -1,11 +1,12 @@
 import {Badge, Box, Button, Grid, Group, Paper, Text, TextInput, Title} from "@mantine/core";
-import {useUser} from "~/utils/utils";
+import {Form} from "@remix-run/react";
 
-export const UserInfo = () => {
-  const user = useUser()
+interface Props {
+  email: string;
+  isConfirmed: boolean;
+}
 
-  const isConfirmed = user.isConfirmed
-
+export const UserInfo = ({email, isConfirmed}: Props) => {
   return (
     <Paper shadow="0" withBorder mb={12}>
       <Box p={"lg"}>
@@ -15,7 +16,7 @@ export const UserInfo = () => {
           <Grid align={"center"}>
             <Grid.Col xs={12} sm={6}>
               <TextInput
-                placeholder={user?.email}
+                placeholder={email}
                 name={"email"}
                 disabled={!isConfirmed}
               />
@@ -23,7 +24,11 @@ export const UserInfo = () => {
             <Grid.Col xs={12} sm={6}>
               <Group position={"right"}>
                 <Badge color={isConfirmed ? "emerald" : "red"}>{isConfirmed ? "Confirmed" : "Unconfirmed"}</Badge>
-                {!isConfirmed ? <Button color={"emerald"} compact>Resend confirmation</Button> : null}
+                {!isConfirmed ? (
+                  <Form method={"post"}>
+                    <Button type={"submit"} name={"intent"} value={"sendInvite"} color={"emerald"} compact>Resend confirmation</Button>
+                  </Form>
+                ) : null}
               </Group>
             </Grid.Col>
           </Grid>
