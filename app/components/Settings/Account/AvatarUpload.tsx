@@ -1,9 +1,10 @@
-import {Avatar, Box, Button, FileButton, Group, Paper, Text, Title} from "@mantine/core";
+import {Avatar, Box, Button, FileButton, Group, Paper, Text, ThemeIcon, Title, Tooltip} from "@mantine/core";
 import {Form, useActionData} from "@remix-run/react";
-import {IconExclamationMark, IconUpload} from "@tabler/icons";
+import {IconExclamationMark, IconInfoCircle, IconLetterI, IconUpload} from "@tabler/icons";
 import {useUser} from "~/utils/utils";
 import {useEffect, useRef, useState} from "react";
 import {showNotification} from "@mantine/notifications";
+import {InfoTooltip} from "~/components/Utils/InfoTooltip";
 
 const UPLOAD_SIZE_LIMIT = 3145728
 
@@ -50,7 +51,10 @@ export const AvatarUpload = () => {
       <Form method={"post"} encType={"multipart/form-data"}>
         <Box p={"lg"}>
           <Title order={2}>Avatar</Title>
-          <Text color={"dimmed"}>Set or remove avatar. Max size is 3mb.</Text>
+          <Group spacing={6}>
+            <Text color={"dimmed"}>Set or remove avatar. </Text>
+            <InfoTooltip label={"Max size is 3mb."}/>
+          </Group>
           <Box my={12}>
             <Group>
               <Avatar src={selectedAvatar} alt={user.email} radius="xl" size={36}/>

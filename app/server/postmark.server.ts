@@ -1,6 +1,5 @@
 import invariant from "tiny-invariant";
-
-var postmark = require("postmark");
+const postmark = require("postmark");
 
 const {POSTMARK_SERVER_TOKEN} = process.env;
 
