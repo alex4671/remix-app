@@ -6,7 +6,8 @@ import {
   Group,
   Mark,
   Menu,
-  Paper, ScrollArea,
+  Paper,
+  ScrollArea,
   Select,
   Table,
   Tabs,
@@ -47,7 +48,6 @@ const invitations = [
     inviteLink: "http://localhost:3000/invite/4553455-2344234-rewerrwe"
   },
 ];
-
 
 
 export default function Team() {
@@ -157,25 +157,25 @@ export default function Team() {
             <Button variant={"filled"} color={"dark"} onClick={handleSendEmail}>Send email to alex@alex.com</Button>
           </Group>
         ) : (
-          <Grid>
-            <Grid.Col span="auto">
+          <Grid align={"center"}>
+            <Grid.Col xs={12} sm={6}>
               <TextInput
                 placeholder="john@doe.com"
                 label="Email"
               />
             </Grid.Col>
-            <Grid.Col span={3}>
-              <Select
-                label="Role"
-                data={[
-                  {value: 'member', label: 'Member'},
-                  {value: 'admin', label: 'Admin'},
-                ]}
-                defaultValue={"member"}
-              />
-            </Grid.Col>
-            <Grid.Col span={"content"}>
-              <Button variant={"filled"} color={"dark"} mt={25} onClick={handleSendInvite}>Generate invite</Button>
+            <Grid.Col xs={12} sm={6}>
+              <Group grow>
+                <Select
+                  label="Role"
+                  data={[
+                    {value: 'member', label: 'Member'},
+                    {value: 'admin', label: 'Admin'},
+                  ]}
+                  defaultValue={"member"}
+                />
+                <Button variant={"filled"} color={"dark"} mt={25} onClick={handleSendInvite}>Generate invite</Button>
+              </Group>
             </Grid.Col>
           </Grid>
         )}
