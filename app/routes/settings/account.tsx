@@ -8,7 +8,10 @@ import {AvatarUpload} from "~/components/Settings/Account/AvatarUpload";
 import {ChangePassword} from "~/components/Settings/Account/ChangePassword";
 import {UserInfo} from "~/components/Settings/Account/UserInfo";
 import invariant from "tiny-invariant";
-import {useLoaderData} from "@remix-run/react";
+import {useActionData, useLoaderData} from "@remix-run/react";
+import {useEffect} from "react";
+import {showNotification} from "@mantine/notifications";
+import {IconCheck, IconX} from "@tabler/icons";
 
 export const meta: MetaFunction = () => {
   return {
@@ -49,9 +52,9 @@ export const action = async ({request}: ActionArgs) => {
       await updateAvatar(user.id, avatarUrl)
 
 
-      return json({success: true})
+      return json({success: true, intent, message: "Avatar Uploaded"})
     } catch (e) {
-      return json({success: false})
+      return json({success: false, intent, message: "Error uploading avatar"})
     }
   }
 
@@ -63,9 +66,9 @@ export const action = async ({request}: ActionArgs) => {
         await deleteFileFromS3(getFileKey(user.avatarUrl))
       }
 
-      return json({success: true})
+      return json({success: true, intent, message: "Avatar Deleted"})
     } catch (e) {
-      return json({success: false})
+      return json({success: false, intent, message: "Error deleting avatar"})
     }
   }
 
@@ -98,7 +101,7 @@ export const action = async ({request}: ActionArgs) => {
       return json({intent, success: true, message: "Password updated"});
 
     } catch (e) {
-      return json({success: false})
+      return json({success: false, intent, message: "Error updating password"})
     }
   }
 
@@ -108,20 +111,34 @@ export const action = async ({request}: ActionArgs) => {
 
       console.log("inviteLink", inviteLink)
 
-      return json({success: true})
+      return json({success: true, intent, message: "Invite sent"})
     } catch (e) {
-      return json({success: false})
+      return json({success: false, intent, message: "Error sending invite"})
     }
   }
 
 
-  return json({success: false})
+  return json({success: false, intent, message: "Some error"})
 
 }
 
 
 export default function Account() {
   const {user} = useLoaderData<typeof loader>()
+  const data = useActionData<typeof action>()
+
+  useEffect(() => {
+    if (data) {
+      showNotification({
+        title: data?.message,
+        message: undefined,
+        color: data?.success ? "green" : "red",
+        autoClose: 2000,
+        icon: data?.success ? <IconCheck /> : <IconX />
+      })
+    }
+  }, [data])
+
 
   return (
     <>
