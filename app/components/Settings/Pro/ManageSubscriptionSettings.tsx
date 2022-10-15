@@ -1,9 +1,6 @@
-import {Badge, Box, Button, Group, Paper, SegmentedControl, Stack, Text, Title} from "@mantine/core";
-import {upperFirst} from "@mantine/hooks";
-import {useState} from "react";
+import {Badge, Box, Button, Group, Paper, Text, Title} from "@mantine/core";
 import {useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
-import {useUser} from "~/utils/utils";
 import type {loader} from "~/routes/settings/pro";
 import dayjs from "dayjs";
 
@@ -61,8 +58,11 @@ export const ManageSubscriptionSettings = () => {
   return (
     <Paper shadow="0" withBorder mb={12}>
       <Box p={"lg"}>
-        <Title order={2}>Manage pro settings</Title>
-        <Text color={"dimmed"}>Current plan: <Badge color={"gray"}>{plans[String(userSubscription.plan_id)]}</Badge></Text>
+        <Group>
+          <Title order={2}>Manage pro settings</Title>
+          <Badge color={"emerald"}>{plans[String(userSubscription.plan_id)]}</Badge>
+        </Group>
+        <Text color={"dimmed"}>Manage current subscription</Text>
         <Box my={12}>
           {userSubscription.state === "deleted" ? (
             <Text>Subscription canceled, but active until <Badge color={"emerald"}>{dayjs(payment?.subscriptionEndDate).format("MMMM D, YY")}</Badge></Text>

@@ -1,10 +1,9 @@
-import {Badge, Box, Button, Group, Paper, SegmentedControl, Stack, Text, Title} from "@mantine/core";
+import {Badge, Box, Button, Group, Paper, SegmentedControl, Text, Title} from "@mantine/core";
 import {upperFirst} from "@mantine/hooks";
 import {useState} from "react";
-import {useLoaderData, useNavigate} from "@remix-run/react";
+import {useNavigate} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
 import {useUser} from "~/utils/utils";
-import type {loader} from "~/routes/pro";
 
 const plans: Record<string, string> = {
   "26607": "daily",
@@ -53,7 +52,10 @@ export const SubscribeToPro = () => {
   return (
     <Paper shadow="0" withBorder mb={12}>
       <Box p={"lg"}>
-        <Title order={2}>Subscribe to pro</Title>
+        <Group>
+          <Title order={2}>Subscribe to pro</Title>
+          <Badge color={"gray"}>Free</Badge>
+        </Group>
         <Text color={"dimmed"}>Get access to all premium features</Text>
         <Box my={12}>
           <Text>Selected plan: <Text component="span" weight={700}>{upperFirst(plans[selectedPlan])}</Text></Text>

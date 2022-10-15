@@ -52,7 +52,7 @@ export const action = async ({request}: ActionArgs) => {
       await updateAvatar(user.id, avatarUrl)
 
 
-      return json({success: true, intent, message: "Avatar Uploaded"})
+      return json({success: true, intent, message: "Avatar uploaded"})
     } catch (e) {
       return json({success: false, intent, message: "Error uploading avatar"})
     }
@@ -66,7 +66,7 @@ export const action = async ({request}: ActionArgs) => {
         await deleteFileFromS3(getFileKey(user.avatarUrl))
       }
 
-      return json({success: true, intent, message: "Avatar Deleted"})
+      return json({success: true, intent, message: "Avatar deleted"})
     } catch (e) {
       return json({success: false, intent, message: "Error deleting avatar"})
     }
