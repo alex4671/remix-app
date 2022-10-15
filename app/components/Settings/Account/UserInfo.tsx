@@ -10,7 +10,10 @@ export const UserInfo = ({email, isConfirmed}: Props) => {
   return (
     <Paper shadow="0" withBorder mb={12}>
       <Box p={"lg"}>
-        <Title order={2}>Account</Title>
+        <Group>
+          <Title order={2}>Account</Title>
+          <Badge color={isConfirmed ? "emerald" : "red"}>{isConfirmed ? "Confirmed" : "Unconfirmed"}</Badge>
+        </Group>
         <Text color={"dimmed"}>Change you email</Text>
         <Box my={12}>
           <Grid align={"center"}>
@@ -21,16 +24,16 @@ export const UserInfo = ({email, isConfirmed}: Props) => {
                 disabled={!isConfirmed}
               />
             </Grid.Col>
-            <Grid.Col xs={12} sm={6}>
-              <Group position={"right"}>
-                <Badge color={isConfirmed ? "emerald" : "red"}>{isConfirmed ? "Confirmed" : "Unconfirmed"}</Badge>
-                {!isConfirmed ? (
+            {!isConfirmed ? (
+              <Grid.Col xs={12} sm={6}>
+                <Group position={"right"}>
                   <Form method={"post"}>
                     <Button type={"submit"} name={"intent"} value={"sendInvite"} color={"emerald"} compact>Resend confirmation</Button>
                   </Form>
-                ) : null}
-              </Group>
-            </Grid.Col>
+                </Group>
+              </Grid.Col>
+            ) : null}
+
           </Grid>
 
         </Box>

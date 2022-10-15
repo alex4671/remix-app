@@ -1,5 +1,6 @@
-import {Box, Button, Paper, PasswordInput, Stack, Text, Title} from "@mantine/core";
+import {Box, Button, Grid, Group, Paper, PasswordInput, Stack, Text, Title} from "@mantine/core";
 import {Form} from "@remix-run/react";
+import {InfoTooltip} from "~/components/Utils/InfoTooltip";
 
 export const ChangePassword = () => {
   return (
@@ -7,18 +8,25 @@ export const ChangePassword = () => {
       <Form method={"post"}>
         <Box p={"lg"}>
           <Title order={2}>Password</Title>
-          <Text color={"dimmed"}>Change you password</Text>
+          <Group spacing={6}>
+            <Text color={"dimmed"}>Change you password</Text>
+            <InfoTooltip label={"Password mast be at least 8 characters."}/>
+          </Group>
           <Box my={12}>
-            <Stack>
-              <PasswordInput
-                placeholder="Current password"
-                name={"password"}
-              />
-              <PasswordInput
-                placeholder="New password"
-                name={"newPassword"}
-              />
-            </Stack>
+            <Grid align={"center"}>
+              <Grid.Col xs={12} sm={6}>
+                <Stack>
+                  <PasswordInput
+                    placeholder="Current password"
+                    name={"password"}
+                  />
+                  <PasswordInput
+                    placeholder="New password"
+                    name={"newPassword"}
+                  />
+                </Stack>
+              </Grid.Col>
+            </Grid>
           </Box>
           <Box py={12}>
             <Button type={"submit"} name="intent" color={"emerald"} value="changePassword">Update password</Button>

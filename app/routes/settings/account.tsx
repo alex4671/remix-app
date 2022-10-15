@@ -74,8 +74,8 @@ export const action = async ({request}: ActionArgs) => {
 
   if (intent === "changePassword") {
     try {
-      const password = formData.get("password");
-      const newPassword = formData.get("newPassword");
+      const password = formData.get("password")?.toString() ?? "";
+      const newPassword = formData.get("newPassword")?.toString() ?? "";
 
       // invariant(email, "Email must be set")
       // invariant(password, "Password must be set")
@@ -87,6 +87,10 @@ export const action = async ({request}: ActionArgs) => {
 
       if (password === newPassword) {
         return json({intent, success: false, message: "Old and new password can't be same"})
+      }
+
+      if (password?.length < 8) {
+        return json({intent, success: false, message: "Password is to short"});
       }
 
       const isValid = await verifyLogin(user.email, String(password))
