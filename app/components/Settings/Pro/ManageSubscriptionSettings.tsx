@@ -10,18 +10,13 @@ const plans: Record<string, string> = {
   "26609": "yearly"
 };
 
-const planPrices: Record<string, string> = {
-  "26607": "1$/day",
-  "26608": "24$/month",
-  "26609": "230$/year"
-};
 
 export const ManageSubscriptionSettings = () => {
   const {payment, userSubscription} = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const fetcher = useFetcher()
 
-  console.log("userSubscription", userSubscription)
+
 
   const {paddle} = usePaddle({environment: "sandbox", vendor: 3808});
 
@@ -95,7 +90,6 @@ export const ManageSubscriptionSettings = () => {
 
         </Box>
       </Box>
-
     </Paper>
   )
 }

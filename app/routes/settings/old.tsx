@@ -55,7 +55,7 @@ export const loader = async ({request}: LoaderArgs) => {
     const subscriptionId = user.payment.subscriptionId
     const transactions = await paddle.listTransactions({entity: "subscription", entity_id: subscriptionId})
     // const test = await paddle.updateUser({subscription_id: 336541, pause: false})
-    //
+
     // console.log("test", test)
     // const data = await paddle.getWebhookHistory({})
     const modifiers = await paddle.listModifiers({subscription_id: subscriptionId})
@@ -94,7 +94,7 @@ export const action = async ({request}: ActionArgs) => {
     const extraAmount = formData.get("extraAmount");
     try {
       const data = await paddle.createOneOffCharge({
-        subscription_id: Number(336541),
+        subscription_id: Number(subscriptionId),
         charge_name: "Test",
         amount: Number(extraAmount)
       })

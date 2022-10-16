@@ -1,6 +1,5 @@
 import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
-import {requireUser} from "~/server/session.server";
 import {ManageSubscriptionSettings} from "~/components/Settings/Pro/ManageSubscriptionSettings";
 import {useLoaderData} from "@remix-run/react";
 import {SubscribeToPro} from "~/components/Settings/Pro/SubscribeToPro";
@@ -8,6 +7,7 @@ import {getUserPaymentData} from "~/models/user.server";
 import {paddle} from "~/server/paddle.server";
 import type {User} from "@invertase/node-paddle-sdk/src/types";
 import dayjs from "dayjs";
+import {PaymentTransactions} from "~/components/Settings/Pro/PaymentTransactions";
 
 
 export const meta: MetaFunction = () => {
@@ -21,8 +21,6 @@ type UserSubscriptionResponse = Partial<Pick<User, "cancel_url" | "update_url" |
 export const loader = async ({request}: LoaderArgs) => {
   const user = await getUserPaymentData(request)
 
-
-
   if (user?.payment) {
     const isSubscriptionActive = dayjs().isBefore(dayjs(user.payment.subscriptionEndDate))
 
@@ -32,13 +30,18 @@ export const loader = async ({request}: LoaderArgs) => {
 
     const userSubscriptionResponse: UserSubscriptionResponse = {cancel_url, update_url, state, next_payment, plan_id}
 
-    return json({payment: user?.payment, userSubscription: userSubscriptionResponse, isSubscriptionActive})
+    const subscriptionId = user.payment.subscriptionId
+    const transactions = await paddle.listTransactions({entity: "subscription", entity_id: subscriptionId})
+
+
+    return json({payment: user?.payment, userSubscription: userSubscriptionResponse, isSubscriptionActive, transactions})
   }
 
   return json({
     payment: user?.payment,
     userSubscription: {} as UserSubscriptionResponse,
-    isSubscriptionActive: false
+    isSubscriptionActive: false,
+    transactions: []
   })
 
 }
@@ -59,7 +62,7 @@ export default function Pro() {
   return (
     <>
       {isSubscriptionActive ? <ManageSubscriptionSettings/> : <SubscribeToPro/>}
-      Transactions...
+      <PaymentTransactions/>
     </>
   )
 }
