@@ -128,14 +128,15 @@ export const subscriptionPaymentFailed = async (paddle: SubscriptionPaymentFaile
 export const subscriptionPaymentRefunded = async (paddle: SubscriptionPaymentRefundedWebhook) => {
   const {email} = paddle ;
 
-  // delete user payment?
-  const user = await prisma.user.findUnique({where: {email}})
 
-  return prisma.userPayment.delete({
-    where: {
-      userId: user?.id
-    },
-  });
+  // figure out what to do when user refounded
+  // const user = await prisma.user.findUnique({where: {email}})
+  //
+  // return prisma.userPayment.delete({
+  //   where: {
+  //     userId: user?.id
+  //   },
+  // });
 };
 
 
