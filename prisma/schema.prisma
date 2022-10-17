@@ -1,22 +1,24 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 model User {
-  id    String @id @default(cuid())
-  email String @unique
+  id        String  @id @default(cuid())
+  email     String  @unique
   avatarUrl String?
 
   password Password?
 
   isConfirmed Boolean @default(false)
 
-  payment        UserPayment?
+  payment UserPayment?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
