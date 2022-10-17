@@ -57,6 +57,7 @@ export const NavbarMenu = () => {
       transition="pop-top-right"
       onClose={() => setUserMenuOpened(false)}
       onOpen={() => setUserMenuOpened(true)}
+      closeOnClickOutside
     >
       <Menu.Target>
         <UnstyledButton
@@ -106,6 +107,9 @@ export const NavbarMenu = () => {
           Delete account
         </Menu.Item>
         <Menu.Item icon={<IconLogout size={14} stroke={1.5}/>} onClick={handleLogout}>Logout</Menu.Item>
+        <Menu.Label>
+          <Text size={"xs"} color={"dimmed"}>v0.0.1</Text>
+        </Menu.Label>
       </Menu.Dropdown>
     </Menu>
   )
