@@ -1,8 +1,10 @@
-import {Badge, Box, Button, Group, Paper, Text, Title} from "@mantine/core";
+import {Badge, Box, Button, Group, Paper, SegmentedControl, Stack, Text, Title} from "@mantine/core";
 import {useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
 import type {loader} from "~/routes/settings/pro";
 import dayjs from "dayjs";
+import {useEffect, useState} from "react";
+import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 
 const plans: Record<string, string> = {
   "26607": "daily",
@@ -10,14 +12,22 @@ const plans: Record<string, string> = {
   "26609": "yearly"
 };
 
-
 export const ManageSubscriptionSettings = () => {
   const {payment, userSubscription} = useLoaderData<typeof loader>()
+
   const navigate = useNavigate()
   const fetcher = useFetcher()
+  const [selectedPlan, setSelectedPlan] = useState(userSubscription.plan_id === 26607 ? "26608" : "26607");
+
+
+  useEffect(() => {
+    if (fetcher.data?.success) {
+      setSelectedPlan(selectedPlan === "26607" ? "26608" : "26607")
+    }
+  }, [fetcher.data])
+
 
   const {paddle} = usePaddle({environment: "sandbox", vendor: 3808});
-
 
   const handleCancelSubscription = () => {
     paddle.Checkout.open({
@@ -40,7 +50,7 @@ export const ManageSubscriptionSettings = () => {
     console.log("data", data.checkout.completed);
 
     if (data.checkout.completed) {
-      navigate("/payment/unsubscribed", { state: dayjs(payment?.subscriptionEndDate).format("MMMM D, YYYY") });
+      navigate("/payment/unsubscribed", {state: dayjs(payment?.subscriptionEndDate).format("MMMM D, YYYY")});
     }
   };
 
@@ -54,32 +64,57 @@ export const ManageSubscriptionSettings = () => {
   };
 
   return (
-    <Paper shadow="0" withBorder mb={12}>
-      <Box p={"lg"}>
-        <Group>
-          <Title order={2}>Manage pro settings</Title>
-          <Badge color={"emerald"}>{plans[String(userSubscription.plan_id)]}</Badge>
-        </Group>
-        <Text color={"dimmed"}>Manage current subscription</Text>
-        <Box my={12}>
-          {userSubscription.state === "deleted" ? (
-            <Text>Subscription canceled, but active until <Badge color={"emerald"}>{dayjs(payment?.subscriptionEndDate).format("MMMM D, YY")}</Badge></Text>
+    <>
+      <LoadingProgress state={fetcher.state}/>
+      <Paper shadow="0" withBorder mb={12}>
+        <Box p={"lg"}>
+          <Group>
+            <Title order={2}>Manage pro settings</Title>
+            <Badge color={"emerald"}>Pro ({plans[String(userSubscription.plan_id)]})
+              until {dayjs(userSubscription?.next_payment?.date).format("MMMM D, YY")}</Badge>
+          </Group>
+          <Text color={"dimmed"}>Manage current subscription</Text>
+          <Box my={12}>
+            {userSubscription.state === "deleted" ? (
+              <Text>Subscription canceled, but active until <Badge color={"emerald"}>{dayjs(payment?.subscriptionEndDate).format("MMMM D, YY")}</Badge></Text>
             ) : (
-            <Text>Next payment: <Badge color={"emerald"}>{dayjs(userSubscription?.next_payment?.date).format("MMMM D, YY")}</Badge></Text>
-          )}
+              <fetcher.Form method={"post"}>
+                <Stack align={"start"}>
+                  <SegmentedControl
+                    mt={6}
+                    value={selectedPlan}
+                    onChange={setSelectedPlan}
+                    name={"planId"}
+                    data={[
+                      {label: "Daily", value: "26607", disabled: userSubscription.plan_id === 26607},
+                      {label: "Monthly", value: "26608", disabled: userSubscription.plan_id === 26608},
+                      {label: "Yearly", value: "26609", disabled: userSubscription.plan_id === 26609}
+                    ]}
+                  />
 
-        </Box>
-        <Box py={12}>
-          {userSubscription.state === "deleted" ? (
-            <Text>You can subscribe again when current subscription expires</Text>
+                  <Button
+                    color={"emerald"}
+                    compact
+                    type={"submit"}
+                    name={"intent"}
+                    value={"updatePlan"}
+                  >
+                    Change plan
+                  </Button>
+                </Stack>
+              </fetcher.Form>
+            )}
+          </Box>
+          <Box py={12}>
+            {userSubscription.state === "deleted" ? (
+              <Text>You can subscribe again when current subscription expires</Text>
             ) : (
-            <fetcher.Form method={"post"}>
-              <Group mt={12}>
+              <Group mt={12} position={"apart"}>
                 <Button
                   color={"emerald"}
                   onClick={handleUpdateSubscription}
                 >
-                  Update subscription
+                  Update payment method
                 </Button>
                 <Button
                   color={"red"}
@@ -88,11 +123,11 @@ export const ManageSubscriptionSettings = () => {
                   Cancel subscription
                 </Button>
               </Group>
-            </fetcher.Form>
-          )}
+            )}
 
+          </Box>
         </Box>
-      </Box>
-    </Paper>
+      </Paper>
+    </>
   )
 }

@@ -5,11 +5,12 @@ import {useUser} from "~/utils/utils";
 import {useEffect, useRef, useState} from "react";
 import {showNotification} from "@mantine/notifications";
 import {InfoTooltip} from "~/components/Utils/InfoTooltip";
+import type {action} from "~/routes/settings/account";
 
 const UPLOAD_SIZE_LIMIT = 3145728
 
 export const AvatarUpload = () => {
-  const actionData = useActionData()
+  const actionData = useActionData<typeof action>()
 
   const user = useUser()
   const [file, setFile] = useState<File | null>(null);

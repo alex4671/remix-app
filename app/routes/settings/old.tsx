@@ -175,8 +175,8 @@ export const action = async ({request}: ActionArgs) => {
 
 
 export default function Pro() {
-  const data = useActionData<typeof action>()
-
+  // const data = useActionData<typeof action>()
+  // console.log("data", data)
   const fetcher = useFetcher()
   const navigate = useNavigate();
   // if (data?.intent === "removeModifier") {

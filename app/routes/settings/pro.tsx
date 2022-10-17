@@ -31,6 +31,8 @@ export const loader = async ({request}: LoaderArgs) => {
     const userSubscriptionResponse: UserSubscriptionResponse = {cancel_url, update_url, state, next_payment, plan_id}
 
     const subscriptionId = user.payment.subscriptionId
+
+    // todo add pagination
     const transactions = await paddle.listTransactions({entity: "subscription", entity_id: subscriptionId})
 
 
@@ -50,14 +52,24 @@ export const action = async ({request}: ActionArgs) => {
   const formData = await request.formData();
   const intent = formData.get("intent");
 
+  if (intent === "updatePlan") {
+    const planId = formData.get("planId");
+    try {
+      const user = await getUserPaymentData(request)
+      await paddle.updateUser({subscription_id: Number(user?.payment?.subscriptionId), plan_id: Number(planId)})
+      return json({success: true, intent})
 
-  return json({success: false, intent: null})
+    } catch (e) {
+      return json({success: false, intent})
+    }
+  }
+
+  return json({success: false, intent})
 };
 
 
 export default function Pro() {
   const {isSubscriptionActive, userSubscription} = useLoaderData<typeof loader>()
-
 
   return (
     <>
