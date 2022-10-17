@@ -16,27 +16,13 @@ export const ManageSubscriptionSettings = () => {
   const navigate = useNavigate()
   const fetcher = useFetcher()
 
-
-
   const {paddle} = usePaddle({environment: "sandbox", vendor: 3808});
 
-  const checkoutComplete = (data: any) => {
-    console.log("data", data);
-    console.log("data", data.checkout.completed);
-
-    if (data.checkout.completed) {
-      navigate("/payment/unsubscribed");
-    }
-  };
-
-  const checkoutClosed = (data: any) => {
-    console.log("checkoutClosed", data);
-  };
 
   const handleCancelSubscription = () => {
     paddle.Checkout.open({
       override: userSubscription.cancel_url,
-      successCallback: checkoutComplete,
+      successCallback: checkoutCancelComplete,
       closeCallback: checkoutClosed
     })
   }
@@ -44,11 +30,28 @@ export const ManageSubscriptionSettings = () => {
   const handleUpdateSubscription = () => {
     paddle.Checkout.open({
       override: userSubscription.update_url,
-      successCallback: checkoutComplete,
+      successCallback: checkoutUpdateComplete,
       closeCallback: checkoutClosed
     })
   }
 
+  const checkoutCancelComplete = (data: any) => {
+    console.log("data", data);
+    console.log("data", data.checkout.completed);
+
+    if (data.checkout.completed) {
+      navigate("/payment/unsubscribed", { state: dayjs(payment?.subscriptionEndDate).format("MMMM D, YYYY") });
+    }
+  };
+
+  const checkoutUpdateComplete = (data: any) => {
+    console.log("data", data);
+    console.log("data", data.checkout.completed);
+  };
+
+  const checkoutClosed = (data: any) => {
+    console.log("checkoutClosed", data);
+  };
 
   return (
     <Paper shadow="0" withBorder mb={12}>

@@ -21,7 +21,7 @@ export default function Unsubscribed () {
   return (
     <Container size={600}>
       <Title order={1}>You successfully unsubscribed</Title>
-      <Text size={'lg'}>Processing could take couple minutes, you subscription is canceled and will be disabled <Mark color="green">{String(location.state)}</Mark></Text>
+      <Text size={'lg'}>Processing could take couple minutes, you subscription is canceled and will be disabled <Mark color="emerald">{String(location.state)}</Mark></Text>
       <Button mt={12} color={"gray"} variant={"outline"} onClick={handleGoHome}>Go Home</Button>
     </Container>
   )
