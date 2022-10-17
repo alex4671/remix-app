@@ -16,6 +16,8 @@ export const action = async ({request}: ActionArgs) => {
 
   const verified = paddle.verifyWebhook(payload);
 
+  console.log("verified", verified)
+
   if (!verified) {
     return json({error: "Invalid webhook request."}, 403)
   }

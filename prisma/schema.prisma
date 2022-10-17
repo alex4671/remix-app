@@ -17,7 +17,6 @@ model User {
   isConfirmed Boolean @default(false)
 
   payment        UserPayment?
-  paymentHistory UserPaymentHistory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -42,28 +41,4 @@ model UserPayment {
   subscriptionCancelUrl String
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
-}
-
-model UserPaymentHistory {
-  id                    String    @id @default(uuid())
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                String
-  status                String
-  subscriptionId        String
-  subscriptionPaymentId String    @unique
-  subscriptionPlanId    String
-  currency              String?
-  amount                String?
-  amountTax             String?
-  paddleFee             String?
-  paymentMethod         String?
-  receiptUrl            String?
-  attemptNumber         String?
-  nextRetryDate         DateTime?
-  refundReason          String?
-  refundType            String?
-  customerName          String?
-  userCountry           String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
 }
