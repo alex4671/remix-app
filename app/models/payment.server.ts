@@ -9,13 +9,6 @@ import type {
 } from "@invertase/node-paddle-sdk";
 
 
-// todo check if needed
-export enum PaymentStatus {
-  Success = 'success',
-  Error = 'error',
-  Refund = 'refund',
-}
-
 export const subscriptionCreated = async (paddle: SubscriptionCreatedWebhook) => {
   const {next_bill_date, status, subscription_plan_id, update_url, subscription_id, cancel_url, email} = paddle;
 
@@ -87,14 +80,7 @@ export const subscriptionCanceled = async (paddle: SubscriptionCancelledWebhook)
 };
 
 export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSucceededWebhook) => {
-  const {
-    status,
-    subscription_plan_id,
-    next_bill_date,
-    email,
-    subscription_id
-  } = paddle;
-
+  const {status, subscription_plan_id, next_bill_date, email, subscription_id} = paddle;
 
   const user = await prisma.user.findUnique({where: {email}})
 
@@ -125,11 +111,8 @@ export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSu
 
 
 export const subscriptionPaymentFailed = async (paddle: SubscriptionPaymentFailedWebhook) => {
-  const {
-    email,
-    next_retry_date,
-    subscription_id,
-  } = paddle;
+  const {email, next_retry_date} = paddle;
+
   const user = await prisma.user.findUnique({where: {email}})
 
   return  prisma.userPayment.update({
@@ -143,39 +126,16 @@ export const subscriptionPaymentFailed = async (paddle: SubscriptionPaymentFaile
 };
 
 export const subscriptionPaymentRefunded = async (paddle: SubscriptionPaymentRefundedWebhook) => {
-  const {
-    subscription_payment_id,
-    fee_refund,
-    tax_refund,
-    refund_reason,
-    refund_type,
-    subscription_plan_id,
-    currency,
-    subscription_id,
-    gross_refund,
-    email
-  } = paddle ;
+  const {email} = paddle ;
 
-  // await prisma.userPaymentHistory.create({
-  //   data: {
-  //     status: PaymentStatus.Refund,
-  //     subscriptionId: subscription_id,
-  //     subscriptionPaymentId: subscription_payment_id,
-  //     subscriptionPlanId: subscription_plan_id,
-  //     currency: currency,
-  //     amount: gross_refund,
-  //     amountTax: tax_refund,
-  //     paddleFee: fee_refund,
-  //     refundReason: refund_reason,
-  //     refundType: refund_type,
-  //     user: {
-  //       connect: {
-  //         email: email
-  //       }
-  //     }
-  //
-  //   }
-  // })
+  // delete user payment?
+  const user = await prisma.user.findUnique({where: {email}})
+
+  return prisma.userPayment.delete({
+    where: {
+      userId: user?.id
+    },
+  });
 };
 
 
