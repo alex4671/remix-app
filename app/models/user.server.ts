@@ -161,24 +161,24 @@ export async function deleteAvatar(id: User["id"]) {
 }
 
 
-export const getUserPaymentStatus = async (request: Request) => {
-  const userId = await getUserId(request)
-
-  const userStatus = await prisma.user.findUnique(({
-    where: {
-      id: userId
-    },
-    select: {
-      payment: {
-        select: {
-          subscriptionStatus: true
-        }
-      }
-    }
-  }))
-
-  return userStatus?.payment?.subscriptionStatus ?? null
-}
+// export const getUserPaymentStatus = async (request: Request) => {
+//   const userId = await getUserId(request)
+//
+//   const userStatus = await prisma.user.findUnique(({
+//     where: {
+//       id: userId
+//     },
+//     select: {
+//       payment: {
+//         select: {
+//           subscriptionStatus: true
+//         }
+//       }
+//     }
+//   }))
+//
+//   return userStatus?.payment?.subscriptionStatus ?? null
+// }
 
 export const isUserCurrentlyPro = async (request: Request) => {
   const userId = await getUserId(request)
