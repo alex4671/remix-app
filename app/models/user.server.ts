@@ -4,6 +4,7 @@ import {prisma} from "~/server/db.server";
 import {getUserId, requireUserId} from "~/server/session.server";
 import dayjs from "dayjs";
 import {sign, verify} from "jsonwebtoken";
+import invariant from "tiny-invariant";
 
 interface InviteToken {
   userId: string
@@ -13,9 +14,11 @@ interface ResetToken {
   email: string
 }
 
-// todo move to env
-export const APP_SECRET = 'appsecret321'
+const {
+  APP_SECRET,
+} = process.env;
 
+invariant(APP_SECRET, "APP_SECRET must be set")
 
 export type { User } from "@prisma/client";
 
