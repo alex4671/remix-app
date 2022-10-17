@@ -31,7 +31,7 @@ export const PaymentTransactions = () => {
 
   return transactions.length > 0 ? (
     <Paper shadow="0" p="md" my={6} withBorder>
-      <Title order={2}>Transactions</Title>
+      <Title order={2}>Transactions ({transactions.length})</Title>
       <Text color={"dimmed"}>History of you transactions and receipts</Text>
       <Box my={12}>
         <ScrollArea>

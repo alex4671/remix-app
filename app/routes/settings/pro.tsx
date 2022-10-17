@@ -32,9 +32,18 @@ export const loader = async ({request}: LoaderArgs) => {
 
     const subscriptionId = user.payment.subscriptionId
 
-    // todo add pagination
-    const transactions = await paddle.listTransactions({entity: "subscription", entity_id: subscriptionId})
+    const transactions = []
+    let page = 1
+    while (true) {
+      const items = await paddle.listTransactions({entity: "subscription", entity_id: subscriptionId, page})
+      transactions.push(...items)
 
+      if (items.length === 15) {
+        page++
+        continue
+      }
+      break;
+    }
 
     return json({payment: user?.payment, userSubscription: userSubscriptionResponse, isSubscriptionActive, transactions})
   }
