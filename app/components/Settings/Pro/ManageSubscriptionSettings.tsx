@@ -1,10 +1,12 @@
-import {Badge, Box, Button, Group, Paper, SegmentedControl, Stack, Text, Title} from "@mantine/core";
+import {Badge, Box, Button, Group, Paper, SegmentedControl, Stack, Text, Title, Tooltip} from "@mantine/core";
 import {useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
 import type {loader} from "~/routes/settings/pro";
 import dayjs from "dayjs";
 import {useEffect, useState} from "react";
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
+import {formatMoney} from "~/utils/utils";
+import {IconInfoCircle} from "@tabler/icons";
 
 const plans: Record<string, string> = {
   "26607": "daily",
@@ -50,7 +52,7 @@ export const ManageSubscriptionSettings = () => {
     console.log("data", data.checkout.completed);
 
     if (data.checkout.completed) {
-      navigate("/payment/unsubscribed", {state: dayjs(payment?.subscriptionEndDate).format("MMMM D, YYYY")});
+      navigate("/payment/unsubscribed", {state: dayjs(payment?.subscriptionEndDate).format("MMMM D, YYYYYY")});
     }
   };
 
@@ -68,15 +70,16 @@ export const ManageSubscriptionSettings = () => {
       <LoadingProgress state={fetcher.state}/>
       <Paper shadow="0" withBorder mb={12}>
         <Box p={"lg"}>
-          <Group>
+          <Group spacing={6}>
             <Title order={2}>Manage pro settings</Title>
-            <Badge color={"emerald"}>Pro ({plans[String(userSubscription.plan_id)]})
-              until {dayjs(userSubscription?.next_payment?.date).format("MMMM D, YY")}</Badge>
+            <Tooltip withArrow arrowSize={6} label={<Text>Next payment {formatMoney(userSubscription?.next_payment?.amount, userSubscription?.next_payment?.currency)} {dayjs(userSubscription?.next_payment?.date).format("MMMM D, YYYY")}</Text>}>
+              <Badge color={"emerald"} sx={{cursor: "pointer"}} rightSection={<IconInfoCircle style={{marginTop: "6px"}} size={12}/>}>Pro ({plans[String(userSubscription.plan_id)]})</Badge>
+            </Tooltip>
           </Group>
           <Text color={"dimmed"}>Manage current subscription</Text>
           <Box my={12}>
             {userSubscription.state === "deleted" ? (
-              <Text>Subscription canceled, but active until <Badge color={"emerald"}>{dayjs(payment?.subscriptionEndDate).format("MMMM D, YY")}</Badge></Text>
+              <Text>Subscription canceled, but active until <Badge color={"emerald"}>{dayjs(payment?.subscriptionEndDate).format("MMMM D, YYYY")}</Badge></Text>
             ) : (
               <fetcher.Form method={"post"}>
                 <Stack align={"start"}>

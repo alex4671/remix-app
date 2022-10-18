@@ -90,3 +90,10 @@ export const getFileKey = (fileUrl: string) => {
 
   return url.pathname.substring(1)
 }
+
+export const formatMoney = (amount?: string | number, currency: string = "USD"): string => {
+  if (amount !== undefined) {
+    return new Intl.NumberFormat('en-US', {style: 'currency', currency}).format(Number(amount))
+  }
+  return "0"
+}

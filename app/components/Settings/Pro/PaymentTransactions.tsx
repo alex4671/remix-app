@@ -3,6 +3,7 @@ import {Anchor, Badge, Box, Paper, ScrollArea, Table, Text, Title} from "@mantin
 import {upperFirst} from "@mantine/hooks";
 import {useLoaderData} from "@remix-run/react";
 import type {loader} from "~/routes/settings/pro";
+import {formatMoney} from "~/utils/utils";
 
 const plans: Record<string, string> = {
   "26607": "daily",
@@ -17,12 +18,12 @@ export const PaymentTransactions = () => {
 
   const rows = transactions?.map((t) => (
     <tr key={t.order_id}>
-      <td>{dayjs(t.created_at).format("MMMM D, YY")}</td>
+      <td>{dayjs(t.created_at).format("MMMM D, YYYY")}</td>
       <td>
         <Badge color={"green"}>{t.status}</Badge>
       </td>
       <td>{t.is_one_off ? "One Off" : upperFirst(plans[t.product_id])}</td>
-      <td>{new Intl.NumberFormat('en-US', {style: 'currency', currency: t.currency,}).format(Number(t.amount))}</td>
+      <td>{formatMoney(t.amount, t.currency)}</td>
       <td>
         <Anchor component={"a"} target={"_blank"} href={t.receipt_url}>Receipt</Anchor>
       </td>
