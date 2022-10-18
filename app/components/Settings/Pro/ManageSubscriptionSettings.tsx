@@ -72,7 +72,12 @@ export const ManageSubscriptionSettings = () => {
         <Box p={"lg"}>
           <Group spacing={6}>
             <Title order={2}>Manage pro settings</Title>
-            <Tooltip withArrow arrowSize={6} label={<Text>Next payment {formatMoney(userSubscription?.next_payment?.amount, userSubscription?.next_payment?.currency)} {dayjs(userSubscription?.next_payment?.date).format("MMMM D, YYYY")}</Text>}>
+            <Tooltip
+              withArrow
+              arrowSize={6}
+              label={<Text>Next payment {formatMoney(userSubscription?.next_payment?.amount, userSubscription?.next_payment?.currency)} {dayjs(userSubscription?.next_payment?.date).format("MMMM D, YYYY")}</Text>}
+              events={{ hover: true, focus: true, touch: true }}
+            >
               <Badge color={"emerald"} sx={{cursor: "pointer"}} rightSection={<IconInfoCircle style={{marginTop: "6px"}} size={12}/>}>Pro ({plans[String(userSubscription.plan_id)]})</Badge>
             </Tooltip>
           </Group>
