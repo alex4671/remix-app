@@ -20,7 +20,7 @@ export const PaymentTransactions = () => {
     <tr key={t.order_id}>
       <td>{dayjs(t.created_at).format("MMMM D, YYYY")}</td>
       <td>
-        <Badge color={"green"}>{t.status}</Badge>
+        <Badge color={"emerald"}>{t.status}</Badge>
       </td>
       <td>{t.is_one_off ? "One Off" : upperFirst(plans[t.product_id])}</td>
       <td>{formatMoney(t.amount, t.currency)}</td>
@@ -36,7 +36,7 @@ export const PaymentTransactions = () => {
       <Text color={"dimmed"}>History of you transactions and receipts</Text>
       <Box my={12}>
         <ScrollArea>
-          <Table sx={{minWidth: 600}}>
+          <Table sx={{minWidth: 576}}>
             <thead>
             <tr>
               <th>Date</th>

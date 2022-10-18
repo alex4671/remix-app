@@ -22,7 +22,7 @@ import {Navbar} from "~/components/Navbar/Navbar";
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {NavigationProgress} from "@mantine/nprogress";
 import {NotificationsProvider} from "@mantine/notifications";
-import favicon from "./favicon.svg";
+import favicon from "./assets/favicon.svg";
 
 export const links: LinksFunction = () => {
   return [

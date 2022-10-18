@@ -421,7 +421,7 @@ export default function Pro() {
       <Paper shadow="0" p="md" my={6} withBorder>
         <Text>Modifiers</Text>
         <ScrollArea>
-          <Table sx={{minWidth: 600}}>
+          <Table sx={{minWidth: 576}}>
             <thead>
             <tr>
               <th>Currency/Amount</th>
@@ -446,7 +446,7 @@ export default function Pro() {
 
         <Text>Transactions</Text>
         <ScrollArea>
-          <Table sx={{minWidth: 600}}>
+          <Table sx={{minWidth: 576}}>
             <thead>
             <tr>
               <th>Date</th>
