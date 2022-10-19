@@ -9,12 +9,12 @@ const useStyles = createStyles((theme) => ({
     lineHeight: 1,
     padding: '8px 16px',
     textDecoration: 'none',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
+    color: theme.colorScheme === 'dark' ? theme.white : theme.colors.dark[5],
     fontSize: theme.fontSizes.lg,
     fontWeight: 500,
 
     '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[1],
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
     },
 
     [theme.fn.smallerThan('sm')]: {
@@ -26,8 +26,7 @@ const useStyles = createStyles((theme) => ({
 
   linkActive: {
     '&, &:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ?  theme.colors.dark[4] : theme.colors.emerald[0],
-      color: theme.colors.emerald[6],
+      backgroundColor: theme.colorScheme === 'dark' ?  theme.colors.dark[4] : theme.colors.gray[1],
     },
   },
 

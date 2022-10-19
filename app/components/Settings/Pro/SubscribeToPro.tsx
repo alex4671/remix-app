@@ -1,15 +1,10 @@
-import {Badge, Box, Button, Group, Paper, SegmentedControl, Text, Title} from "@mantine/core";
+import {Badge, Box, Group, Paper, Select, Stack, Text, Title} from "@mantine/core";
 import {upperFirst} from "@mantine/hooks";
 import {useState} from "react";
 import {useNavigate} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
 import {useUser} from "~/utils/utils";
-
-const plans: Record<string, string> = {
-  "26607": "daily",
-  "26608": "monthly",
-  "26609": "yearly"
-};
+import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 
 const planPrices: Record<string, string> = {
   "26607": "1$/day",
@@ -24,7 +19,7 @@ export const SubscribeToPro = () => {
   const navigate = useNavigate()
 
   const {paddle} = usePaddle({environment: "sandbox", vendor: 3808});
-  const [selectedPlan, setSelectedPlan] = useState("26607");
+  const [selectedPlan, setSelectedPlan] = useState<string | null>("26607");
 
   const checkoutComplete = (data: any) => {
     console.log("data", data);
@@ -58,26 +53,41 @@ export const SubscribeToPro = () => {
         </Group>
         <Text color={"dimmed"}>Get access to all premium features</Text>
         <Box my={12}>
-          <Text>Selected plan: <Text component="span" weight={700}>{upperFirst(plans[selectedPlan])}</Text></Text>
-          <SegmentedControl
-            mt={6}
-            value={selectedPlan}
-            onChange={setSelectedPlan}
-            data={[
-              {label: "Daily", value: "26607"},
-              {label: "Monthly", value: "26608"},
-              {label: "Yearly", value: "26609"}
-            ]}
-          />
+          <Stack align={"start"}>
+            <Select
+              mt={6}
+              value={selectedPlan}
+              onChange={setSelectedPlan}
+              name={"planId"}
+              label="Selected plan"
+              data={[
+                {label: "Daily", value: "26607"},
+                {label: "Monthly", value: "26608"},
+                {label: "Yearly", value: "26609"}
+              ]}
+              styles={(theme) => ({
+                item: {
+                  borderRadius: 0,
+                  '&[data-selected]': {
+                    '&, &:hover': {
+                      backgroundColor:
+                        theme.colorScheme === 'dark' ?  theme.colors.dark[5] : theme.colors.gray[2],
+                      color: theme.colorScheme === 'dark' ? theme.white : theme.colors.dark[5],
+                    },
+                  },
+                },
+              })}
+            />
+          </Stack>
+
         </Box>
         <Box py={12}>
-          <Button
+          <PrimaryButton
             variant={"filled"}
-            color={"emerald"}
             onClick={handleBuy}
           >
-            Pay {upperFirst(planPrices[selectedPlan])}
-          </Button>
+            Pay {upperFirst(planPrices[String(selectedPlan)])}
+          </PrimaryButton>
         </Box>
       </Box>
 

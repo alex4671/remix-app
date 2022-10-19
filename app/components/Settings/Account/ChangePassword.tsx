@@ -1,6 +1,7 @@
-import {Box, Button, Grid, Group, Paper, PasswordInput, Stack, Text, Title} from "@mantine/core";
+import {Box, Grid, Group, Paper, PasswordInput, Stack, Text, Title} from "@mantine/core";
 import {Form} from "@remix-run/react";
 import {InfoTooltip} from "~/components/Utils/InfoTooltip";
+import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 
 export const ChangePassword = () => {
   return (
@@ -29,7 +30,7 @@ export const ChangePassword = () => {
             </Grid>
           </Box>
           <Box py={12}>
-            <Button type={"submit"} name="intent" color={"emerald"} value="changePassword">Update password</Button>
+            <PrimaryButton type={"submit"} name="intent" value="changePassword">Update password</PrimaryButton>
           </Box>
         </Box>
       </Form>

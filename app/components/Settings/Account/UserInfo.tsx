@@ -1,5 +1,7 @@
-import {Badge, Box, Button, Grid, Group, Paper, Text, TextInput, Title} from "@mantine/core";
+import {Badge, Box, Grid, Group, Paper, Text, TextInput, Title} from "@mantine/core";
 import {Form} from "@remix-run/react";
+import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
+import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
 
 interface Props {
   email: string;
@@ -28,7 +30,7 @@ export const UserInfo = ({email, isConfirmed}: Props) => {
               <Grid.Col xs={12} sm={6}>
                 <Group position={"right"}>
                   <Form method={"post"}>
-                    <Button type={"submit"} name={"intent"} value={"sendInvite"} color={"emerald"} compact>Resend confirmation</Button>
+                    <SecondaryButton name={"intent"} value={"sendInvite"} compact>Resend confirmation</SecondaryButton>
                   </Form>
                 </Group>
               </Grid.Col>
@@ -38,7 +40,7 @@ export const UserInfo = ({email, isConfirmed}: Props) => {
 
         </Box>
         <Box py={12}>
-          <Button color={"emerald"}>Update email</Button>
+          <PrimaryButton>Update email</PrimaryButton>
         </Box>
       </Box>
     </Paper>

@@ -1,4 +1,4 @@
-import {Badge, Box, Button, Group, Paper, SegmentedControl, Stack, Text, Title, Tooltip} from "@mantine/core";
+import {Badge, Box, Group, Paper, SegmentedControl, Select, Stack, Text, Title, Tooltip} from "@mantine/core";
 import {useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
 import type {loader} from "~/routes/settings/pro";
@@ -7,6 +7,9 @@ import {useEffect, useState} from "react";
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {formatMoney} from "~/utils/utils";
 import {IconInfoCircle} from "@tabler/icons";
+import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
+import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
+import {DangerButton} from "~/components/Buttons/DangerButtom";
 
 const plans: Record<string, string> = {
   "26607": "daily",
@@ -19,7 +22,7 @@ export const ManageSubscriptionSettings = () => {
 
   const navigate = useNavigate()
   const fetcher = useFetcher()
-  const [selectedPlan, setSelectedPlan] = useState(userSubscription.plan_id === 26607 ? "26608" : "26607");
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(userSubscription.plan_id === 26607 ? "26608" : "26607");
 
 
   useEffect(() => {
@@ -88,27 +91,38 @@ export const ManageSubscriptionSettings = () => {
             ) : (
               <fetcher.Form method={"post"}>
                 <Stack align={"start"}>
-                  <SegmentedControl
+                  <Select
                     mt={6}
                     value={selectedPlan}
                     onChange={setSelectedPlan}
                     name={"planId"}
+                    label="Select plan"
                     data={[
                       {label: "Daily", value: "26607", disabled: userSubscription.plan_id === 26607},
                       {label: "Monthly", value: "26608", disabled: userSubscription.plan_id === 26608},
                       {label: "Yearly", value: "26609", disabled: userSubscription.plan_id === 26609}
                     ]}
+                    styles={(theme) => ({
+                      item: {
+                        borderRadius: 0,
+                        '&[data-selected]': {
+                          '&, &:hover': {
+                            backgroundColor:
+                              theme.colorScheme === 'dark' ?  theme.colors.dark[5] : theme.colors.gray[2],
+                            color: theme.colorScheme === 'dark' ? theme.white : theme.colors.dark[5],
+                          },
+                        },
+                      },
+                    })}
                   />
-
-                  <Button
-                    color={"emerald"}
+                  <SecondaryButton
                     compact
                     type={"submit"}
                     name={"intent"}
                     value={"updatePlan"}
                   >
                     Change plan
-                  </Button>
+                  </SecondaryButton>
                 </Stack>
               </fetcher.Form>
             )}
@@ -118,18 +132,16 @@ export const ManageSubscriptionSettings = () => {
               <Text>You can subscribe again when current subscription expires</Text>
             ) : (
               <Group mt={12} position={"apart"}>
-                <Button
-                  color={"emerald"}
+                <PrimaryButton
                   onClick={handleUpdateSubscription}
                 >
                   Update payment method
-                </Button>
-                <Button
-                  color={"red"}
+                </PrimaryButton>
+                <DangerButton
                   onClick={handleCancelSubscription}
                 >
                   Cancel subscription
-                </Button>
+                </DangerButton>
               </Group>
             )}
 

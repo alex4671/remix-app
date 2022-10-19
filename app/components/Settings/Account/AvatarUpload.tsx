@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, FileButton, Group, Paper, Text, Title} from "@mantine/core";
+import {Avatar, Box, FileButton, Group, Paper, Text, Title} from "@mantine/core";
 import {Form, useActionData} from "@remix-run/react";
 import {IconExclamationMark, IconUpload} from "@tabler/icons";
 import {useUser} from "~/utils/utils";
@@ -6,6 +6,9 @@ import {useEffect, useRef, useState} from "react";
 import {showNotification} from "@mantine/notifications";
 import {InfoTooltip} from "~/components/Utils/InfoTooltip";
 import type {action} from "~/routes/settings/account";
+import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
+import {DangerButton} from "~/components/Buttons/DangerButtom";
+import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
 
 const UPLOAD_SIZE_LIMIT = 3145728
 
@@ -61,38 +64,34 @@ export const AvatarUpload = () => {
               <Avatar src={selectedAvatar} alt={user.email} size={48}/>
               <FileButton resetRef={resetRef} onChange={handleSelectFile} accept="image/png, image/gif, image/jpeg, image/svg+xml, image/webp" name={"file"}>
                 {(props) =>
-                  <Button
-                    variant="outline"
-                    color={"gray"}
+                  <SecondaryButton
                     leftIcon={<IconUpload size={"14"}/>}
                     compact
                     {...props}
                   >
                     Select avatar
-                  </Button>}
+                  </SecondaryButton>}
               </FileButton>
             </Group>
           </Box>
           <Box py={12}>
             <Group>
-              <Button
+              <PrimaryButton
                 type={"submit"}
-                color={"emerald"}
                 name={"intent"}
                 value={"uploadAvatar"}
                 disabled={!file}
               >
                 Upload
-              </Button>
-              <Button
+              </PrimaryButton>
+              <DangerButton
                 type={"submit"}
-                color={"red"}
                 name={"intent"}
                 value={"deleteAvatar"}
                 onClick={handleRemoveAvatar}
               >
                 Delete
-              </Button>
+              </DangerButton>
             </Group>
           </Box>
         </Box>
