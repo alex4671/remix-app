@@ -55,7 +55,7 @@ export const ManageSubscriptionSettings = () => {
     console.log("data", data.checkout.completed);
 
     if (data.checkout.completed) {
-      navigate("/payment/unsubscribed", {state: dayjs(payment?.subscriptionEndDate).format("MMMM D, YYYYYY")});
+      navigate("/payment/unsubscribed", {state: dayjs(payment?.subscriptionEndDate).format("MMMM D, YYYY")});
     }
   };
 
