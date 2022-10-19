@@ -7,6 +7,7 @@ import {validateEmail} from "~/utils/utils";
 import {Anchor, Button, Container, PasswordInput, Text, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
 import {postmarkClient} from "~/server/postmark.server";
+import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -147,9 +148,9 @@ export default function Join() {
             Login
           </Anchor>
         </Text>
-        <Button fullWidth mt="xl" type={"submit"} loading={isLoading} color={"emerald"} variant={"filled"}>
+        <PrimaryButton fullWidth mt="xl" type={"submit"} loading={isLoading}>
           Sign up
-        </Button>
+        </PrimaryButton>
         <input type="hidden" name="redirectTo" value={redirectTo} />
       </Form>
     </Container>

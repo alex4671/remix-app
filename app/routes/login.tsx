@@ -4,8 +4,9 @@ import {Form, Link, useActionData, useSearchParams, useTransition} from "@remix-
 import {createUserSession, getUserId} from "~/server/session.server";
 import {verifyLogin} from "~/models/user.server";
 import {validateEmail} from "~/utils/utils";
-import {Anchor, Button, Checkbox, Container, Group, PasswordInput, Text, TextInput, Title} from "@mantine/core";
+import {Anchor, Checkbox, Container, Group, PasswordInput, Text, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
+import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -137,9 +138,9 @@ export default function LoginPage() {
             Sign up
           </Anchor>
         </Text>
-        <Button fullWidth mt="xl" type={"submit"} loading={isLoading} color={"emerald"} variant={"filled"}>
+        <PrimaryButton fullWidth mt="xl" type={"submit"} loading={isLoading}>
           Sign in
-        </Button>
+        </PrimaryButton>
         <input type="hidden" name="redirectTo" value={redirectTo} />
       </Form>
     </Container>

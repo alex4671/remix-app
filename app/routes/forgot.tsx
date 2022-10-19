@@ -7,6 +7,7 @@ import {validateEmail} from "~/utils/utils";
 import {Anchor, Box, Button, Center, Container, Group, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
 import {IconArrowLeft} from "@tabler/icons";
+import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -91,7 +92,7 @@ export default function Forgot() {
               <Box ml={5}>Back to login page</Box>
             </Center>
           </Anchor>
-          <Button type={"submit"} loading={isLoading} color={"emerald"} variant={"filled"}>Reset password</Button>
+          <PrimaryButton type={"submit"} loading={isLoading}>Reset password</PrimaryButton>
         </Group>
       </Form>
     </Container>
