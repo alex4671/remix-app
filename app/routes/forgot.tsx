@@ -4,7 +4,7 @@ import {Form, Link, useActionData, useTransition} from "@remix-run/react";
 import {getUserId} from "~/server/session.server";
 import {generateResetToken, getUserByEmail} from "~/models/user.server";
 import {validateEmail} from "~/utils/utils";
-import {Anchor, Box, Button, Center, Container, Group, TextInput, Title} from "@mantine/core";
+import {Anchor, Box, Center, Container, Group, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
 import {IconArrowLeft} from "@tabler/icons";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";

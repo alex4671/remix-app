@@ -4,7 +4,7 @@ import {Form, Link, useActionData, useSearchParams, useTransition} from "@remix-
 import {createUserSession, getUserId} from "~/server/session.server";
 import {createUser, generateInviteLink, getUserByEmail} from "~/models/user.server";
 import {validateEmail} from "~/utils/utils";
-import {Anchor, Button, Container, PasswordInput, Text, TextInput, Title} from "@mantine/core";
+import {Anchor, Container, PasswordInput, Text, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
 import {postmarkClient} from "~/server/postmark.server";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";

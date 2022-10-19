@@ -5,6 +5,7 @@ import {useNavigate} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
 import {useUser} from "~/utils/utils";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
+import {IconChevronDown} from "@tabler/icons";
 
 const planPrices: Record<string, string> = {
   "26607": "1$/day",
@@ -77,6 +78,7 @@ export const SubscribeToPro = () => {
                   },
                 },
               })}
+              rightSection={<IconChevronDown size={14} />}
             />
           </Stack>
 

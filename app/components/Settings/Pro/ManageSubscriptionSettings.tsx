@@ -1,4 +1,4 @@
-import {Badge, Box, Group, Paper, SegmentedControl, Select, Stack, Text, Title, Tooltip} from "@mantine/core";
+import {Badge, Box, Group, Paper, Select, Stack, Text, Title, Tooltip} from "@mantine/core";
 import {useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
 import type {loader} from "~/routes/settings/pro";
@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import {useEffect, useState} from "react";
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {formatMoney} from "~/utils/utils";
-import {IconInfoCircle} from "@tabler/icons";
+import {IconChevronDown, IconInfoCircle} from "@tabler/icons";
 import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import {DangerButton} from "~/components/Buttons/DangerButtom";
@@ -114,6 +114,7 @@ export const ManageSubscriptionSettings = () => {
                         },
                       },
                     })}
+                    rightSection={<IconChevronDown size={14} />}
                   />
                   <SecondaryButton
                     compact
