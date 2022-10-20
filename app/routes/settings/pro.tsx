@@ -8,6 +8,7 @@ import {paddle} from "~/server/paddle.server";
 import type {User} from "@invertase/node-paddle-sdk/src/types";
 import dayjs from "dayjs";
 import {PaymentTransactions} from "~/components/Settings/Pro/PaymentTransactions";
+import {getUser} from "~/server/session.server";
 
 
 export const meta: MetaFunction = () => {
@@ -72,6 +73,19 @@ export const action = async ({request}: ActionArgs) => {
       return json({success: false, intent})
     }
   }
+
+  if (intent === "generatePayLink") {
+    const planId = formData.get("planId");
+    try {
+      const user = await getUser(request)
+      const payLink = await paddle.generatePayLink({product_id: Number(planId), customer_email: user?.email})
+      return json({success: true, intent, payLink})
+
+    } catch (e) {
+      return json({success: false, intent})
+    }
+  }
+
 
   return json({success: false, intent})
 };

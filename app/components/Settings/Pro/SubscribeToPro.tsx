@@ -1,9 +1,8 @@
 import {Badge, Box, Group, Paper, Select, Stack, Text, Title} from "@mantine/core";
 import {upperFirst} from "@mantine/hooks";
-import {useState} from "react";
-import {useNavigate} from "@remix-run/react";
+import {useEffect, useState} from "react";
+import {useFetcher, useNavigate} from "@remix-run/react";
 import usePaddle from "~/hooks/usePaddle";
-import {useUser} from "~/utils/utils";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import {IconChevronDown} from "@tabler/icons";
 
@@ -14,10 +13,19 @@ const planPrices: Record<string, string> = {
 };
 
 export const SubscribeToPro = () => {
-
-
-  const user = useUser()
   const navigate = useNavigate()
+  const fetcher = useFetcher()
+
+  useEffect(() => {
+    if (fetcher.data) {
+      paddle.Checkout.open({
+        override: fetcher.data?.payLink?.url,
+        disableLogout: true,
+        successCallback: checkoutComplete,
+        closeCallback: checkoutClosed
+      })
+    }
+  }, [fetcher.data])
 
   const {paddle} = usePaddle({environment: "sandbox", vendor: 3808});
   const [selectedPlan, setSelectedPlan] = useState<string | null>("26607");
@@ -34,16 +42,6 @@ export const SubscribeToPro = () => {
   const checkoutClosed = (data: any) => {
     console.log("checkoutClosed", data);
   };
-
-  const handleBuy = () => {
-    paddle.Checkout.open({
-      product: Number(selectedPlan),
-      email: user.email,
-      disableLogout: true,
-      successCallback: checkoutComplete,
-      closeCallback: checkoutClosed
-    })
-  }
 
   return (
     <Paper shadow="0" withBorder mb={12}>
@@ -84,12 +82,16 @@ export const SubscribeToPro = () => {
 
         </Box>
         <Box py={12}>
-          <PrimaryButton
-            variant={"filled"}
-            onClick={handleBuy}
-          >
-            Pay {upperFirst(planPrices[String(selectedPlan)])}
-          </PrimaryButton>
+          <fetcher.Form method={"post"}>
+            <input type="hidden" name={"planId"} value={selectedPlan!}/>
+            <PrimaryButton
+              type={"submit"}
+              name={"intent"}
+              value={"generatePayLink"}
+            >
+              Pay {upperFirst(planPrices[String(selectedPlan)])}
+            </PrimaryButton>
+          </fetcher.Form>
         </Box>
       </Box>
 
