@@ -66,7 +66,6 @@ export async function loader({request}: LoaderArgs) {
 export default function App() {
   const {theme, user} = useLoaderData<typeof loader>()
   const transition = useTransition()
-
   return (
     <MantineProvider
       withGlobalStyles
@@ -75,7 +74,7 @@ export default function App() {
         colorScheme: theme,
         fontFamily: "Inter, sans-serif",
         headings: {fontFamily: "Inter, sans-serif"},
-        // primaryShade: {light: 5, dark: 8},
+        // primaryShade: {light: 5, dark: 9},
         colors: {...colors},
         defaultRadius: "0",
         // activeStyles: { transform: 'scale(0.95)', transition: "transform 0.03s ease-in-out" }
@@ -95,7 +94,7 @@ export default function App() {
         <Links/>
       </head>
       <body>
-      <NavigationProgress color={"emerald"} autoReset/>
+      <NavigationProgress color={theme === "dark" ? "white" : "dark"} autoReset/>
       <LoadingProgress state={transition.state}/>
       <NotificationsProvider position={"top-center"}>
         <Container size={"xl"} px={12}>
