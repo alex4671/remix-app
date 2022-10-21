@@ -222,25 +222,25 @@ export const getUserPaymentData = async (request: Request) => {
   }))
 }
 
-export const getUserPaymentTransactionsData = async (request: Request) => {
-  const userId = await getUserId(request)
-
-  return prisma.userPaymentHistory.findMany({
-      where: {
-        userId
-      },
-      select: {
-        id: true,
-        status: true,
-        subscriptionPlanId: true,
-        currency: true,
-        amount: true,
-        receiptUrl: true,
-        createdAt: true,
-      }
-    }
-  )
-}
+// export const getUserPaymentTransactionsData = async (request: Request) => {
+//   const userId = await getUserId(request)
+//
+//   return prisma.userPaymentHistory.findMany({
+//       where: {
+//         userId
+//       },
+//       select: {
+//         id: true,
+//         status: true,
+//         subscriptionPlanId: true,
+//         currency: true,
+//         amount: true,
+//         receiptUrl: true,
+//         createdAt: true,
+//       }
+//     }
+//   )
+// }
 
 export const generateInviteLink = async (url: string, userId: string): Promise<string> => {
   const token = sign({userId}, APP_SECRET)

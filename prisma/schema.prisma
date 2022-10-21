@@ -48,3 +48,13 @@ model UserPayment {
 
   @@index([userId])
 }
+
+model Feedback {
+  id                    String   @id @default(uuid())
+  userEmail             String
+  userId                String
+  feedback              String   @db.Text
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}

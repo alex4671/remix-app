@@ -1,6 +1,6 @@
 import {createStyles, NavLink, Stack} from "@mantine/core";
 import {Link, useLocation} from "@remix-run/react";
-import {IconAlertCircle, IconCreditCard, IconUser, IconUsers} from "@tabler/icons";
+import {IconAlertCircle, IconCreditCard, IconMessage, IconUser, IconUsers} from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -62,6 +62,14 @@ export const SettingsLinks = () => {
         className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("team") })}
         variant="filled"
         prefetch={"intent"}
+      />
+      <NavLink
+        component={Link}
+        to="./feedback"
+        label="Feedback"
+        icon={<IconMessage size={16} stroke={1.5}/>}
+        className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("feedback") })}
+        variant="filled"
       />
       <NavLink
         component={Link}
