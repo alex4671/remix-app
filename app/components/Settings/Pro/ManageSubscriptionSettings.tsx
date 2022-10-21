@@ -68,6 +68,8 @@ export const ManageSubscriptionSettings = () => {
     console.log("checkoutClosed", data);
   };
 
+  const isSubscriptionDeleted = userSubscription.state === "deleted"
+
   return (
     <>
       <LoadingProgress state={fetcher.state}/>
@@ -80,13 +82,14 @@ export const ManageSubscriptionSettings = () => {
               arrowSize={6}
               label={<Text>Next payment {formatMoney(userSubscription?.next_payment?.amount, userSubscription?.next_payment?.currency)} {dayjs(userSubscription?.next_payment?.date).format("MMMM D, YYYY")}</Text>}
               events={{ hover: true, focus: true, touch: true }}
+              disabled={isSubscriptionDeleted}
             >
-              <Badge color={"emerald"} sx={{cursor: "pointer"}} rightSection={<IconInfoCircle style={{marginTop: "6px"}} size={12}/>}>Pro ({plans[String(userSubscription.plan_id)]})</Badge>
+              <Badge color={"emerald"} sx={{cursor: isSubscriptionDeleted ? "default" : "pointer"}} rightSection={!isSubscriptionDeleted ? <IconInfoCircle style={{marginTop: "6px"}} size={12}/> : null}>Pro ({plans[String(userSubscription.plan_id)]})</Badge>
             </Tooltip>
           </Group>
           <Text color={"dimmed"}>Manage current subscription</Text>
           <Box my={12}>
-            {userSubscription.state === "deleted" ? (
+            {isSubscriptionDeleted ? (
               <Text>Subscription canceled, but active until <Badge color={"emerald"}>{dayjs(payment?.subscriptionEndDate).format("MMMM D, YYYY")}</Badge></Text>
             ) : (
               <fetcher.Form method={"post"}>
