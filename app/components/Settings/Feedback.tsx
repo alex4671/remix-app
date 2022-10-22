@@ -48,11 +48,10 @@ export const Feedback = () => {
           </Affix>
         </Popover.Target>
         <Popover.Dropdown>
-          <Text size={"lg"}>Feedback</Text>
+          <Text size={"lg"}>Send feedback</Text>
           <fetcher.Form method={"post"}>
             <Textarea
               mt={12}
-              placeholder="Your feedback"
               autosize
               minRows={4}
               name={"feedback"}
