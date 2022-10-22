@@ -1,14 +1,31 @@
 import {Outlet} from "@remix-run/react";
 import {Grid, Title} from "@mantine/core";
-import type {LoaderArgs, MetaFunction} from "@remix-run/node";
+import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {SettingsLinks} from "~/components/Settings/SettingsLinks";
+import {saveFeedback} from "~/models/feedback.server";
+import {Feedback} from "~/components/Settings/Feedback";
 
 export const meta: MetaFunction = () => {
   return {
     title: "Settings"
   };
+};
+
+export const action = async ({request}: ActionArgs) => {
+  const user = await requireUser(request)
+  const formData = await request.formData();
+  const feedback = formData.get("feedback")?.toString() ?? "";
+
+  if (feedback.length) {
+    await saveFeedback(user.id, user.email, feedback)
+    return json({success: true, message: "Feedback send"})
+  } else {
+    return json({success: false, message: "Feedback can't be empty"})
+  }
+
+
 };
 
 
@@ -30,6 +47,7 @@ export default function Settings() {
           <Outlet/>
         </Grid.Col>
       </Grid>
+      <Feedback />
     </>
   )
 }

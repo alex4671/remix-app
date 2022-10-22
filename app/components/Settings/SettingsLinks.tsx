@@ -65,14 +65,6 @@ export const SettingsLinks = () => {
       />
       <NavLink
         component={Link}
-        to="./feedback"
-        label="Feedback"
-        icon={<IconMessage size={16} stroke={1.5}/>}
-        className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("feedback") })}
-        variant="filled"
-      />
-      <NavLink
-        component={Link}
         to="./danger"
         label="Danger zone"
         icon={<IconAlertCircle size={16} stroke={1.5}/>}
