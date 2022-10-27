@@ -19,6 +19,7 @@ model User {
   isConfirmed Boolean @default(false)
 
   payment UserPayment?
+  paymentHistory UserPaymentHistory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -43,6 +44,19 @@ model UserPayment {
   subscriptionStatus    String
   subscriptionUpdateUrl String
   subscriptionCancelUrl String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model UserPaymentHistory {
+  id                    String   @id @default(uuid())
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String   @unique
+  alert_name            String
+  historyData           Json
+
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
