@@ -1,9 +1,14 @@
-import { renderToString } from 'react-dom/server';
-import { RemixServer } from '@remix-run/react';
-import type { EntryContext } from '@remix-run/node';
-import { injectStyles, createStylesServer } from '@mantine/remix';
+import { PassThrough } from "stream";
+import type { EntryContext } from "@remix-run/node";
+import { Response } from "@remix-run/node";
+import { RemixServer } from "@remix-run/react";
+import isbot from "isbot";
+import { renderToPipeableStream } from "react-dom/server";
+import createEmotionCache from "@emotion/cache";
+import { CacheProvider as EmotionCacheProvider } from "@emotion/react";
+import createEmotionServer from "@emotion/server/create-instance";
 
-const server = createStylesServer();
+const ABORT_DELAY = 5000;
 
 export default function handleRequest(
   request: Request,
@@ -11,11 +16,49 @@ export default function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  let markup = renderToString(<RemixServer context={remixContext} url={request.url} />);
-  responseHeaders.set('Content-Type', 'text/html');
+  const callbackMethod = isbot(request.headers.get("user-agent"))
+    ? "onAllReady"
+    : "onShellReady";
 
-  return new Response(`<!DOCTYPE html>${injectStyles(markup, server)}`, {
-    status: responseStatusCode,
-    headers: responseHeaders,
+  return new Promise((resolve, reject) => {
+    let didError = false;
+
+    const emotionCache = createEmotionCache({ key: "mantine" });
+
+    const { pipe, abort } = renderToPipeableStream(
+      <EmotionCacheProvider value={emotionCache}>
+        <RemixServer context={remixContext} url={request.url} />
+      </EmotionCacheProvider>,
+      {
+        [callbackMethod]() {
+          const reactBody = new PassThrough();
+          const emotionServer = createEmotionServer(emotionCache);
+
+          const bodyWithStyles = emotionServer.renderStylesToNodeStream();
+          reactBody.pipe(bodyWithStyles);
+
+          responseHeaders.set("Content-Type", "text/html");
+
+          resolve(
+            new Response(bodyWithStyles, {
+              headers: responseHeaders,
+              status: didError ? 500 : responseStatusCode,
+            })
+          );
+
+          pipe(reactBody);
+        },
+        onShellError(err: unknown) {
+          reject(err);
+        },
+        onError(error: unknown) {
+          didError = true;
+
+          console.error(error);
+        },
+      }
+    );
+
+    setTimeout(abort, ABORT_DELAY);
   });
 }

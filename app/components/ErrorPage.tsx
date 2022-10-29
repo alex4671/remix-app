@@ -5,7 +5,6 @@ const useStyles = createStyles((theme) => ({
     height: "100vh",
     paddingTop: 80,
     paddingBottom: 120,
-    backgroundColor: theme.fn.variant({variant: 'filled', color: theme.primaryColor}).background,
   },
 
   label: {
@@ -14,7 +13,6 @@ const useStyles = createStyles((theme) => ({
     fontSize: 220,
     lineHeight: 1,
     marginBottom: theme.spacing.xl * 1.5,
-    color: theme.colors[theme.primaryColor][3],
 
     [theme.fn.smallerThan('sm')]: {
       fontSize: 120,
@@ -26,7 +24,6 @@ const useStyles = createStyles((theme) => ({
     textAlign: 'center',
     fontWeight: 900,
     fontSize: 38,
-    color: theme.white,
 
     [theme.fn.smallerThan('sm')]: {
       fontSize: 32,
@@ -38,7 +35,6 @@ const useStyles = createStyles((theme) => ({
     margin: 'auto',
     marginTop: theme.spacing.xl,
     marginBottom: theme.spacing.xl * 1.5,
-    color: theme.colors[theme.primaryColor][1],
   },
 }));
 
@@ -55,7 +51,7 @@ export const ErrorPage = ({status}: {status?: number}) => {
           already notified. Try refreshing the page.
         </Text>
         <Group position="center">
-          <Button variant="white" size="md" onClick={() => window.location.replace("/")}>Refresh the page</Button>
+          <Button variant="filled" size="md" onClick={() => window.location.replace("/")}>Refresh the page</Button>
         </Group>
       </Container>
     </div>

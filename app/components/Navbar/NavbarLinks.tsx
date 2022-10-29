@@ -83,7 +83,7 @@ export const NavbarLinks = () => {
     <Link
       key={link.to}
       to={link.to}
-      prefetch="intent"
+      // prefetch="intent"
       className={cx(classes.link, { [classes.linkActive]: link.isActive })}
       onClick={close}
     >

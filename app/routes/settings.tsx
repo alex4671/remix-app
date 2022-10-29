@@ -13,6 +13,11 @@ export const meta: MetaFunction = () => {
   };
 };
 
+export async function loader({request}: LoaderArgs) {
+  await requireUser(request)
+  return json({});
+}
+
 export const action = async ({request}: ActionArgs) => {
   const user = await requireUser(request)
   const formData = await request.formData();
@@ -24,15 +29,7 @@ export const action = async ({request}: ActionArgs) => {
   } else {
     return json({success: false, message: "Feedback can't be empty"})
   }
-
-
 };
-
-
-export async function loader({request}: LoaderArgs) {
-  await requireUser(request)
-  return json({});
-}
 
 export default function Settings() {
 
