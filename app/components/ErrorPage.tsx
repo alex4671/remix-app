@@ -51,7 +51,7 @@ export const ErrorPage = ({status}: {status?: number}) => {
           already notified. Try refreshing the page.
         </Text>
         <Group position="center">
-          <Button variant="filled" size="md" onClick={() => window.location.replace("/")}>Refresh the page</Button>
+          <Button variant="filled" size="md" onClick={() => window.location.replace("/")}>Go home</Button>
         </Group>
       </Container>
     </div>
