@@ -69,14 +69,12 @@ export const Filter = ({fileTypes, filterTypeValue, setFilterTypeValue}: Props) 
           withinPortal={false}
         >
           <Popover.Target>
-            <Button
-              variant={"outline"}
-              color={"zinc"}
+            <SecondaryButton
               onClick={() => setOpened((o) => !o)}
               rightIcon={opened ? <IconChevronUp size={16}/> : <IconChevronDown size={16}/>}
             >
               File type
-            </Button>
+            </SecondaryButton>
           </Popover.Target>
           <Popover.Dropdown>
             <div style={{minHeight: "200px", maxHeight: "460px"}}>
@@ -115,15 +113,13 @@ export const Filter = ({fileTypes, filterTypeValue, setFilterTypeValue}: Props) 
       </DesktopOnly>
       <MobileOnly>
         <Box>
-          <Button
-            variant={"outline"}
-            color={"zinc"}
+          <SecondaryButton
             onClick={() => setDrawerOpened((o) => !o)}
             rightIcon={drawerOpened ? <IconChevronUp size={16}/> : <IconChevronDown size={16}/>}
             fullWidth
           >
             File type
-          </Button>
+          </SecondaryButton>
           <Drawer
             opened={drawerOpened}
             onClose={() => setDrawerOpened(false)}
