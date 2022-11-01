@@ -75,7 +75,13 @@ export const FilesGrid = ({
                     <video controls preload="metadata">
                       <source src={`${file.fileUrl}#t=0.5`} type={file.type}/>
                     </video>
-                  ) : (
+                  ) : file.type.includes("audio") ? (
+                    <Box sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
+                      <audio controls>
+                        <source src={file.fileUrl} type={file.type} />
+                      </audio>
+                    </Box>
+                    ) : (
                     <Box
                       sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}
                     >
@@ -116,7 +122,6 @@ export const FilesGrid = ({
               <Card p="lg" withBorder key={file.name} style={{opacity: "0.5"}}>
                 <Card.Section>
                   <AspectRatio ratio={16 / 9}>
-
                     {file.type.includes("image") ? (
                       <Image
                         src={URL.createObjectURL(file)}
@@ -126,6 +131,12 @@ export const FilesGrid = ({
                       <video controls={false} preload="metadata">
                         <source src={`${URL.createObjectURL(file)}#t=0.5`} type={file.type}/>
                       </video>
+                    ) : file.type.includes("audio") ? (
+                      <Box sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
+                        <audio controls>
+                          <source src={URL.createObjectURL(file)} type={file.type} />
+                        </audio>
+                      </Box>
                     ) : (
                       <Box
                         sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]})}
