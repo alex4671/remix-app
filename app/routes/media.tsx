@@ -12,7 +12,7 @@ import {
   SimpleGrid,
   Text, TextInput,
   Tooltip, useMantineTheme,
-  ScrollArea, Badge, Grid,
+  ScrollArea, Badge, Grid, RingProgress,
 } from "@mantine/core";
 import {
   IconCheck, IconChevronDown,
@@ -289,39 +289,48 @@ export default function Media() {
             value={searchValue}
             onChange={setSearchValue}
             width={400}
-            rightSection={searchValue !== "" ? <IconCircleX color={"gray"} size={14} style={{cursor: "pointer"}}
-                                                            onClick={() => setSearchValue("")}/> : null}
+            rightSection={
+              searchValue !== ""
+                ? (
+                  <IconCircleX
+                    color={"gray"}
+                    size={14}
+                    style={{cursor: "pointer"}}
+                    onClick={() => setSearchValue("")}
+                  />
+                )
+                : null}
           />
         </Grid.Col>
         <Grid.Col xs={12} sm={"auto"}>
-          <Group>
-            <Filter
-              fileTypes={Array.from(fileTypes)}
-              filterTypeValue={filterTypeValue}
-              setFilterTypeValue={setFilterTypeValue}
-            />
-            <Group>
-              {filterTypeValue?.map(type => (
-                <Badge
-                  key={type}
-                  color={"emerald"}
-                  size={"lg"}
-                  sx={{paddingRight: 3}}
-                  rightSection={
-                    <ActionIcon
-                      color={"emerald"}
-                      variant="transparent"
-                      onClick={() => handleRemoveSelectedType(type)}
-                    >
-                      <IconX size={10}/>
-                    </ActionIcon>
-                  }
-                >
-                  {type}
-                </Badge>
-              ))}
+          <Filter
+            fileTypes={Array.from(fileTypes)}
+            filterTypeValue={filterTypeValue}
+            setFilterTypeValue={setFilterTypeValue}
+          />
 
-            </Group>
+        </Grid.Col>
+        <Grid.Col span={12}>
+          <Group spacing={"xs"}>
+            {filterTypeValue?.map(type => (
+              <Badge
+                key={type}
+                color={"emerald"}
+                size={"lg"}
+                sx={{paddingRight: 3}}
+                rightSection={
+                  <ActionIcon
+                    color={"emerald"}
+                    variant="transparent"
+                    onClick={() => handleRemoveSelectedType(type)}
+                  >
+                    <IconX size={10}/>
+                  </ActionIcon>
+                }
+              >
+                {type}
+              </Badge>
+            ))}
 
           </Group>
         </Grid.Col>
@@ -439,12 +448,12 @@ interface Props {
 }
 
 export const Filter = ({fileTypes, filterTypeValue, setFilterTypeValue}: Props) => {
-  const [opened, setOpened] = useState(true);
+  const [opened, setOpened] = useState(false);
   const [searchValue, setSearchValue] = useInputState("");
   const [checked, setChecked] = useState<string[]>(() => filterTypeValue)
 
   // todo try remove effect
-  useEffect(() => {}, [filterTypeValue])
+  useEffect(() => {setChecked(filterTypeValue)}, [filterTypeValue])
 
   const isAtLeastOneChecked = checked.length;
 
@@ -455,10 +464,12 @@ export const Filter = ({fileTypes, filterTypeValue, setFilterTypeValue}: Props) 
   }
 
   const handleClear = () => {
-    setFilterTypeValue([])
     setChecked([])
-    setOpened(false)
     setSearchValue("")
+  }
+
+  const handleSelectAll = () => {
+    setChecked(fileTypes)
   }
 
   const types = fileTypes
@@ -468,7 +479,7 @@ export const Filter = ({fileTypes, filterTypeValue, setFilterTypeValue}: Props) 
         <Checkbox
           ml={4}
           onChange={() => setChecked(prevState => prevState.includes(type) ? prevState.filter(el => el !== type) : [...prevState, type])}
-          defaultChecked={filterTypeValue.includes(type)}
+          checked={checked.includes(type)}
           label={type}
         />
       </Group>
@@ -505,9 +516,24 @@ export const Filter = ({fileTypes, filterTypeValue, setFilterTypeValue}: Props) 
           <ScrollArea type="auto" style={{height: 250}} my={8}>
             {types.length > 0 ? types : "No file type found"}
           </ScrollArea>
+          <Group grow my={12}>
+            <SecondaryButton
+              compact
+              onClick={handleSelectAll}
+              disabled={checked.length === fileTypes.length || searchValue !== ""}
+            >
+              Select All
+            </SecondaryButton>
+            <SecondaryButton
+              compact
+              disabled={!isAtLeastOneChecked}
+              onClick={handleClear}
+            >
+              Clear
+            </SecondaryButton>
+          </Group>
           <Group grow>
-            <PrimaryButton fullWidth disabled={!isAtLeastOneChecked} onClick={handleApply}>Apply</PrimaryButton>
-            <SecondaryButton fullWidth disabled={!isAtLeastOneChecked} onClick={handleClear}>Clear</SecondaryButton>
+            <PrimaryButton fullWidth onClick={handleApply}>Apply</PrimaryButton>
           </Group>
         </div>
       </Popover.Dropdown>
