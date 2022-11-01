@@ -100,10 +100,9 @@ export default function Join() {
   }, [actionData]);
 
   return (
-    <Container size={400}>
+    <Container size={"xs"} mt={"20%"} p={"md"}>
       <Title
         align="center"
-        mt={"40%"}
         mb={"lg"}
       >
         Create account

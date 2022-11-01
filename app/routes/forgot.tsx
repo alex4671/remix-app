@@ -63,10 +63,9 @@ export default function Forgot() {
   }, [actionData]);
 
   return (
-    <Container size={400}>
+    <Container size={"xs"} mt={"20%"} p={"md"}>
       <Title
         align="center"
-        mt={"40%"}
         mb={"lg"}
       >
         Reset password

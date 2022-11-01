@@ -84,10 +84,9 @@ export default function LoginPage() {
   }, [actionData]);
 
   return (
-    <Container size={400}>
+    <Container size={"xs"} mt={"20%"} p={"md"}>
       <Title
         align="center"
-        mt={"40%"}
         mb={"lg"}
       >
         Please, login!
