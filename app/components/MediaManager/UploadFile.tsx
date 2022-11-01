@@ -65,6 +65,8 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
 
   const handleCancel = () => {
     setFiles(null)
+    setSelectedFiles([])
+    setSelectedFilesUrls([])
     resetRef.current?.()
   }
 

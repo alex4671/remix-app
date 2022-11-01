@@ -2,16 +2,20 @@ import {ActionIcon, Badge, Grid, Group, TextInput} from "@mantine/core";
 import {IconCircleX, IconX} from "@tabler/icons";
 import {Filter} from "~/components/MediaManager/Filter";
 import type {Dispatch, SetStateAction} from "react";
+import {useLoaderData} from "@remix-run/react";
+import type {loader} from "~/routes/media";
 
 interface Props {
-  fileTypes: string[];
   searchValue: string;
   setSearchValue: (value: any) => void;
   filterTypeValue: string[];
   setFilterTypeValue: Dispatch<SetStateAction<string[]>>;
 }
 
-export const FilesFilters = ({fileTypes, searchValue, setSearchValue, filterTypeValue, setFilterTypeValue}: Props) => {
+export const FilesFilters = ({searchValue, setSearchValue, filterTypeValue, setFilterTypeValue}: Props) => {
+  const {userFiles} = useLoaderData<typeof loader>()
+
+  const fileTypes = Array.from(new Set(userFiles?.map(file => file.type.split('/')[1])))
   const handleRemoveSelectedType = (type: string) => {
     setFilterTypeValue(prevState => prevState.filter(t => t !== type))
   }

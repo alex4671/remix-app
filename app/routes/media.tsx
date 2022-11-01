@@ -1,5 +1,4 @@
 import {useState} from "react";
-import {useLoaderData} from "@remix-run/react";
 import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
@@ -108,19 +107,11 @@ export const action = async ({request}: ActionArgs) => {
 
 
 export default function Media() {
-  const {userFiles} = useLoaderData<typeof loader>()
-
 
   const [selectedFiles, setSelectedFiles] = useState<string[]>([])
   const [selectedFilesUrls, setSelectedFilesUrls] = useState<string[]>([])
   const [searchValue, setSearchValue] = useInputState('');
   const [filterTypeValue, setFilterTypeValue] = useState<string[]>([]);
-
-
-  const fileTypes = Array.from(new Set(userFiles?.map(file => file.type.split('/')[1])))
-
-
-
 
   // todo make limit usage in backend
   return (
@@ -132,7 +123,6 @@ export default function Media() {
         setSelectedFilesUrls={setSelectedFilesUrls}
       />
       <FilesFilters
-        fileTypes={fileTypes}
         filterTypeValue={filterTypeValue}
         searchValue={searchValue}
         setFilterTypeValue={setFilterTypeValue}

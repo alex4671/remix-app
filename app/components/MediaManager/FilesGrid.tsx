@@ -16,6 +16,7 @@ import {Form, useLoaderData, useTransition} from "@remix-run/react";
 import {IconDownload, IconTrash} from "@tabler/icons";
 import type {Dispatch, SetStateAction} from "react";
 import type {loader} from "~/routes/media";
+import {upperFirst} from "@mantine/hooks";
 
 interface Props {
   setSelectedFiles: Dispatch<SetStateAction<string[]>>
@@ -25,11 +26,16 @@ interface Props {
   selectedFiles: string[];
 }
 
-export const FilesGrid = ({setSelectedFiles, setSelectedFilesUrls, searchValue, filterTypeValue, selectedFiles}: Props) => {
+export const FilesGrid = ({
+                            setSelectedFiles,
+                            setSelectedFilesUrls,
+                            searchValue,
+                            filterTypeValue,
+                            selectedFiles
+                          }: Props) => {
   const {userFiles} = useLoaderData<typeof loader>()
   const transition = useTransition();
   const isSubmitting = transition.submission
-
 
   const handlePickFile = (id: string, url: string) => {
     setSelectedFiles(prevState => prevState.includes(id) ? prevState.filter(el => el !== id) : [...prevState, id])
@@ -71,8 +77,9 @@ export const FilesGrid = ({setSelectedFiles, setSelectedFilesUrls, searchValue, 
                     </video>
                   ) : (
                     <Box
-                      sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
-                      <Text align={"center"}>{file.type}</Text>
+                      sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}
+                    >
+                      <Text align={"center"}>{upperFirst(file.type.split("/")[1])}</Text>
                     </Box>
                   )}
                 </AspectRatio>
@@ -81,14 +88,17 @@ export const FilesGrid = ({setSelectedFiles, setSelectedFilesUrls, searchValue, 
               <Card.Section py="lg" px={"md"}>
                 <Group position={"apart"} align={"baseline"}>
                   <Group align={"flex-start"}>
-                    <Checkbox color={"dark.6"} onClick={() => handlePickFile(file.id, file.fileUrl)}
-                              defaultChecked={selectedFiles.includes(file.id)}/>
+                    <Checkbox
+                      color={"dark.6"}
+                      onChange={() => handlePickFile(file.id, file.fileUrl)}
+                      checked={selectedFiles.includes(file.id)}
+                    />
                     <Text color={"dimmed"} size={"sm"}>{formatBytes(file.size)}</Text>
                     <Badge color="dark" variant="outline">{file.type.split('/')[1]}</Badge>
                   </Group>
                   <Form method={"post"}>
                     <input type="hidden" name={"fileId"} value={file.id}/>
-                    <Group spacing={0}>
+                    <Group spacing={4}>
                       <ActionIcon component={"a"} href={file.fileUrl} download target={"_blank"}>
                         <IconDownload size={18}/>
                       </ActionIcon>
@@ -118,22 +128,28 @@ export const FilesGrid = ({setSelectedFiles, setSelectedFilesUrls, searchValue, 
                       </video>
                     ) : (
                       <Box
-                        sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]})}>
-                        <Text align={"center"}>{file.type}</Text>
+                        sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]})}
+                      >
+                        <Text align={"center"}>{file.type.split("/")[1]}</Text>
                       </Box>
                     )}
                   </AspectRatio>
                 </Card.Section>
 
                 <Card.Section py="lg" px={"md"}>
-                  <Group position={"apart"}>
-                    <Group>
+                  <Group position={"apart"} align={"baseline"}>
+                    <Group align={"flex-start"}>
                       <Text color={"dimmed"} size={"sm"}>{formatBytes(file.size)}</Text>
-                      <Text color={"dimmed"} size={"sm"}>{file.type}</Text>
+                      <Badge color="dark" variant="outline">{file.type.split('/')[1]}</Badge>
                     </Group>
-                    <ActionIcon disabled>
-                      <IconTrash size={18}/>
-                    </ActionIcon>
+                    <Group spacing={4}>
+                      <ActionIcon disabled>
+                        <IconDownload size={18}/>
+                      </ActionIcon>
+                      <ActionIcon disabled>
+                        <IconTrash size={18}/>
+                      </ActionIcon>
+                    </Group>
                   </Group>
                 </Card.Section>
               </Card>
