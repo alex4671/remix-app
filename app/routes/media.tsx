@@ -1,4 +1,4 @@
-import {ActionIcon, Card, FileButton, Group, Image, SimpleGrid, Text} from "@mantine/core";
+import {ActionIcon, AspectRatio, Box, Card, Checkbox, FileButton, Group, Image, SimpleGrid, Text} from "@mantine/core";
 import {IconCheck, IconTrash, IconUpload, IconX} from "@tabler/icons";
 import {useEffect, useRef, useState} from "react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
@@ -222,25 +222,33 @@ export default function Media() {
         >
           {userFiles?.map(file => (
             <Card p="lg" withBorder key={file.id}
-                  style={{outline: selectedFiles.includes(file.id) ? "2px solid blue" : "none"}}>
-              <Card.Section onClick={() => handlePickFile(file.id, file.fileUrl)}>
+                  sx={(theme) => ({outline: selectedFiles.includes(file.id) ? `2px solid ${theme.colors.dark[6]}` : "none"})}>
+              <Card.Section>
+                <AspectRatio ratio={16 / 9}>
+
                 {file.type.includes("image") ? (
                   <Image
                     src={file.fileUrl}
-                    height={160}
                     alt={file.fileUrl}
                   />
+                ) : file.type.includes("video") ? (
+                  <video controls preload="metadata">
+                    <source src={`${file.fileUrl}#t=0.5`} type={file.type} />
+                  </video>
                 ) : (
-                  <div>Not image</div>
+                  <Box sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
+                    <Text align={"center"}>{file.type}</Text>
+                  </Box>
                 )}
-
+                </AspectRatio>
               </Card.Section>
 
               <Card.Section py="lg" px={"md"}>
-                <Group position={"apart"}>
-                  <Group>
+                <Group position={"apart"} align={"baseline"}>
+                  <Group align={"flex-start"}>
+                    <Checkbox color={"dark.6"} onClick={() => handlePickFile(file.id, file.fileUrl)} checked={selectedFiles.includes(file.id)}/>
                     <Text color={"dimmed"} size={"sm"}>{formatBytes(file.size)}</Text>
-                    <Text color={"dimmed"} size={"sm"}>{file.type}</Text>
+                    <Text color={"dimmed"} size={"sm"}>{file.type.split('/')[1]}</Text>
                   </Group>
                   <Form method={"post"}>
                     <input type="hidden" name={"fileId"} value={file.id}/>
@@ -256,11 +264,23 @@ export default function Media() {
             (transition?.submission?.formData.getAll("file") as File[]).map((file) => (
               <Card p="lg" withBorder key={file.name} style={{opacity: "0.5"}}>
                 <Card.Section>
-                  <Image
-                    src={URL.createObjectURL(file)}
-                    height={160}
-                    alt={"Test"}
-                  />
+                  <AspectRatio ratio={16 / 9}>
+
+                    {file.type.includes("image") ? (
+                      <Image
+                        src={URL.createObjectURL(file)}
+                        alt={"Test"}
+                      />
+                    ) : file.type.includes("video") ? (
+                      <video controls preload="metadata">
+                        <source src={`${URL.createObjectURL(file)}#t=0.5`} type={file.type} />
+                      </video>
+                    ) : (
+                      <Box sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]})}>
+                        <Text align={"center"}>{file.type}</Text>
+                      </Box>
+                    )}
+                  </AspectRatio>
                 </Card.Section>
 
                 <Card.Section py="lg" px={"md"}>
