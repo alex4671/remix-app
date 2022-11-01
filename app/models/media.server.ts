@@ -16,9 +16,13 @@ export const getUserFiles = async (userId: Media["userId"]) => {
     },
 
   })
-
-
   return userFiles?.media
+}
+
+export const getUserFilesSize = async (userId: Media["userId"]) => {
+  const userFiles = await getUserFiles(userId)
+
+  return userFiles?.reduce((acc, item) => acc + item.size, 0)
 }
 
 // export const saveFile = async (userId: Media["userId"], fileUrl: Media['fileUrl'], size: Media["size"], type: Media['type']) => {

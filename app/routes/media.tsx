@@ -4,7 +4,7 @@ import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import invariant from "tiny-invariant";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
-import {deleteFile, deleteFiles, getUserFiles, saveFiles} from "~/models/media.server";
+import {deleteFile, deleteFiles, getUserFiles, getUserFilesSize, saveFiles} from "~/models/media.server";
 import {getFileKey} from "~/utils/utils";
 import {useInputState} from "@mantine/hooks";
 import {UploadFile} from "~/components/MediaManager/UploadFile";
@@ -41,8 +41,16 @@ export const action = async ({request}: ActionArgs) => {
   const intent = formData.get("intent");
 
   if (intent === "uploadFiles") {
+    const filesSize = await getUserFilesSize(user.id)
     const files = formData.getAll("file") as File[];
 
+    const maxSizeLimit = user.payment ? 3221225472 : 314572800
+    const newFilesSize = files.reduce((acc, file) => acc + file.size, 0)
+
+    if (newFilesSize + (filesSize ?? 0) >= maxSizeLimit) {
+      return json({success: false, intent, message: "Select other files or delete existing"})
+    }
+    
     const filesToDB = []
 
     for (const file of files) {

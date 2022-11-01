@@ -62,7 +62,7 @@ export const FilesGrid = ({
               p="lg"
               withBorder
               key={file.id}
-              sx={(theme) => ({outline: selectedFiles.includes(file.id) ? `2px solid ${theme.colors.dark[6]}` : "none"})}
+              sx={(theme) => ({outline: selectedFiles.includes(file.id) ? `2px solid ${theme.colors.gray[6]}` : "none"})}
             >
               <Card.Section>
                 <AspectRatio ratio={16 / 9}>
@@ -89,12 +89,12 @@ export const FilesGrid = ({
                 <Group position={"apart"} align={"baseline"}>
                   <Group align={"flex-start"}>
                     <Checkbox
-                      color={"dark.6"}
+                      color={"gray"}
                       onChange={() => handlePickFile(file.id, file.fileUrl)}
                       checked={selectedFiles.includes(file.id)}
                     />
                     <Text color={"dimmed"} size={"sm"}>{formatBytes(file.size)}</Text>
-                    <Badge color="dark" variant="outline">{file.type.split('/')[1]}</Badge>
+                    <Badge color="gray" variant="outline">{file.type.split('/')[1]}</Badge>
                   </Group>
                   <Form method={"post"}>
                     <input type="hidden" name={"fileId"} value={file.id}/>
@@ -140,7 +140,7 @@ export const FilesGrid = ({
                   <Group position={"apart"} align={"baseline"}>
                     <Group align={"flex-start"}>
                       <Text color={"dimmed"} size={"sm"}>{formatBytes(file.size)}</Text>
-                      <Badge color="dark" variant="outline">{file.type.split('/')[1]}</Badge>
+                      <Badge color="gray" variant="outline">{file.type.split('/')[1]}</Badge>
                     </Group>
                     <Group spacing={4}>
                       <ActionIcon disabled>

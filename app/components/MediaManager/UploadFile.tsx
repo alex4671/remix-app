@@ -80,6 +80,8 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
     setSelectedFilesUrls([])
   }
 
+  // todo make new upload ui with preview
+
   return (
     <Form method={"post"} encType={"multipart/form-data"}>
       <Group position={"apart"}>
