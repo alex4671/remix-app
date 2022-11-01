@@ -8,6 +8,9 @@ import type {loader} from "~/routes/media";
 import type {DateRangePickerValue} from "@mantine/dates";
 import {DateRangePicker} from "@mantine/dates";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat"
+
+dayjs.extend(customParseFormat)
 
 interface Props {
   searchValue: string;
