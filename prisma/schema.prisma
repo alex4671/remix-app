@@ -20,6 +20,7 @@ model User {
 
   payment UserPayment?
   paymentHistory UserPaymentHistory[]
+  media Media[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -67,6 +68,19 @@ model Feedback {
   userEmail             String
   userId                String
   feedback              String   @db.Text
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Media {
+  id                    String   @id @default(uuid())
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+
+  fileUrl               String
+  type                  String
+  size                  Int
 
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt

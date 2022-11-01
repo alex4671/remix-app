@@ -7,9 +7,10 @@ import {useFetcher} from "@remix-run/react";
 import type {ChangeEvent} from "react";
 import { useEffect, useRef, useState} from "react";
 import {showNotification} from "@mantine/notifications";
+import type {action} from "~/routes/settings";
 
 export const Feedback = () => {
-  const fetcher = useFetcher()
+  const fetcher = useFetcher<typeof action>()
   const formRef = useRef<HTMLFormElement>(null);
 
   const [opened, setOpened] = useState<boolean>(false);
@@ -57,7 +58,7 @@ export const Feedback = () => {
               name={"feedback"}
               required
               onChange={handleTextChange}
-              error={!fetcher?.data?.success ? fetcher?.data?.message : null}
+              error={!fetcher.data?.success ? fetcher.data?.message : null}
             />
             <Group my={12} position={"right"}>
               <PrimaryButton type={"submit"} disabled={isDisabled}>Send</PrimaryButton>

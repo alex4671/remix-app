@@ -1,6 +1,6 @@
 import {createStyles, NavLink, Stack} from "@mantine/core";
 import {Link, useLocation} from "@remix-run/react";
-import {IconAlertCircle, IconCreditCard, IconMessage, IconUser, IconUsers} from "@tabler/icons";
+import {IconAlertCircle, IconCreditCard, IconUser, IconUsers} from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
   link: {
