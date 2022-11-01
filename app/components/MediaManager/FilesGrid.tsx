@@ -46,6 +46,8 @@ export const FilesGrid = ({
     ?.filter(file => file.name.toLowerCase().includes(searchValue.toLowerCase()))
     ?.filter(file => filterTypeValue.length ? filterTypeValue.includes(file.type.split("/")[1]) : true)
 
+
+  // todo refactor component
   return (
     <Group grow mt={24}>
       {filteredUserFiles?.length ? (
@@ -76,12 +78,18 @@ export const FilesGrid = ({
                       <source src={`${file.fileUrl}#t=0.5`} type={file.type}/>
                     </video>
                   ) : file.type.includes("audio") ? (
-                    <Box sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
+                    <Box
+                      sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
                       <audio controls>
-                        <source src={file.fileUrl} type={file.type} />
+                        <source src={file.fileUrl} type={file.type}/>
                       </audio>
                     </Box>
-                    ) : (
+                  ) : file.type.includes("pdf") ? (
+                    <embed
+                      type={file.type}
+                      src={file.fileUrl}
+                    />
+                  ) : (
                     <Box
                       sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}
                     >
@@ -132,9 +140,10 @@ export const FilesGrid = ({
                         <source src={`${URL.createObjectURL(file)}#t=0.5`} type={file.type}/>
                       </video>
                     ) : file.type.includes("audio") ? (
-                      <Box sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
+                      <Box
+                        sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
                         <audio controls>
-                          <source src={URL.createObjectURL(file)} type={file.type} />
+                          <source src={URL.createObjectURL(file)} type={file.type}/>
                         </audio>
                       </Box>
                     ) : (
