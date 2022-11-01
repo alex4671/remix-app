@@ -114,7 +114,6 @@ export default function Media() {
 
   const resetRef = useRef<() => void>(null);
 
-
   useEffect(() => {
     if (actionData) {
       showNotification({
@@ -165,7 +164,6 @@ export default function Media() {
     setSelectedFilesUrls([])
   }
   // todo decompose components
-  // todo add other file types
   // todo make limit usage
   return (
     <>
@@ -176,9 +174,15 @@ export default function Media() {
               <Group>
                 <input type="hidden" name={"filesToDeleteIds"} value={JSON.stringify(selectedFiles)}/>
                 <input type="hidden" name={"filesToDeleteUrls"} value={JSON.stringify(selectedFilesUrls)}/>
-                <DangerButton type={"submit"} name={"intent"}
-                               value={"deleteFiles"}>Delete {selectedFiles.length} files</DangerButton>
-                <SecondaryButton onClick={handleSelectAllFiles}>{selectedFiles.length === userFiles?.length ? "Deselect all": "Select all"}</SecondaryButton>
+                <DangerButton
+                  type={"submit"}
+                  name={"intent"}
+                  value={"deleteFiles"}
+                >
+                  Delete {selectedFiles.length} files
+                </DangerButton>
+                <SecondaryButton
+                  onClick={handleSelectAllFiles}>{selectedFiles.length === userFiles?.length ? "Deselect all" : "Select all"}</SecondaryButton>
                 <SecondaryButton onClick={handleCancelPick}>Cancel</SecondaryButton>
               </Group>
             ) : (
@@ -215,9 +219,9 @@ export default function Media() {
         <SimpleGrid
           cols={4}
           breakpoints={[
-            { maxWidth: 'md', cols: 3 },
-            { maxWidth: 'sm', cols: 2 },
-            { maxWidth: 'xs', cols: 1 },
+            {maxWidth: 'md', cols: 3},
+            {maxWidth: 'sm', cols: 2},
+            {maxWidth: 'xs', cols: 1},
           ]}
         >
           {userFiles?.map(file => (
@@ -272,11 +276,12 @@ export default function Media() {
                         alt={"Test"}
                       />
                     ) : file.type.includes("video") ? (
-                      <video controls preload="metadata">
-                        <source src={`${URL.createObjectURL(file)}#t=0.5`} type={file.type} />
+                      <video controls={false} preload="metadata">
+                        <source src={`${URL.createObjectURL(file)}#t=0.5`} type={file.type}/>
                       </video>
                     ) : (
-                      <Box sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]})}>
+                      <Box
+                        sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]})}>
                         <Text align={"center"}>{file.type}</Text>
                       </Box>
                     )}
