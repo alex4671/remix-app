@@ -79,6 +79,7 @@ model Media {
   userId                String
 
   fileUrl               String
+  name                  String
   type                  String
   size                  Int
 
