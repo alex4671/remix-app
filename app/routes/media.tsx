@@ -212,7 +212,14 @@ export default function Media() {
         </Group>
       </Form>
       <Group grow mt={24}>
-        <SimpleGrid cols={4}>
+        <SimpleGrid
+          cols={4}
+          breakpoints={[
+            { maxWidth: 'md', cols: 3 },
+            { maxWidth: 'sm', cols: 2 },
+            { maxWidth: 'xs', cols: 1 },
+          ]}
+        >
           {userFiles?.map(file => (
             <Card p="lg" withBorder key={file.id}
                   style={{outline: selectedFiles.includes(file.id) ? "2px solid blue" : "none"}}>
