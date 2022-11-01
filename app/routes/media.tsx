@@ -12,7 +12,7 @@ import {
   SimpleGrid,
   Text, TextInput,
   Tooltip, useMantineTheme,
-  ScrollArea, Badge, Grid, RingProgress,
+  ScrollArea, Badge, Grid, RingProgress, Title,
 } from "@mantine/core";
 import {
   IconCheck, IconChevronDown,
@@ -218,6 +218,11 @@ export default function Media() {
     setFilterTypeValue(prevState => prevState.filter(t => t !== type))
   }
 
+  const filteredUserFiles = userFiles
+    ?.filter(file => file.name.toLowerCase().includes(searchValue.toLowerCase()))
+    ?.filter(file => filterTypeValue.length ? filterTypeValue.includes(file.type.split("/")[1]) : true)
+
+
   // todo decompose components
   // todo make limit usage in backend
   // todo add file name
@@ -338,20 +343,22 @@ export default function Media() {
 
 
       <Group grow mt={24}>
-        <SimpleGrid
-          cols={4}
-          breakpoints={[
-            {maxWidth: 'md', cols: 3},
-            {maxWidth: 'sm', cols: 2},
-            {maxWidth: 'xs', cols: 1},
-          ]}
-        >
-          {userFiles
-            ?.filter(file => file.name.toLowerCase().includes(searchValue.toLowerCase()))
-            ?.filter(file => filterTypeValue.length ? filterTypeValue.includes(file.type.split("/")[1]) : true)
-            .map(file => (
-              <Card p="lg" withBorder key={file.id}
-                    sx={(theme) => ({outline: selectedFiles.includes(file.id) ? `2px solid ${theme.colors.dark[6]}` : "none"})}>
+        {filteredUserFiles?.length ? (
+          <SimpleGrid
+            cols={4}
+            breakpoints={[
+              {maxWidth: 'md', cols: 3},
+              {maxWidth: 'sm', cols: 2},
+              {maxWidth: 'xs', cols: 1},
+            ]}
+          >
+            {filteredUserFiles.map(file => (
+              <Card
+                p="lg"
+                withBorder
+                key={file.id}
+                sx={(theme) => ({outline: selectedFiles.includes(file.id) ? `2px solid ${theme.colors.dark[6]}` : "none"})}
+              >
                 <Card.Section>
                   <AspectRatio ratio={16 / 9}>
 
@@ -396,46 +403,49 @@ export default function Media() {
                 </Card.Section>
               </Card>
             ))}
-          {isSubmitting && filterTypeValue.length === 0 ? (
-            (transition?.submission?.formData.getAll("file") as File[]).map((file) => (
-              <Card p="lg" withBorder key={file.name} style={{opacity: "0.5"}}>
-                <Card.Section>
-                  <AspectRatio ratio={16 / 9}>
+            {isSubmitting && filterTypeValue.length === 0 ? (
+              (transition?.submission?.formData.getAll("file") as File[]).map((file) => (
+                <Card p="lg" withBorder key={file.name} style={{opacity: "0.5"}}>
+                  <Card.Section>
+                    <AspectRatio ratio={16 / 9}>
 
-                    {file.type.includes("image") ? (
-                      <Image
-                        src={URL.createObjectURL(file)}
-                        alt={"Test"}
-                      />
-                    ) : file.type.includes("video") ? (
-                      <video controls={false} preload="metadata">
-                        <source src={`${URL.createObjectURL(file)}#t=0.5`} type={file.type}/>
-                      </video>
-                    ) : (
-                      <Box
-                        sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]})}>
-                        <Text align={"center"}>{file.type}</Text>
-                      </Box>
-                    )}
-                  </AspectRatio>
-                </Card.Section>
+                      {file.type.includes("image") ? (
+                        <Image
+                          src={URL.createObjectURL(file)}
+                          alt={"Test"}
+                        />
+                      ) : file.type.includes("video") ? (
+                        <video controls={false} preload="metadata">
+                          <source src={`${URL.createObjectURL(file)}#t=0.5`} type={file.type}/>
+                        </video>
+                      ) : (
+                        <Box
+                          sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[2]})}>
+                          <Text align={"center"}>{file.type}</Text>
+                        </Box>
+                      )}
+                    </AspectRatio>
+                  </Card.Section>
 
-                <Card.Section py="lg" px={"md"}>
-                  <Group position={"apart"}>
-                    <Group>
-                      <Text color={"dimmed"} size={"sm"}>{formatBytes(file.size)}</Text>
-                      <Text color={"dimmed"} size={"sm"}>{file.type}</Text>
+                  <Card.Section py="lg" px={"md"}>
+                    <Group position={"apart"}>
+                      <Group>
+                        <Text color={"dimmed"} size={"sm"}>{formatBytes(file.size)}</Text>
+                        <Text color={"dimmed"} size={"sm"}>{file.type}</Text>
+                      </Group>
+                      <ActionIcon disabled>
+                        <IconTrash size={18}/>
+                      </ActionIcon>
                     </Group>
-                    <ActionIcon disabled>
-                      <IconTrash size={18}/>
-                    </ActionIcon>
-                  </Group>
-                </Card.Section>
-              </Card>
-            ))
+                  </Card.Section>
+                </Card>
+              ))
 
-          ) : null}
-        </SimpleGrid>
+            ) : null}
+          </SimpleGrid>
+          ) : (
+          <Title order={3} align={"center"}>Nothing found</Title>
+        )}
       </Group>
     </>
   )
