@@ -15,9 +15,10 @@ interface Props {
   selectedFilesUrls: string[];
   setSelectedFiles: Dispatch<SetStateAction<string[]>>
   setSelectedFilesUrls: Dispatch<SetStateAction<string[]>>
+  filteredUserFilesCount: number;
 }
 
-export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, setSelectedFilesUrls}: Props) => {
+export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, setSelectedFilesUrls, filteredUserFilesCount}: Props) => {
   const {userFiles, filesSize, maxSizeLimit} = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const [files, setFiles] = useState<File[] | null>(null);
@@ -134,7 +135,7 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
             withArrow
           >
             <Text component={"span"}>
-              {userFiles?.length} files, Used: {Math.round((100 / maxSizeLimit) * (filesSize ?? 0))}%
+              {filteredUserFilesCount} files, Used: {Math.round((100 / maxSizeLimit) * (filesSize ?? 0))}%
             </Text>
           </Tooltip>
         ) : null}

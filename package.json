@@ -21,6 +21,7 @@
     "@emotion/server": "^11.10.0",
     "@invertase/node-paddle-sdk": "^0.3.2",
     "@mantine/core": "5.6.3",
+    "@mantine/dates": "^5.6.3",
     "@mantine/hooks": "5.6.3",
     "@mantine/notifications": "5.6.3",
     "@mantine/nprogress": "5.6.3",

@@ -10,14 +10,22 @@ import {useInputState} from "@mantine/hooks";
 import {UploadFile} from "~/components/MediaManager/UploadFile";
 import {FilesGrid} from "~/components/MediaManager/FilesGrid";
 import {FilesFilters} from "~/components/MediaManager/FilesFilters";
+import dayjs from "dayjs";
+import {useLoaderData} from "@remix-run/react";
 
 // const MAX_SIZE_LIMIT_3GB = 3221225472
 // const MAX_SIZE_LIMIT_300MB = 3145728000
 
 export const loader = async ({request}: LoaderArgs) => {
+  const url = new URL(request.url);
+  const defaultFrom = url.searchParams.get("from");
+  const defaultTo = url.searchParams.get("to");
   const user = await requireUser(request)
 
-  const userFiles = await getUserFiles(user.id)
+  const from = defaultFrom ? dayjs(defaultFrom, "DD-MM-YYYY").startOf("day").toDate() : undefined
+  const to = defaultTo ? dayjs(defaultTo, "DD-MM-YYYY").endOf("day").toDate() : undefined
+
+  const userFiles = await getUserFiles(user.id, from, to)
 
   const filesSize = userFiles?.reduce((acc, item) => acc + item.size, 0)
 
@@ -50,7 +58,7 @@ export const action = async ({request}: ActionArgs) => {
     if (newFilesSize + (filesSize ?? 0) >= maxSizeLimit) {
       return json({success: false, intent, message: "Select other files or delete existing"})
     }
-    
+
     const filesToDB = []
 
     for (const file of files) {
@@ -108,20 +116,25 @@ export const action = async ({request}: ActionArgs) => {
     return json({success: true, intent, message: `${parsedFilesIdsToDelete.length} files deleted`})
   }
 
-
   return json({success: false, intent, message: "Some error"})
-
 }
 
 
-export default function Media() {
+// todo maybe add valtio for state managment
 
+export default function Media() {
+  const {userFiles} = useLoaderData<typeof loader>()
   const [selectedFiles, setSelectedFiles] = useState<string[]>([])
   const [selectedFilesUrls, setSelectedFilesUrls] = useState<string[]>([])
   const [searchValue, setSearchValue] = useInputState('');
   const [filterTypeValue, setFilterTypeValue] = useState<string[]>([]);
 
   // todo make limit usage in backend
+
+  const filteredUserFiles = userFiles
+    ?.filter(file => file.name.toLowerCase().includes(searchValue.toLowerCase()))
+    ?.filter(file => filterTypeValue.length ? filterTypeValue.includes(file.type.split("/")[1]) : true)
+
   return (
     <>
       <UploadFile
@@ -129,6 +142,7 @@ export default function Media() {
         selectedFilesUrls={selectedFilesUrls}
         setSelectedFiles={setSelectedFiles}
         setSelectedFilesUrls={setSelectedFilesUrls}
+        filteredUserFilesCount={filteredUserFiles.length}
       />
       <FilesFilters
         filterTypeValue={filterTypeValue}
@@ -136,11 +150,10 @@ export default function Media() {
         setFilterTypeValue={setFilterTypeValue}
         setSearchValue={setSearchValue}
       />
-
       <FilesGrid
         setSelectedFiles={setSelectedFiles}
         setSelectedFilesUrls={setSelectedFilesUrls}
-        searchValue={searchValue}
+        filteredUserFiles={filteredUserFiles}
         filterTypeValue={filterTypeValue}
         selectedFiles={selectedFiles}
       />

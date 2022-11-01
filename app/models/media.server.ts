@@ -2,21 +2,19 @@ import type {Media} from "@prisma/client";
 import {prisma} from "~/server/db.server";
 
 
-export const getUserFiles = async (userId: Media["userId"]) => {
-  const userFiles = await prisma.user.findUnique({
+export const getUserFiles = (userId: Media["userId"], from: Date | undefined = undefined, to: Date | undefined = undefined) => {
+  return prisma.media.findMany({
     where: {
-      id: userId
-    },
-    select: {
-      media: {
-        orderBy: {
-          createdAt: "asc"
-        }
+      userId,
+      createdAt: {
+        gte: from,
+        lte: to,
       }
     },
-
+    orderBy: {
+      createdAt: "asc"
+    }
   })
-  return userFiles?.media
 }
 
 export const getUserFilesSize = async (userId: Media["userId"]) => {

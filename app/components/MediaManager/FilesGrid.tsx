@@ -12,16 +12,15 @@ import {
   Title
 } from "@mantine/core";
 import {formatBytes} from "~/utils/utils";
-import {Form, useLoaderData, useTransition} from "@remix-run/react";
+import {Form, useTransition} from "@remix-run/react";
 import {IconDownload, IconTrash} from "@tabler/icons";
 import type {Dispatch, SetStateAction} from "react";
-import type {loader} from "~/routes/media";
 import {upperFirst} from "@mantine/hooks";
 
 interface Props {
   setSelectedFiles: Dispatch<SetStateAction<string[]>>
   setSelectedFilesUrls: Dispatch<SetStateAction<string[]>>
-  searchValue: string;
+  filteredUserFiles: any;
   filterTypeValue: string[];
   selectedFiles: string[];
 }
@@ -29,25 +28,22 @@ interface Props {
 export const FilesGrid = ({
                             setSelectedFiles,
                             setSelectedFilesUrls,
-                            searchValue,
+                            filteredUserFiles,
                             filterTypeValue,
                             selectedFiles
                           }: Props) => {
-  const {userFiles} = useLoaderData<typeof loader>()
+
   const transition = useTransition();
   const isSubmitting = transition.submission
 
   const handlePickFile = (id: string, url: string) => {
     setSelectedFiles(prevState => prevState.includes(id) ? prevState.filter(el => el !== id) : [...prevState, id])
     setSelectedFilesUrls(prevState => prevState.includes(url) ? prevState.filter(el => el !== url) : [...prevState, url])
-
   }
-  const filteredUserFiles = userFiles
-    ?.filter(file => file.name.toLowerCase().includes(searchValue.toLowerCase()))
-    ?.filter(file => filterTypeValue.length ? filterTypeValue.includes(file.type.split("/")[1]) : true)
 
 
   // todo refactor component
+  // todo add type
   return (
     <Group grow mt={24}>
       {filteredUserFiles?.length ? (
