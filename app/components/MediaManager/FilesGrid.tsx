@@ -129,13 +129,14 @@ export const FilesGrid = ({
                           </ActionIcon>
                         </Popover.Target>
                         <Popover.Dropdown>
-                          <Stack align={"start"}>
+                          <Stack align={"start"} spacing={0}>
                             <Text>Share this file</Text>
                             <Switch
                               label="Make this file public"
                               name={"isPublic"}
                               checked={file.public}
                               onChange={(event) => handleMakePublic(event, file.id)}
+                              mb={20}
                             />
                             <CopyButton value={`${window.location.origin}/media/${file.id}`}>
                               {({copied, copy}) => (
