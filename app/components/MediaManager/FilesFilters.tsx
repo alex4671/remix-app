@@ -1,4 +1,4 @@
-import {ActionIcon, Badge, Grid, Group, TextInput} from "@mantine/core";
+import {ActionIcon, Badge, Button, Grid, Group, Select, TextInput} from "@mantine/core";
 import {IconCircleX, IconX} from "@tabler/icons";
 import {Filter} from "~/components/MediaManager/Filter";
 import type {Dispatch, SetStateAction} from "react";
@@ -24,6 +24,8 @@ export const FilesFilters = ({searchValue, setSearchValue, filterTypeValue, setF
   const [searchParams, setSearchParams] = useSearchParams();
   const defaultFrom = searchParams.get("from")
   const defaultTo = searchParams.get("to")
+  const defaultOrder = searchParams.get("order") ?? "asc"
+  const defaultPublic = searchParams.get("public") ?? "no"
 
   const fileTypes = Array.from(new Set(userFiles?.map(file => file.type.split('/')[1])))
   const handleRemoveSelectedType = (type: string) => {
@@ -35,21 +37,40 @@ export const FilesFilters = ({searchValue, setSearchValue, filterTypeValue, setF
     defaultTo ? dayjs(defaultTo, "DD-MM-YYYY").toDate() : null,
   ]);
 
-  // todo From - to
   const handleRangeChange = (date: DateRangePickerValue) => {
     const [from, to] = date
     console.log("date", date)
     if (from && to) {
-      setSearchParams({
-        from: dayjs(from).format('DD-MM-YYYY'),
-        to: dayjs(to).format('DD-MM-YYYY')
-      });
+      searchParams.set("from", dayjs(from).format('DD-MM-YYYY'))
+      searchParams.set("to", dayjs(to).format('DD-MM-YYYY'))
+      setSearchParams(searchParams.toString());
     } else if (!from && !to) {
-      setSearchParams({});
+      searchParams.delete("from")
+      searchParams.delete("to")
+      setSearchParams(searchParams.toString());
     }
     setTimeRange(date)
   }
 
+  const handleSortChange = (value: string | null) => {
+    if (value === "desc") {
+      searchParams.set("order", value)
+      setSearchParams(searchParams.toString());
+    } else {
+      searchParams.delete("order")
+      setSearchParams(searchParams.toString());
+    }
+  }
+
+  const handlePublicFilter = () => {
+    if (defaultPublic === "no") {
+      searchParams.set("public", "yes")
+      setSearchParams(searchParams.toString());
+    } else {
+      searchParams.delete("public")
+      setSearchParams(searchParams.toString());
+    }
+  }
   return (
     <Grid my={24}>
       <Grid.Col xs={12} sm={4}>
@@ -77,6 +98,25 @@ export const FilesFilters = ({searchValue, setSearchValue, filterTypeValue, setF
           filterTypeValue={filterTypeValue}
           setFilterTypeValue={setFilterTypeValue}
         />
+      </Grid.Col>
+      <Grid.Col xs={12} sm={2}>
+        <Select
+          onChange={handleSortChange}
+          defaultValue={defaultOrder}
+          data={[
+            {value: 'asc', label: 'New top'},
+            {value: 'desc', label: 'Old top'},
+          ]}
+        />
+      </Grid.Col>
+      <Grid.Col xs={12} sm={"content"}>
+        <Button
+          onClick={handlePublicFilter}
+          variant={defaultPublic === "yes" ? "filled" : "outline"}
+          color={"dark"}
+        >
+          Only Public
+        </Button>
       </Grid.Col>
       <Grid.Col xs={12} sm={3}>
         <DateRangePicker

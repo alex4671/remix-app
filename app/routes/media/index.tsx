@@ -20,12 +20,15 @@ export const loader = async ({request}: LoaderArgs) => {
   const url = new URL(request.url);
   const defaultFrom = url.searchParams.get("from");
   const defaultTo = url.searchParams.get("to");
+  const defaultOrder = url.searchParams.get("order") ?? "asc";
+  const defaultPublic = url.searchParams.get("public") ?? "no";
+
   const user = await requireUser(request)
 
   const from = defaultFrom ? dayjs(defaultFrom, "DD-MM-YYYY").startOf("day").toDate() : undefined
   const to = defaultTo ? dayjs(defaultTo, "DD-MM-YYYY").endOf("day").toDate() : undefined
 
-  const userFiles = await getUserFiles(user.id, from, to)
+  const userFiles = await getUserFiles(user.id, from, to, defaultOrder, defaultPublic)
 
   const filesSize = userFiles?.reduce((acc, item) => acc + item.size, 0)
 
