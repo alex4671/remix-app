@@ -4,7 +4,7 @@ import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import invariant from "tiny-invariant";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
-import {deleteFile, deleteFiles, getUserFiles, getUserFilesSize, saveFiles} from "~/models/media.server";
+import {deleteFile, deleteFiles, getUserFiles, getUserFilesSize, saveFiles, togglePublic} from "~/models/media.server";
 import {getFileKey} from "~/utils/utils";
 import {useInputState} from "@mantine/hooks";
 import {UploadFile} from "~/components/MediaManager/UploadFile";
@@ -114,6 +114,14 @@ export const action = async ({request}: ActionArgs) => {
     }
 
     return json({success: true, intent, message: `${parsedFilesIdsToDelete.length} files deleted`})
+  }
+
+  if (intent === "togglePublic") {
+    const checked = formData.get("checked")?.toString() ?? "";
+    const fileId = formData.get("fileId")?.toString() ?? "";
+
+    await togglePublic(fileId, checked === "true")
+    return json({success: true, intent, message: `File now ${checked ? "Public" : "Private"}`})
   }
 
   return json({success: false, intent, message: "Some error"})

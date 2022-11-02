@@ -3,17 +3,22 @@ import {
   AspectRatio,
   Badge,
   Box,
+  Button,
   Card,
   Checkbox,
+  CopyButton,
   Group,
   Image,
+  Popover,
   SimpleGrid,
+  Stack,
+  Switch,
   Text,
   Title
 } from "@mantine/core";
 import {formatBytes} from "~/utils/utils";
-import {Form, useTransition} from "@remix-run/react";
-import {IconDownload, IconTrash} from "@tabler/icons";
+import {useFetcher, useTransition} from "@remix-run/react";
+import {IconClipboard, IconDownload, IconShare, IconTrash} from "@tabler/icons";
 import type {Dispatch, SetStateAction} from "react";
 import {upperFirst} from "@mantine/hooks";
 
@@ -33,6 +38,8 @@ export const FilesGrid = ({
                             selectedFiles
                           }: Props) => {
 
+  const fetcher = useFetcher()
+
   const transition = useTransition();
   const isSubmitting = transition.submission
 
@@ -41,6 +48,12 @@ export const FilesGrid = ({
     setSelectedFilesUrls(prevState => prevState.includes(url) ? prevState.filter(el => el !== url) : [...prevState, url])
   }
 
+
+  const handleMakePublic = (event: any, fileId: string) => {
+    const {checked} = event.currentTarget
+
+    fetcher.submit({intent: "togglePublic", fileId, checked}, {method: "post", replace: true})
+  }
 
   // todo refactor component
   // todo add type
@@ -106,9 +119,40 @@ export const FilesGrid = ({
                     <Text color={"dimmed"} size={"sm"}>{formatBytes(file.size)}</Text>
                     <Badge color="gray" variant="outline">{file.type.split('/')[1]}</Badge>
                   </Group>
-                  <Form method={"post"}>
+                  <fetcher.Form method={"post"}>
                     <input type="hidden" name={"fileId"} value={file.id}/>
                     <Group spacing={4}>
+                      <Popover width={250} withArrow position="bottom" shadow={"sm"}>
+                        <Popover.Target>
+                          <ActionIcon>
+                            <IconShare size={18}/>
+                          </ActionIcon>
+                        </Popover.Target>
+                        <Popover.Dropdown>
+                          <Stack align={"start"}>
+                            <Text>Share this file</Text>
+                            <Switch
+                              label="Make this file public"
+                              name={"isPublic"}
+                              checked={file.public}
+                              onChange={(event) => handleMakePublic(event, file.id)}
+                            />
+                            <CopyButton value={`${window.location.origin}/media/${file.id}`}>
+                              {({copied, copy}) => (
+                                <Button
+                                  color={copied ? 'teal' : 'blue'}
+                                  leftIcon={<IconClipboard size={18}/>}
+                                  onClick={copy}
+                                  disabled={!file.public}
+                                >
+                                  {copied ? 'Copied link' : 'Copy link'}
+                                </Button>
+                              )}
+                            </CopyButton>
+                          </Stack>
+                        </Popover.Dropdown>
+                      </Popover>
+
                       <ActionIcon component={"a"} href={file.fileUrl} download target={"_blank"}>
                         <IconDownload size={18}/>
                       </ActionIcon>
@@ -116,7 +160,7 @@ export const FilesGrid = ({
                         <IconTrash size={18}/>
                       </ActionIcon>
                     </Group>
-                  </Form>
+                  </fetcher.Form>
                 </Group>
               </Card.Section>
             </Card>

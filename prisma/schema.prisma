@@ -82,6 +82,7 @@ model Media {
   name                  String
   type                  String
   size                  Int
+  public                Boolean  @default(false)
 
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt

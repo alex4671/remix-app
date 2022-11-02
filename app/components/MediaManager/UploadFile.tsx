@@ -81,8 +81,8 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
     setSelectedFilesUrls([])
   }
 
-  // todo make new upload ui with preview
-
+  // todo make new upload ui with preview/
+  // todo bug with usage count when filtering
   return (
     <Form method={"post"} encType={"multipart/form-data"}>
       <Group position={"apart"}>

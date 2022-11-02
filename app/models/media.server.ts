@@ -44,6 +44,24 @@ export const saveFiles = (files: SaveFileType[]) => {
   })
 }
 
+export const togglePublic = (fileId: Media["id"], checked: Media["public"]) => {
+  return prisma.media.update({
+    where: {
+      id: fileId
+    },
+    data: {
+      public: checked
+    }
+  })
+}
+
+export const getFileById = (fileId: Media['id']) => {
+  return prisma.media.findUnique({
+    where: {
+      id: fileId,
+    }
+  })
+}
 
 export const deleteFile = (fileId: Media['id']) => {
   return prisma.media.delete({

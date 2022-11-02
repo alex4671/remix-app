@@ -1,6 +1,7 @@
 import {Container, MantineProvider} from "@mantine/core";
 import type {LinksFunction, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
+import type {ShouldReloadFunction} from "@remix-run/react";
 import {
   Links,
   LiveReload,
@@ -10,6 +11,7 @@ import {
   ScrollRestoration,
   useCatch,
   useLoaderData,
+  useParams,
   useTransition
 } from "@remix-run/react";
 import {getUser} from "~/server/session.server";
@@ -36,7 +38,19 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
-export async function loader({request}: LoaderArgs) {
+export const unstable_shouldReload: ShouldReloadFunction = ({submission}) => {
+  // only refetch if changing theme, logout and login
+  return submission?.action === "/api/set-theme"
+    || submission?.action === "/logout"
+    || Boolean(submission?.action.includes("/login"))
+    || Boolean(submission?.action.includes("/join"))
+    || submission?.action === "/settings/account"
+    || submission?.action === "/settings/danger"
+  // || submission?.action === undefined
+  // || Boolean(submission?.action.includes("/media"))
+};
+
+export async function loader({request, params}: LoaderArgs) {
   const [{theme}, user] = await Promise.all([
     getTheme(request),
     getUser(request)
@@ -70,6 +84,7 @@ const Document = ({children, title = "App"}: { children: ReactNode, title?: stri
 
 export default function App() {
   const {theme, user} = useLoaderData<typeof loader>()
+  const params = useParams()
   const transition = useTransition()
 
   return (
@@ -98,7 +113,7 @@ export default function App() {
         <LoadingProgress state={transition.state}/>
         <NotificationsProvider position={"top-center"}>
           <Container size={"xl"} px={12}>
-            {user && <Navbar/>}
+            {user && !params.fileId && <Navbar/>}
             <Outlet/>
           </Container>
         </NotificationsProvider>
