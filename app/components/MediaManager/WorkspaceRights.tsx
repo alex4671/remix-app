@@ -13,9 +13,10 @@ type Rights = {
 interface Props {
   rights: any;
   collaboratorId: string;
+  isOwner: boolean;
 }
 
-export const WorkspaceRights = ({rights, collaboratorId}: Props) => {
+export const WorkspaceRights = ({rights, collaboratorId, isOwner}: Props) => {
   const fetcher = useFetcher()
   const [workspaceRights, setWorkspaceRights] = useState({delete: rights?.delete, upload: rights?.upload})
   const [opened, setOpened] = useState(false);
@@ -37,41 +38,42 @@ export const WorkspaceRights = ({rights, collaboratorId}: Props) => {
           <Text>Delete: </Text>
           <Badge color={rights.delete ? "emerald" : "red"}>{rights.delete ? "Yes" : "No"}</Badge>
         </Group>
-        <Popover width={250} withArrow position="top" shadow={"sm"} withinPortal opened={opened} onChange={setOpened}>
-          <Popover.Target>
-            <ActionIcon onClick={() => setOpened((o) => !o)}>
-              <IconEdit size={14}/>
-            </ActionIcon>
-          </Popover.Target>
-          <Popover.Dropdown>
-            <Stack align={"start"} spacing={0}>
-              <Text>Edit rules</Text>
-              <Switch
-                label="Upload"
-                name={"rightsUpload"}
-                checked={workspaceRights.upload}
-                onChange={(event) => setWorkspaceRights({delete: workspaceRights.delete, upload: event.currentTarget.checked})}
-                color={"emerald"}
-              />
-              <Switch
-                label="Delete"
-                name={"rightsDelete"}
-                checked={workspaceRights.delete}
-                onChange={(event) => setWorkspaceRights({upload: workspaceRights.upload, delete: event.currentTarget.checked})}
-                color={"emerald"}
-              />
-              <Button
-                mt={12}
-                onClick={handleUpdateRights}
-                variant={"light"}
-                color={"emerald"}
-              >
-                Save
-              </Button>
-            </Stack>
-          </Popover.Dropdown>
-        </Popover>
-
+        {isOwner ? (
+          <Popover width={250} withArrow position="top" shadow={"sm"} withinPortal opened={opened} onChange={setOpened}>
+            <Popover.Target>
+              <ActionIcon onClick={() => setOpened((o) => !o)}>
+                <IconEdit size={14}/>
+              </ActionIcon>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Stack align={"start"} spacing={0}>
+                <Text>Edit rules</Text>
+                <Switch
+                  label="Upload"
+                  name={"rightsUpload"}
+                  checked={workspaceRights.upload}
+                  onChange={(event) => setWorkspaceRights({delete: workspaceRights.delete, upload: event.currentTarget.checked})}
+                  color={"emerald"}
+                />
+                <Switch
+                  label="Delete"
+                  name={"rightsDelete"}
+                  checked={workspaceRights.delete}
+                  onChange={(event) => setWorkspaceRights({upload: workspaceRights.upload, delete: event.currentTarget.checked})}
+                  color={"emerald"}
+                />
+                <Button
+                  mt={12}
+                  onClick={handleUpdateRights}
+                  variant={"light"}
+                  color={"emerald"}
+                >
+                  Save
+                </Button>
+              </Stack>
+            </Popover.Dropdown>
+          </Popover>
+        ) : null}
       </Group>
     </>
   )

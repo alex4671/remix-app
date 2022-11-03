@@ -50,6 +50,7 @@ export const loader = async ({request, params}: LoaderArgs) => {
       : userFiles?.collaborator?.find(c => c.userId === user.id)?.rights as Rights
 
   return json({
+    origin: url.origin,
     rights,
     userFiles: userFiles?.media ?? [],
     filesSize,

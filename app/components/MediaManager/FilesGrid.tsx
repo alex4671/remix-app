@@ -40,7 +40,7 @@ export const FilesGrid = ({
                             filterTypeValue,
                             selectedFiles
                           }: Props) => {
-  const {rights} = useLoaderData<typeof loader>()
+  const {rights, origin} = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
 
   const transition = useTransition();
@@ -144,7 +144,7 @@ export const FilesGrid = ({
                                 mb={20}
                                 color={"emerald"}
                               />
-                              <CopyButton value={`${window.location.origin}/media/share/${file.id}`}>
+                              <CopyButton value={`${origin}/media/share/${file.id}`}>
                                 {({copied, copy}) => (
                                   <Button
                                     color={copied ? 'lime' : 'emerald'}

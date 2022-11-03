@@ -128,14 +128,21 @@ export default function WorkspaceId() {
       <td>{c.role}</td>
       <td>{dayjs(c.createdAt).format("DD/MM/YYYY")}</td>
       <td>
-        <WorkspaceRights rights={c.rights} collaboratorId={c.id}/>
+        <WorkspaceRights rights={c.rights} collaboratorId={c.id} isOwner={isUserOwner}/>
       </td>
       {isUserOwner ? (
         <td>
           <Form method={"post"}>
             <input type="hidden" name={"collaboratorId"} value={c.id}/>
-            <DangerButton disabled={!isUserOwner} compact type={"submit"} name={"intent"} value={"removeAccess"}>Remove
-              access</DangerButton>
+            <DangerButton
+              disabled={!isUserOwner}
+              compact
+              type={"submit"}
+              name={"intent"}
+              value={"removeAccess"}
+            >
+              Remove access
+            </DangerButton>
           </Form>
         </td>
       ) : null}
