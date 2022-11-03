@@ -1,9 +1,9 @@
 import {Badge, Group, Paper, ScrollArea, Table, Text, TextInput, Title} from "@mantine/core";
 import {IconCheck, IconChevronLeft, IconX} from "@tabler/icons";
-import {Form, useActionData, useLoaderData, useNavigate} from "@remix-run/react";
+import {Form, useActionData, useLoaderData, useNavigate, useTransition} from "@remix-run/react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import type {ActionArgs, LoaderArgs} from "@remix-run/node";
-import { json, redirect} from "@remix-run/node";
+import {json, redirect} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {deleteWorkspace, getWorkspacesById, isUserAllowedViewWorkspace} from "~/models/workspace.server";
 import invariant from "tiny-invariant";
@@ -17,6 +17,8 @@ import {deleteFileFromS3} from "~/models/storage.server";
 import {getFileKey} from "~/utils/utils";
 import {useEffect} from "react";
 import {showNotification} from "@mantine/notifications";
+import {emitter} from "~/server/emitter.server";
+import {EventType, useSubscription} from "~/hooks/useSubscription";
 
 export const loader = async ({request, params}: LoaderArgs) => {
   const user = await requireUser(request)
@@ -49,7 +51,7 @@ export const action = async ({request, params}: ActionArgs) => {
 
     try {
       const userToInvite = await getUserByEmail(memberEmail)
-      console.log("userToInvite", userToInvite)
+
       if (userToInvite?.email === user.email) {
         return json({success: false, intent, message: `You can't invite yourself`})
       }
@@ -57,6 +59,7 @@ export const action = async ({request, params}: ActionArgs) => {
       if (userToInvite) {
         await createCollaborator(workspaceId, userToInvite.id)
 
+        emitter.emit(EventType.INVITE_MEMBER)
         return json({success: true, intent, message: `Collaborator ${userToInvite.email} added`})
       }
 
@@ -72,6 +75,7 @@ export const action = async ({request, params}: ActionArgs) => {
     try {
       await deleteCollaborator(collaboratorId)
 
+      emitter.emit(EventType.REMOVE_ACCESS)
       return json({success: true, intent, message: `Collaborator removed`})
     } catch (e) {
       return json({success: false, intent, message: "Error removing collaborator"})
@@ -89,6 +93,7 @@ export const action = async ({request, params}: ActionArgs) => {
         }
       }
 
+      emitter.emit(EventType.DELETE_WORKSPACE)
       return json({success: true, intent, message: `Workspace deleted`})
     } catch (e) {
       return json({success: false, intent, message: "Error deleting workspace"})
@@ -102,6 +107,8 @@ export const action = async ({request, params}: ActionArgs) => {
     try {
       await updateCollaboratorRights(collaboratorId, workspaceRights)
 
+
+      emitter.emit(EventType.UPDATE_RIGHTS)
       return json({success: true, intent, message: `Rights updated`})
     } catch (e) {
       return json({success: false, intent, message: "Error updating rights"})
@@ -116,7 +123,9 @@ export default function WorkspaceId() {
   const {user, workspace} = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const navigate = useNavigate()
+  const transition = useTransition()
 
+  useSubscription([EventType.UPDATE_RIGHTS, EventType.REMOVE_ACCESS], !!transition.submission)
   useEffect(() => {
     if (actionData) {
       showNotification({

@@ -20,6 +20,7 @@ export const loader = async ({request}: LoaderArgs) => {
 
 export default function WorkspaceIndex() {
   const {workspaces, collaborator} = useLoaderData<typeof loader>()
+
   const listType = useOutletContext()
   const navigate = useNavigate()
 

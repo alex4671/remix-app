@@ -6,7 +6,7 @@ import {deleteFile, deleteFiles, getUserFilesSize, saveFiles, togglePublic} from
 import invariant from "tiny-invariant";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
 import {getFileKey} from "~/utils/utils";
-import {useActionData, useLoaderData} from "@remix-run/react";
+import {useActionData, useLoaderData, useTransition} from "@remix-run/react";
 import {useEffect, useState} from "react";
 import {useInputState} from "@mantine/hooks";
 import {UploadFile} from "~/components/MediaManager/UploadFile";
@@ -16,6 +16,8 @@ import {getWorkspaceFilesById, isUserAllowedViewWorkspace} from "~/models/worksp
 import {createComment, deleteComment} from "~/models/comments.server";
 import {showNotification} from "@mantine/notifications";
 import {IconCheck, IconX} from "@tabler/icons";
+import {EventType, useSubscription} from "~/hooks/useSubscription";
+import {emitter} from "~/server/emitter.server";
 
 type Rights = {
   delete: boolean;
@@ -109,6 +111,8 @@ export const action = async ({request, params}: ActionArgs) => {
 
     await saveFiles(filesToDB)
 
+    emitter.emit(EventType.UPLOAD_FILE)
+
     return json({success: true, intent, message: `${filesToDB.length} files uploaded`})
   }
 
@@ -123,6 +127,8 @@ export const action = async ({request, params}: ActionArgs) => {
       return json({success: false, intent, message: "Error deleting avatar"})
     }
 
+
+    emitter.emit(EventType.DELETE_FILE)
     return json({success: true, intent, message: "File deleted"})
   }
 
@@ -143,6 +149,7 @@ export const action = async ({request, params}: ActionArgs) => {
       return json({success: false, intent, message: "Error deleting files"})
     }
 
+    emitter.emit(EventType.DELETE_FILE)
     return json({success: true, intent, message: `${parsedFilesIdsToDelete.length} files deleted`})
   }
 
@@ -152,6 +159,8 @@ export const action = async ({request, params}: ActionArgs) => {
 
     try {
       await togglePublic(fileId, checked === "true")
+
+      emitter.emit(EventType.UPDATE_FILE)
       return json({success: true, intent, message: `File now ${checked ? "Public" : "Private"}`})
     } catch (e) {
       return json({success: false, intent, message: `Error making file ${checked ? "Public" : "Private"}`})
@@ -164,6 +173,8 @@ export const action = async ({request, params}: ActionArgs) => {
 
     try {
       await createComment(user.id, comment, mediaId)
+
+      emitter.emit(EventType.CREATE_COMMENT)
       return json({success: true, intent, message: `Comment added`})
     } catch (e) {
       return json({success: false, intent, message: `Error adding comment`})
@@ -175,6 +186,8 @@ export const action = async ({request, params}: ActionArgs) => {
 
     try {
       await deleteComment(commentId)
+
+      emitter.emit(EventType.DELETE_COMMENT)
       return json({success: true, intent, message: `Comment deleted`})
     } catch (e) {
       return json({success: false, intent, message: `Error deleting comment`})
@@ -190,11 +203,12 @@ export const action = async ({request, params}: ActionArgs) => {
 export default function WorkspaceId() {
   const {userFiles} = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
+  const transition = useTransition()
   const [selectedFiles, setSelectedFiles] = useState<string[]>([])
   const [selectedFilesUrls, setSelectedFilesUrls] = useState<string[]>([])
   const [searchValue, setSearchValue] = useInputState('');
   const [filterTypeValue, setFilterTypeValue] = useState<string[]>([]);
-
+  useSubscription([EventType.REMOVE_ACCESS, EventType.UPLOAD_FILE, EventType.DELETE_FILE, EventType.DELETE_WORKSPACE, EventType.UPDATE_RIGHTS, EventType.UPDATE_FILE, EventType.CREATE_COMMENT, EventType.DELETE_COMMENT], !!transition.submission)
   useEffect(() => {
     if (actionData) {
       showNotification({

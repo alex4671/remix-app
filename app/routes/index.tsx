@@ -4,7 +4,20 @@ import {requireUser} from "~/server/session.server";
 import {useInputState} from "@mantine/hooks";
 import {useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
 import {getAllowedWorkspaces} from "~/models/workspace.server";
-import {ActionIcon, Avatar, Badge, Box, Grid, Group, Paper, SimpleGrid, Text, TextInput, Title, Tooltip} from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Badge,
+  Box,
+  Grid,
+  Group,
+  Paper,
+  SimpleGrid,
+  Text,
+  TextInput,
+  Title,
+  Tooltip
+} from "@mantine/core";
 import {IconFiles, IconSettings} from "@tabler/icons";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import dayjs from "dayjs";
@@ -12,6 +25,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {DesktopOnly} from "~/components/Utils/DesktopOnly";
 import {MobileOnly} from "~/components/Utils/MobileOnly";
+import {EventType, useSubscription} from "~/hooks/useSubscription";
 
 dayjs.extend(relativeTime)
 
@@ -30,7 +44,7 @@ export default function WorkspacesIndex() {
   const {user, workspaces} = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const fetcher = useFetcher()
-
+  useSubscription([EventType.CREATE_WORKSPACE, EventType.DELETE_WORKSPACE, EventType.INVITE_MEMBER, EventType.REMOVE_ACCESS], !!fetcher.submission)
   const [value, setValue] = useInputState('');
   const [searchValue, setSearchValue] = useInputState('');
 

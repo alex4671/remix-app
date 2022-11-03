@@ -8,7 +8,28 @@ const BUILD_DIR = path.join(process.cwd(), "build");
 
 const app = express();
 
-app.use(compression());
+app.use(compression({
+  filter: (_req, res) => {
+    const contentTypeHeader = res.getHeader('Content-Type')
+    let contentType = ''
+    if (contentTypeHeader) {
+      if (Array.isArray(contentTypeHeader)) {
+        contentType = contentTypeHeader.join(' ')
+      } else {
+        contentType = String(contentTypeHeader)
+      }
+    }
+
+    if (
+      contentType.includes('text/html') ||
+      contentType.includes('text/event-stream')
+    ) {
+      return false
+    }
+
+    return true
+  },
+}))
 
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
 app.disable("x-powered-by");
