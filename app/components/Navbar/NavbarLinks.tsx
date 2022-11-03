@@ -74,7 +74,7 @@ export const NavbarLinks = () => {
   };
 
   const links = [
-    {to: "/", isActive: location.pathname === "/" || location.pathname.includes("/media/"), name: "Home"},
+    {to: "/", isActive: location.pathname === "/" || location.pathname.includes("/media/"), name: "Workspaces"},
     {to: "settings/account", isActive: location.pathname.includes("/settings/"), name: "Settings"},
     {to: "pro", isActive: location.pathname === "/pro" || location.pathname === "/require-pro", name: "Pro"},
   ]

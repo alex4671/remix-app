@@ -40,7 +40,7 @@ const useStyles = createStyles((theme) => ({
 export const NavbarMenu = () => {
   const user = useUser()
   const submit = useSubmit()
-  const {classes, theme, cx} = useStyles();
+  const {classes, cx} = useStyles();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   const handleLogout = () => {
@@ -80,15 +80,7 @@ export const NavbarMenu = () => {
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Item icon={<IconHeart size={14} color={theme.colors.red[6]} stroke={1.5}/>} disabled>
-          Liked posts
-        </Menu.Item>
-        <Menu.Item icon={<IconStar size={14} color={theme.colors.yellow[6]} stroke={1.5}/>} disabled>
-          Saved posts
-        </Menu.Item>
-        <Menu.Item icon={<IconMessage size={14} color={theme.colors.blue[6]} stroke={1.5}/>} disabled>
-          Your comments
-        </Menu.Item>
+        <Menu.Label>{user.email}</Menu.Label>
 
         <Menu.Label>Settings</Menu.Label>
         <Menu.Item component={Link} to={"/settings/account"} icon={<IconSettings size={14} stroke={1.5}/>}>Account

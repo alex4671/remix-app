@@ -45,15 +45,15 @@ export const SettingsLinks = () => {
         variant="filled"
         prefetch={"intent"}
       />
-      <NavLink
-        component={Link}
-        to="./old"
-        label="Pro Old"
-        icon={<IconCreditCard size={16} stroke={1.5}/>}
-        className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("old") })}
-        variant="filled"
-        prefetch={"intent"}
-      />
+      {/*<NavLink*/}
+      {/*  component={Link}*/}
+      {/*  to="./old"*/}
+      {/*  label="Pro Old"*/}
+      {/*  icon={<IconCreditCard size={16} stroke={1.5}/>}*/}
+      {/*  className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("old") })}*/}
+      {/*  variant="filled"*/}
+      {/*  prefetch={"intent"}*/}
+      {/*/>*/}
       <NavLink
         component={Link}
         to="./workspaces"

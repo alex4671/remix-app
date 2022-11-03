@@ -4,12 +4,14 @@ import {requireUser} from "~/server/session.server";
 import {useInputState} from "@mantine/hooks";
 import {useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
 import {getAllowedWorkspaces} from "~/models/workspace.server";
-import {ActionIcon, Avatar, Badge, Box, Group, Paper, SimpleGrid, Text, TextInput, Title, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Badge, Box, Grid, Group, Paper, SimpleGrid, Text, TextInput, Title, Tooltip} from "@mantine/core";
 import {IconFiles, IconSettings} from "@tabler/icons";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
+import {DesktopOnly} from "~/components/Utils/DesktopOnly";
+import {MobileOnly} from "~/components/Utils/MobileOnly";
 
 dayjs.extend(relativeTime)
 
@@ -52,17 +54,39 @@ export default function WorkspacesIndex() {
   return (
     <Box>
       <LoadingProgress state={fetcher.state}/>
-      <Group position={filteredWorkspaces?.length ? "apart" : "right"} spacing={"xs"} my={24}>
-        {filteredWorkspaces?.length ? (
+      <Grid>
+        <Grid.Col xs={12} sm={6}>
           <TextInput placeholder={"Search workspace"} value={searchValue} onChange={setSearchValue}/>
-        ) : null}
-        <Group>
-          <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>
-          <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>
-        </Group>
+        </Grid.Col>
+        <Grid.Col xs={12} sm={6}>
+          <DesktopOnly>
+            <Group position={"right"}>
+              <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>
+              <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>
+            </Group>
+          </DesktopOnly>
+          <MobileOnly>
+            <Group grow>
+              <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>
+              <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>
+            </Group>
+          </MobileOnly>
+        </Grid.Col>
+      </Grid>
+      <Group position={filteredWorkspaces?.length ? "apart" : "right"} spacing={"xs"} my={24}>
+
+
       </Group>
       {filteredWorkspaces?.length ? (
-        <SimpleGrid cols={4}>
+        <SimpleGrid
+          cols={4}
+          mb={24}
+          breakpoints={[
+            {maxWidth: 'md', cols: 3},
+            {maxWidth: 'sm', cols: 2},
+            {maxWidth: 'xs', cols: 1},
+          ]}
+        >
           {filteredWorkspaces?.map(w => (
             <Paper p="md" withBorder key={w.id} onClick={() => handleGoWorkspace(w.id)} sx={{cursor: "pointer"}}>
               <Group position={"apart"}>
