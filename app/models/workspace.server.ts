@@ -146,6 +146,13 @@ export const deleteWorkspace = (workspaceId: Workspace["id"]) => {
   return prisma.workspace.delete({
     where: {
       id: workspaceId
+    },
+    select: {
+      media: {
+        select: {
+          fileUrl: true
+        }
+      }
     }
   })
 }

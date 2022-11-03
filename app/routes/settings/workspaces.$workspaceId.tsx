@@ -13,6 +13,8 @@ import {DangerButton} from "~/components/Buttons/DangerButtom";
 import {createCollaborator, deleteCollaborator, updateCollaboratorRights} from "~/models/collaborator.server";
 import {getUserByEmail} from "~/models/user.server";
 import {WorkspaceRights} from "~/components/MediaManager/WorkspaceRights";
+import {deleteFileFromS3} from "~/models/storage.server";
+import {getFileKey} from "~/utils/utils";
 
 export const loader = async ({request, params}: LoaderArgs) => {
   const user = await requireUser(request)
@@ -72,7 +74,13 @@ export const action = async ({request, params}: ActionArgs) => {
   if (intent === "deleteWorkspace") {
 
     try {
-      await deleteWorkspace(workspaceId)
+      const workspaceToDelete = await deleteWorkspace(workspaceId)
+
+      if (workspaceToDelete?.media?.length) {
+        for (const {fileUrl} of workspaceToDelete?.media) {
+          await deleteFileFromS3(getFileKey(fileUrl))
+        }
+      }
 
       return json({success: true, intent, message: `Workspace deleted`})
     } catch (e) {

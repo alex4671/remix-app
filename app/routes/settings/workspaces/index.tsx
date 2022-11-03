@@ -44,7 +44,9 @@ export default function WorkspaceIndex() {
             <Text>{w.name}</Text>
             <Text size={"sm"} color={"dimmed"}>{dayjs(w.createdAt).format("DD/MM/YYYY")}</Text>
           </Paper>
-        )) : (
+        )) : listType === "workspaces" ? (
+          <Title order={5} align={"center"} my={24}>Create you first workspace to get started</Title>
+          ) : (
           <Title order={5} align={"center"} my={24}>You currently not invited in any workspace</Title>
         )}
     </Box>
