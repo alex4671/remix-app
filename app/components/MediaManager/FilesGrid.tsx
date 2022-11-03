@@ -142,14 +142,16 @@ export const FilesGrid = ({
                                 checked={file.public}
                                 onChange={(event) => handleMakePublic(event, file.id)}
                                 mb={20}
+                                color={"emerald"}
                               />
                               <CopyButton value={`${window.location.origin}/media/share/${file.id}`}>
                                 {({copied, copy}) => (
                                   <Button
-                                    color={copied ? 'teal' : 'blue'}
+                                    color={copied ? 'lime' : 'emerald'}
                                     leftIcon={<IconClipboard size={18}/>}
                                     onClick={copy}
                                     disabled={!file.public}
+                                    variant={"light"}
                                   >
                                     {copied ? 'Copied link' : 'Copy link'}
                                   </Button>

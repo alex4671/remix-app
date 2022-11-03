@@ -5,7 +5,7 @@ import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import { json, redirect} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
-import {deleteWorkspace, getWorkspacesById} from "~/models/workspace.server";
+import {deleteWorkspace, getWorkspacesById, isUserAllowedViewWorkspace} from "~/models/workspace.server";
 import invariant from "tiny-invariant";
 import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
 import dayjs from "dayjs";
@@ -22,6 +22,11 @@ export const loader = async ({request, params}: LoaderArgs) => {
   invariant(typeof workspaceId === "string", "Workspace Id must be provided")
   const workspace = await getWorkspacesById(workspaceId)
   if (workspace) {
+    const isUserAllowedView = await isUserAllowedViewWorkspace(user.id, workspaceId)
+
+    if (!isUserAllowedView) {
+      return redirect("/settings/workspaces")
+    }
     return json({user, workspace})
   }
   return redirect("/settings/workspaces")

@@ -51,14 +51,23 @@ export const WorkspaceRights = ({rights, collaboratorId}: Props) => {
                 name={"rightsUpload"}
                 checked={workspaceRights.upload}
                 onChange={(event) => setWorkspaceRights({delete: workspaceRights.delete, upload: event.currentTarget.checked})}
+                color={"emerald"}
               />
               <Switch
                 label="Delete"
                 name={"rightsDelete"}
                 checked={workspaceRights.delete}
                 onChange={(event) => setWorkspaceRights({upload: workspaceRights.upload, delete: event.currentTarget.checked})}
+                color={"emerald"}
               />
-              <Button mt={12} onClick={handleUpdateRights}>Save</Button>
+              <Button
+                mt={12}
+                onClick={handleUpdateRights}
+                variant={"light"}
+                color={"emerald"}
+              >
+                Save
+              </Button>
             </Stack>
           </Popover.Dropdown>
         </Popover>
