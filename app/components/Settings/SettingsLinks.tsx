@@ -56,10 +56,10 @@ export const SettingsLinks = () => {
       />
       <NavLink
         component={Link}
-        to="./team"
-        label="Team"
+        to="./workspaces"
+        label="Workspaces"
         icon={<IconUsers size={16} stroke={1.5}/>}
-        className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("team") })}
+        className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("workspaces") })}
         variant="filled"
         prefetch={"intent"}
       />

@@ -64,7 +64,7 @@ export const Filter = ({fileTypes, filterTypeValue, setFilterTypeValue}: Props) 
           opened={opened}
           onClose={() => setOpened(false)}
           trapFocus
-          width={260}
+          width={"target"}
           position="bottom"
           withinPortal={false}
         >

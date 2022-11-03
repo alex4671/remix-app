@@ -38,7 +38,7 @@ export const getUserFilesSize = async (userId: Media["userId"]) => {
 //   return file
 // }
 
-type SaveFileType = Pick<Media, "userId" | "fileUrl" | "name" | "size" | "type">
+type SaveFileType = Pick<Media, "userId" | "workspaceId" | "fileUrl" | "name" | "size" | "type">
 
 export const saveFiles = (files: SaveFileType[]) => {
   return prisma.media.createMany({

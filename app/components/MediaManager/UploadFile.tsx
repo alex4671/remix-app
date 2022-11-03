@@ -6,7 +6,7 @@ import {IconCheck, IconExclamationMark, IconUpload, IconX} from "@tabler/icons";
 import {formatBytes} from "~/utils/utils";
 import {Form, useActionData, useLoaderData} from "@remix-run/react";
 import {showNotification} from "@mantine/notifications";
-import type {action, loader} from "~/routes/media";
+import type {action, loader} from "~/routes/media/$workspaceId";
 import type {Dispatch, SetStateAction} from "react";
 import { useEffect, useRef, useState} from "react";
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, setSelectedFilesUrls, filteredUserFilesCount}: Props) => {
-  const {userFiles, filesSize, maxSizeLimit} = useLoaderData<typeof loader>()
+  const {userFiles, filesSize, maxSizeLimit, rights} = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const [files, setFiles] = useState<File[] | null>(null);
   const resetRef = useRef<() => void>(null);
@@ -95,6 +95,7 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
                 type={"submit"}
                 name={"intent"}
                 value={"deleteFiles"}
+                disabled={!rights?.delete}
               >
                 Delete {selectedFiles.length} files
               </DangerButton>
@@ -108,12 +109,11 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
               onChange={handleSelectFile}
               name={"file"}
               multiple
-
             >
               {(props) =>
                 <PrimaryButton
                   leftIcon={<IconUpload size={"14"}/>}
-                  disabled={Number(filesSize) >= maxSizeLimit}
+                  disabled={Number(filesSize) >= maxSizeLimit || !rights?.upload}
                   {...props}
                 >
                   Select Files
