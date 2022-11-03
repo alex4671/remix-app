@@ -3,7 +3,6 @@ import {prisma} from "~/server/db.server";
 
 
 export const getUserFiles = (userId: Media["userId"], from: Date | undefined = undefined, to: Date | undefined = undefined, order: "asc" | "desc" = "asc", isPublic: "yes" | "no" = "no") => {
-  console.log("order", order)
   return prisma.media.findMany({
     where: {
       userId,

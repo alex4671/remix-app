@@ -1,6 +1,6 @@
 import {Badge, Group, Paper, ScrollArea, Table, Text, TextInput, Title} from "@mantine/core";
-import {IconChevronLeft} from "@tabler/icons";
-import {Form, useLoaderData, useNavigate} from "@remix-run/react";
+import {IconCheck, IconChevronLeft, IconX} from "@tabler/icons";
+import {Form, useActionData, useLoaderData, useNavigate} from "@remix-run/react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import { json, redirect} from "@remix-run/node";
@@ -15,6 +15,8 @@ import {getUserByEmail} from "~/models/user.server";
 import {WorkspaceRights} from "~/components/MediaManager/WorkspaceRights";
 import {deleteFileFromS3} from "~/models/storage.server";
 import {getFileKey} from "~/utils/utils";
+import {useEffect} from "react";
+import {showNotification} from "@mantine/notifications";
 
 export const loader = async ({request, params}: LoaderArgs) => {
   const user = await requireUser(request)
@@ -112,7 +114,22 @@ export const action = async ({request, params}: ActionArgs) => {
 
 export default function WorkspaceId() {
   const {user, workspace} = useLoaderData<typeof loader>()
+  const actionData = useActionData<typeof action>()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (actionData) {
+      showNotification({
+        title: actionData?.message,
+        message: undefined,
+        color: actionData?.success ? "green" : "red",
+        autoClose: 2000,
+        icon: actionData?.success ? <IconCheck/> : <IconX/>
+      })
+
+    }
+  }, [actionData])
+
 
   const handleGoBack = () => {
     // todo figure out where redirect back (use location state)

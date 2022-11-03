@@ -76,8 +76,13 @@ export default function Workspaces() {
             <Form method={"post"}>
               <Group position={"right"} spacing={"xs"} mt={24}>
                 <TextInput placeholder={"Workspace name"} name={"workspaceName"}/>
-                <PrimaryButton type={"submit"} name={"intent"} value={"createWorkspace"}>Create new
-                  workspace</PrimaryButton>
+                <PrimaryButton
+                  type={"submit"}
+                  name={"intent"}
+                  value={"createWorkspace"}
+                >
+                  Create new workspace
+                </PrimaryButton>
               </Group>
             </Form>
           </Tabs.Panel>

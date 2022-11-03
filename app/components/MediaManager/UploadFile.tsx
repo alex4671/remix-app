@@ -26,6 +26,20 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
 
   useEffect(() => {
     if (actionData) {
+      if (actionData.intent === "uploadFiles") {
+        setFiles(null)
+        resetRef.current?.();
+
+        return
+      }
+
+      if (actionData.intent === "deleteFiles") {
+        setSelectedFiles([])
+        setSelectedFilesUrls([])
+
+        return
+      }
+
       showNotification({
         title: actionData?.message,
         message: undefined,
@@ -34,14 +48,6 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
         icon: actionData?.success ? <IconCheck/> : <IconX/>
       })
 
-      if (actionData.intent === "uploadFiles") {
-        setFiles(null)
-        resetRef.current?.();
-      }
-      if (actionData.intent === "deleteFiles") {
-        setSelectedFiles([])
-        setSelectedFilesUrls([])
-      }
     }
   }, [actionData])
 

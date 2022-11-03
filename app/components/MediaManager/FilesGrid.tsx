@@ -18,12 +18,14 @@ import {
 } from "@mantine/core";
 import {formatBytes} from "~/utils/utils";
 import {useFetcher, useLoaderData, useTransition} from "@remix-run/react";
-import {IconClipboard, IconDownload, IconMessage2, IconShare, IconTrash} from "@tabler/icons";
+import {IconCheck, IconClipboard, IconDownload, IconMessage2, IconShare, IconTrash, IconX} from "@tabler/icons";
 import type {Dispatch, SetStateAction} from "react";
 import {upperFirst} from "@mantine/hooks";
-import { FileComments } from "./FileComments";
+import {FileComments} from "./FileComments";
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import type {loader} from "~/routes/media/$workspaceId";
+import {useEffect} from "react";
+import {showNotification} from "@mantine/notifications";
 
 interface Props {
   setSelectedFiles: Dispatch<SetStateAction<string[]>>
@@ -42,6 +44,19 @@ export const FilesGrid = ({
                           }: Props) => {
   const {rights, origin} = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
+
+  useEffect(() => {
+    if (fetcher?.data) {
+      showNotification({
+        title: fetcher?.data?.message,
+        message: undefined,
+        color: fetcher?.data?.success ? "green" : "red",
+        autoClose: 2000,
+        icon: fetcher?.data?.success ? <IconCheck/> : <IconX/>
+      })
+
+    }
+  }, [fetcher?.data])
 
   const transition = useTransition();
   const isSubmitting = transition.submission

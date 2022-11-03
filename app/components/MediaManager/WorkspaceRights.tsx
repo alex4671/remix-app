@@ -1,8 +1,10 @@
 import {ActionIcon, Badge, Button, Group, Popover, Stack, Switch, Text} from "@mantine/core";
-import {IconEdit} from "@tabler/icons";
-import {useState} from "react";
+import {IconCheck, IconEdit, IconX} from "@tabler/icons";
+import {useEffect, useState} from "react";
 import {useFetcher} from "@remix-run/react";
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
+import {showNotification} from "@mantine/notifications";
+import type {action} from "~/routes/media/$workspaceId";
 
 
 type Rights = {
@@ -17,9 +19,22 @@ interface Props {
 }
 
 export const WorkspaceRights = ({rights, collaboratorId, isOwner}: Props) => {
-  const fetcher = useFetcher()
+  const fetcher = useFetcher<typeof action>()
   const [workspaceRights, setWorkspaceRights] = useState({delete: rights?.delete, upload: rights?.upload})
   const [opened, setOpened] = useState(false);
+
+  useEffect(() => {
+    if (fetcher.data) {
+      showNotification({
+        title: fetcher.data?.message,
+        message: undefined,
+        color: fetcher.data?.success ? "green" : "red",
+        autoClose: 2000,
+        icon: fetcher.data?.success ? <IconCheck/> : <IconX/>
+      })
+
+    }
+  }, [fetcher.data])
 
   const handleUpdateRights = () => {
     fetcher.submit({workspaceRights: JSON.stringify(workspaceRights), collaboratorId, intent: "updateRights"}, {method: "post"})

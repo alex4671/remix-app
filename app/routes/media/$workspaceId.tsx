@@ -6,14 +6,16 @@ import {deleteFile, deleteFiles, getUserFilesSize, saveFiles, togglePublic} from
 import invariant from "tiny-invariant";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
 import {getFileKey} from "~/utils/utils";
-import {useLoaderData} from "@remix-run/react";
-import {useState} from "react";
+import {useActionData, useLoaderData} from "@remix-run/react";
+import {useEffect, useState} from "react";
 import {useInputState} from "@mantine/hooks";
 import {UploadFile} from "~/components/MediaManager/UploadFile";
 import {FilesFilters} from "~/components/MediaManager/FilesFilters";
 import {FilesGrid} from "~/components/MediaManager/FilesGrid";
 import {getWorkspaceFilesById, isUserAllowedViewWorkspace} from "~/models/workspace.server";
 import {createComment, deleteComment} from "~/models/comments.server";
+import {showNotification} from "@mantine/notifications";
+import {IconCheck, IconX} from "@tabler/icons";
 
 type Rights = {
   delete: boolean;
@@ -107,7 +109,6 @@ export const action = async ({request, params}: ActionArgs) => {
 
     await saveFiles(filesToDB)
 
-
     return json({success: true, intent, message: `${filesToDB.length} files uploaded`})
   }
 
@@ -188,10 +189,24 @@ export const action = async ({request, params}: ActionArgs) => {
 
 export default function WorkspaceId() {
   const {userFiles} = useLoaderData<typeof loader>()
+  const actionData = useActionData<typeof action>()
   const [selectedFiles, setSelectedFiles] = useState<string[]>([])
   const [selectedFilesUrls, setSelectedFilesUrls] = useState<string[]>([])
   const [searchValue, setSearchValue] = useInputState('');
   const [filterTypeValue, setFilterTypeValue] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (actionData) {
+      showNotification({
+        title: actionData?.message,
+        message: undefined,
+        color: actionData?.success ? "green" : "red",
+        autoClose: 2000,
+        icon: actionData?.success ? <IconCheck/> : <IconX/>
+      })
+
+    }
+  }, [actionData])
 
   // todo make limit usage in backend
 
