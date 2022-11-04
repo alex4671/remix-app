@@ -228,6 +228,9 @@ export const FilesGrid = ({
                       </Group>
                       <Group spacing={4}>
                         <ActionIcon disabled>
+                          <IconShare size={18}/>
+                        </ActionIcon>
+                        <ActionIcon disabled>
                           <IconDownload size={18}/>
                         </ActionIcon>
                         <ActionIcon disabled>

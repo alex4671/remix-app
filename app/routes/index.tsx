@@ -150,7 +150,7 @@ export default function WorkspacesIndex() {
           ))}
         </SimpleGrid>
       ) : (
-        <Title order={3} align={"center"}>Nothing found, create you first workspace</Title>
+        <Title order={3} align={"center"} mt={"50px"}>Nothing found, create you first workspace</Title>
       )}
     </Box>
   )

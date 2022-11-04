@@ -81,6 +81,22 @@ const Document = ({children, title = "App"}: { children: ReactNode, title?: stri
   );
 }
 
+const mantineTheme = {
+  fontFamily: "Inter, sans-serif",
+  headings: {fontFamily: "Inter, sans-serif"},
+  // primaryShade: {light: 5, dark: 9},
+  colors: {...colors},
+  defaultRadius: "0",
+  // activeStyles: { transform: 'scale(0.95)', transition: "transform 0.03s ease-in-out" }
+  components: {
+    Badge: {
+      defaultProps: {
+        radius: 0,
+      },
+    }
+  }
+}
+
 
 export default function App() {
   const {theme, user} = useLoaderData<typeof loader>()
@@ -92,19 +108,7 @@ export default function App() {
       <MantineProvider
         theme={{
           colorScheme: theme,
-          fontFamily: "Inter, sans-serif",
-          headings: {fontFamily: "Inter, sans-serif"},
-          // primaryShade: {light: 5, dark: 9},
-          colors: {...colors},
-          defaultRadius: "0",
-          // activeStyles: { transform: 'scale(0.95)', transition: "transform 0.03s ease-in-out" }
-          components: {
-            Badge: {
-              defaultProps: {
-                radius: 0,
-              },
-            }
-          }
+          ...mantineTheme
         }}
         withGlobalStyles
         withNormalizeCSS
@@ -112,7 +116,7 @@ export default function App() {
         <NavigationProgress color={theme === "dark" ? "white" : "dark"} autoReset/>
         <LoadingProgress state={transition.state}/>
         <NotificationsProvider position={"top-center"}>
-          <Container size={"xl"} px={12}>
+          <Container size={"xl"} px={{base: "12"}}>
             {user && !params.fileId && <Navbar/>}
             <Outlet/>
           </Container>
@@ -129,18 +133,29 @@ export function CatchBoundary() {
   const caught = useCatch();
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <MantineProvider>
+      <MantineProvider
+        theme={{
+          ...mantineTheme
+        }}
+        withGlobalStyles
+        withNormalizeCSS
+      >
         <ErrorPage status={caught.status}/>
       </MantineProvider>
     </Document>
   );
 }
 
-// How ChakraProvider should be used on ErrorBoundary
 export function ErrorBoundary({error}: { error: Error }) {
   return (
     <Document title="Error!">
-      <MantineProvider>
+      <MantineProvider
+        theme={{
+          ...mantineTheme
+        }}
+        withGlobalStyles
+        withNormalizeCSS
+      >
         <ErrorPage/>
       </MantineProvider>
     </Document>

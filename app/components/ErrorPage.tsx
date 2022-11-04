@@ -1,59 +1,19 @@
-import {createStyles, Title, Text, Button, Container, Group} from '@mantine/core';
-
-const useStyles = createStyles((theme) => ({
-  root: {
-    height: "100vh",
-    paddingTop: 80,
-    paddingBottom: 120,
-  },
-
-  label: {
-    textAlign: 'center',
-    fontWeight: 900,
-    fontSize: 220,
-    lineHeight: 1,
-    marginBottom: theme.spacing.xl * 1.5,
-
-    [theme.fn.smallerThan('sm')]: {
-      fontSize: 120,
-    },
-  },
-
-  title: {
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    textAlign: 'center',
-    fontWeight: 900,
-    fontSize: 38,
-
-    [theme.fn.smallerThan('sm')]: {
-      fontSize: 32,
-    },
-  },
-
-  description: {
-    maxWidth: 540,
-    margin: 'auto',
-    marginTop: theme.spacing.xl,
-    marginBottom: theme.spacing.xl * 1.5,
-  },
-}));
+import {Box, Button, Container, Group, Text, Title} from '@mantine/core';
 
 export const ErrorPage = ({status}: {status?: number}) => {
-  const {classes} = useStyles();
-
   return (
-    <div className={classes.root}>
+    <Box h={"100vh"} pt={80} pb={120}>
       <Container>
-        {status ? <div className={classes.label}>{status}</div> : null}
-        <Title className={classes.title}>Something bad just happened...</Title>
-        <Text size="lg" align="center" className={classes.description}>
+        {status ? <Box fz={{base: "120px", sm: "220px"}} ta={"center"} fw={90} lh={1} mb={"xl"}>{status}</Box> : null}
+        <Title ta={"center"} fw={900} order={1}>Something bad just happened...</Title>
+        <Text size="lg" align="center" maw={"540px"} m={"auto"} mt={"xl"} mb={"xl"}>
           Our servers could not handle your request. Don&apos;t worry, our development team was
           already notified. Try refreshing the page.
         </Text>
         <Group position="center">
-          <Button variant="filled" size="md" onClick={() => window.location.replace("/")}>Go home</Button>
+          <Button variant="filled" size="md" color={"dark"} onClick={() => window.location.replace("/")}>Go home</Button>
         </Group>
       </Container>
-    </div>
+    </Box>
   );
 }
