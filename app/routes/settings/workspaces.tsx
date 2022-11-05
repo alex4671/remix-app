@@ -5,7 +5,7 @@ import {useEffect} from "react";
 import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
-import {Link, Outlet, useActionData} from "@remix-run/react";
+import {Link, Outlet, useActionData, useLocation} from "@remix-run/react";
 import {createWorkspace, getUserWorkspacesById, updateWorkspaceSortOrder} from "~/models/workspace.server";
 import {emitter} from "~/server/emitter.server";
 import {EventType} from "~/hooks/useSubscription";
@@ -79,7 +79,7 @@ export const action = async ({request}: ActionArgs) => {
 
 export default function Workspaces() {
   const data = useActionData<typeof action>()
-
+  const location = useLocation()
 
   useEffect(() => {
     if (data) {
@@ -93,14 +93,13 @@ export default function Workspaces() {
     }
   }, [data])
 
-
-
+  console.log("location.pathname", location.pathname)
   return (
     <>
       <Paper shadow="0" p="md" withBorder mb={24}>
         <Title order={2}>Manage workspaces</Title>
         <Text mt={6} mb={12}>Manage your workspaces and invite members</Text>
-        <CreateNewWorkspace />
+        <CreateNewWorkspace/>
       </Paper>
       <Paper shadow="0" p="md" withBorder mb={24}>
         <Group spacing={0}>
@@ -113,11 +112,16 @@ export default function Workspaces() {
               padding: '8px 16px',
               textDecoration: 'none',
               color: theme.colorScheme === 'dark' ? theme.white : theme.colors.dark[5],
+              backgroundColor: location.pathname.includes("/my")
+                ? theme.colorScheme === 'dark' ?  theme.colors.dark[4] : theme.colors.gray[1]
+                : "inherit",
               fontSize: theme.fontSizes.lg,
               fontWeight: 500,
 
               '&:hover': {
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+                backgroundColor: location.pathname.includes("/my")
+                  ? theme.colorScheme === 'dark' ?  theme.colors.dark[4] : theme.colors.gray[1]
+                  : theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
               },
             })}
           >
@@ -132,11 +136,16 @@ export default function Workspaces() {
               padding: '8px 16px',
               textDecoration: 'none',
               color: theme.colorScheme === 'dark' ? theme.white : theme.colors.dark[5],
+              backgroundColor: location.pathname.includes("/collaborated")
+                ? theme.colorScheme === 'dark' ?  theme.colors.dark[4] : theme.colors.gray[1]
+                : "inherit",
               fontSize: theme.fontSizes.lg,
               fontWeight: 500,
 
               '&:hover': {
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+                backgroundColor: location.pathname.includes("/collaborated")
+                  ? theme.colorScheme === 'dark' ?  theme.colors.dark[4] : theme.colors.gray[1]
+                  : theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
               },
             })}
           >

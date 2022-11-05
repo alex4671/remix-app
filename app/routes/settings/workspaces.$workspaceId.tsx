@@ -203,6 +203,10 @@ export default function WorkspaceId() {
       {isUserOwner ? (
         <Form method={"post"}>
           <Group position="apart">
+            <Group spacing={"xs"} mt={24}>
+              <TextInput placeholder={"New member email"} name={"memberEmail"}/>
+              <PrimaryButton type={"submit"} name={"intent"} value={"inviteMember"}>Invite member</PrimaryButton>
+            </Group>
             <DangerButton
               mt={24}
               type={"submit"}
@@ -211,10 +215,6 @@ export default function WorkspaceId() {
             >
               Delete workspace and all files
             </DangerButton>
-            <Group spacing={"xs"} mt={24}>
-              <TextInput placeholder={"New member email"} name={"memberEmail"}/>
-              <PrimaryButton type={"submit"} name={"intent"} value={"inviteMember"}>Invite member</PrimaryButton>
-            </Group>
           </Group>
         </Form>
       ) : null}
