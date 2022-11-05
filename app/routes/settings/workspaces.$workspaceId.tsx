@@ -20,7 +20,7 @@ import {getUserByEmail} from "~/models/user.server";
 import {WorkspaceRights} from "~/components/MediaManager/WorkspaceRights";
 import {deleteFileFromS3} from "~/models/storage.server";
 import {getFileKey} from "~/utils/utils";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {showNotification} from "@mantine/notifications";
 import {emitter} from "~/server/emitter.server";
 import {EventType, useSubscription} from "~/hooks/useSubscription";

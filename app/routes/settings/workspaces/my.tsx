@@ -32,7 +32,7 @@ export default function MyWorkspaces() {
 
   }, [workspaces])
 
-  useSubscription([EventType.CREATE_WORKSPACE, EventType.DELETE_WORKSPACE, EventType.INVITE_MEMBER], !!transition.submission)
+  useSubscription([EventType.CREATE_WORKSPACE, EventType.DELETE_WORKSPACE, EventType.INVITE_MEMBER, EventType.REORDER_WORKSPACE], !!transition.submission)
 
   const sensors = useSensors(
     useSensor(PointerSensor),
