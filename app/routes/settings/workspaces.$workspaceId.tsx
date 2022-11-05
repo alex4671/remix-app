@@ -20,7 +20,7 @@ import {getUserByEmail} from "~/models/user.server";
 import {WorkspaceRights} from "~/components/MediaManager/WorkspaceRights";
 import {deleteFileFromS3} from "~/models/storage.server";
 import {getFileKey} from "~/utils/utils";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {showNotification} from "@mantine/notifications";
 import {emitter} from "~/server/emitter.server";
 import {EventType, useSubscription} from "~/hooks/useSubscription";
@@ -34,11 +34,11 @@ export const loader = async ({request, params}: LoaderArgs) => {
     const isUserAllowedView = await isUserAllowedViewWorkspace(user.id, workspaceId)
 
     if (!isUserAllowedView) {
-      return redirect("/settings/workspaces")
+      return redirect("/settings/workspaces/my")
     }
     return json({user, workspace})
   }
-  return redirect("/settings/workspaces")
+  return redirect("/settings/workspaces/my")
 
 }
 

@@ -1,14 +1,15 @@
-import {useLocation, useNavigate} from "@remix-run/react";
+import {useFetcher, useLocation, useNavigate} from "@remix-run/react";
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import {ActionIcon, Group, Paper, Text} from "@mantine/core";
 import {IconGripVertical} from "@tabler/icons";
 import dayjs from "dayjs";
+import {DangerButton} from "~/components/Buttons/DangerButtom";
 
 export const WorkspaceItem = ({workspace, isDraggable}: {workspace: any, isDraggable: boolean}) => {
   const navigate = useNavigate()
   const location = useLocation()
-
+  const fetcher = useFetcher()
 
   const handleNavigate = (workspaceId: string) => {
     navigate(`/settings/workspaces/${workspaceId}`, {state: location.pathname})
@@ -28,6 +29,17 @@ export const WorkspaceItem = ({workspace, isDraggable}: {workspace: any, isDragg
     transition,
   };
 
+  const handleDelete = (e: any, workspaceId: string) => {
+    e.stopPropagation()
+    fetcher.submit({
+      intent: "deleteWorkspace",
+    }, {
+      method: "post",
+      action: `/settings/workspaces/${workspaceId}`
+    })
+
+  }
+
   return (
     <Paper
       ref={setNodeRef}
@@ -37,16 +49,21 @@ export const WorkspaceItem = ({workspace, isDraggable}: {workspace: any, isDragg
       withBorder
       my={12}
       py={12}
-      px={6}
+      px={12}
     >
       <Group position={"apart"}>
-        <Text>{workspace.name}</Text>
-        {isDraggable ? (
-          <ActionIcon size="sm" color={"zinc"} {...listeners} {...attributes}>
-            <IconGripVertical/>
-          </ActionIcon>
-        ) : null}
+        <Group >
+          {isDraggable ? (
+            <ActionIcon size="sm" color={"zinc"} {...listeners} {...attributes}>
+              <IconGripVertical/>
+            </ActionIcon>
+          ) : null}
+          <Text>{workspace.name}</Text>
 
+
+
+        </Group>
+        <DangerButton compact onClick={(e) => handleDelete(e, workspace.id) }>Delete</DangerButton>
       </Group>
       <Text size={"sm"} color={"dimmed"}>{dayjs(workspace.createdAt).format("DD/MM/YYYY")}</Text>
     </Paper>

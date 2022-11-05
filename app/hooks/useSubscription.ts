@@ -37,9 +37,6 @@ export function useSubscription(events: EventType[] = [], isSubmitting: boolean)
 
     return () => {
       eventSource.close()
-      events.forEach((event) => {
-        eventSource.removeEventListener(event, handler)
-      })
     }
 
   }, [])

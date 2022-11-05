@@ -57,8 +57,7 @@ export default function MyWorkspaces() {
             items={sortedCopy}
             strategy={verticalListSortingStrategy}
           >
-            {sortedCopy
-              .map(w => (<WorkspaceItem key={w.id} workspace={w} isDraggable={true}/>))}
+            {sortedCopy.map(w => (<WorkspaceItem key={w.id} workspace={w} isDraggable={true}/>))}
           </SortableContext>
         </DndContext>
       ) : (

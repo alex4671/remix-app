@@ -1,4 +1,4 @@
-import {Group, Paper, Text, Title} from "@mantine/core";
+import {Box, Group, Paper, Text, Title} from "@mantine/core";
 import {showNotification} from "@mantine/notifications";
 import {IconCheck, IconX} from "@tabler/icons";
 import {useEffect} from "react";
@@ -103,11 +103,45 @@ export default function Workspaces() {
         <CreateNewWorkspace />
       </Paper>
       <Paper shadow="0" p="md" withBorder mb={24}>
-        {/*<Title order={2}>TTTTT</Title>*/}
-        {/*<Text mt={6} mb={12}>DSGSDGSDG</Text>*/}
-        <Group>
-          <Link to="./my">My Workspaces</Link>
-          <Link to="./collaborated">Collaborated</Link>
+        <Group spacing={0}>
+          <Box
+            component={Link}
+            to="./my"
+            sx={theme => ({
+              display: 'block',
+              lineHeight: 1,
+              padding: '8px 16px',
+              textDecoration: 'none',
+              color: theme.colorScheme === 'dark' ? theme.white : theme.colors.dark[5],
+              fontSize: theme.fontSizes.lg,
+              fontWeight: 500,
+
+              '&:hover': {
+                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+              },
+            })}
+          >
+            My Workspaces
+          </Box>
+          <Box
+            component={Link}
+            to="./collaborated"
+            sx={theme => ({
+              display: 'block',
+              lineHeight: 1,
+              padding: '8px 16px',
+              textDecoration: 'none',
+              color: theme.colorScheme === 'dark' ? theme.white : theme.colors.dark[5],
+              fontSize: theme.fontSizes.lg,
+              fontWeight: 500,
+
+              '&:hover': {
+                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+              },
+            })}
+          >
+            Collaborated
+          </Box>
         </Group>
         <Outlet/>
       </Paper>
