@@ -56,7 +56,7 @@ export const SettingsLinks = () => {
       {/*/>*/}
       <NavLink
         component={Link}
-        to="./workspaces"
+        to="./workspaces/my"
         label="Workspaces"
         icon={<IconUsers size={16} stroke={1.5}/>}
         className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("workspaces") })}

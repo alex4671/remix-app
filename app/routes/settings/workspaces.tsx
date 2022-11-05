@@ -1,15 +1,16 @@
-import {Group, Paper, Tabs, Text, TextInput, Title} from "@mantine/core";
+import {Group, Paper, Text, Title} from "@mantine/core";
 import {showNotification} from "@mantine/notifications";
-import {IconCheck, IconMessageCircle, IconPhoto, IconX} from "@tabler/icons";
+import {IconCheck, IconX} from "@tabler/icons";
 import {useEffect} from "react";
-import type {MetaFunction,ActionArgs, LoaderArgs} from "@remix-run/node";
-import { json} from "@remix-run/node";
+import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
+import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
-import {Form, Outlet, useActionData, useTransition} from "@remix-run/react";
-import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
-import {createWorkspace} from "~/models/workspace.server";
+import {Link, Outlet, useActionData} from "@remix-run/react";
+import {createWorkspace, getUserWorkspacesById, updateWorkspaceSortOrder} from "~/models/workspace.server";
 import {emitter} from "~/server/emitter.server";
-import {EventType, useSubscription} from "~/hooks/useSubscription";
+import {EventType} from "~/hooks/useSubscription";
+import {generateKeyBetween} from "~/utils/generateIndex";
+import {CreateNewWorkspace} from "~/components/Settings/Workspaces/CreateNewWorkspace";
 
 export const meta: MetaFunction = () => {
   return {
@@ -20,7 +21,6 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({request}: LoaderArgs) => {
   await requireUser(request)
-
 
   return json({})
 }
@@ -34,8 +34,18 @@ export const action = async ({request}: ActionArgs) => {
   if (intent === "createWorkspace") {
     const workspaceName = formData.get("workspaceName")?.toString() ?? "";
 
+    const workspaces = await getUserWorkspacesById(user.id)
+
+    const lastSortIndexValue = workspaces
+      ?.sort((a, b) => a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0)
+      ?.at(-1)?.sortIndex
+
     try {
-      await createWorkspace(user.id, workspaceName)
+      const nextSortIndex = !lastSortIndexValue
+        ? generateKeyBetween(null, null)
+        : generateKeyBetween(lastSortIndexValue, null);
+
+      await createWorkspace(user.id, workspaceName, nextSortIndex)
 
       emitter.emit(EventType.CREATE_WORKSPACE)
 
@@ -45,15 +55,32 @@ export const action = async ({request}: ActionArgs) => {
     }
   }
 
+
+  if (intent === "changeSortOrder") {
+    const workspaceId = formData.get("workspaceId")?.toString() ?? "";
+    const newSortIndex = formData.get("newSortIndex")?.toString() ?? "";
+
+    try {
+
+      await updateWorkspaceSortOrder(workspaceId, newSortIndex)
+
+      emitter.emit(EventType.REORDER_WORKSPACE)
+
+      return json({success: true, intent, message: `REMOVE Sort index updated`})
+    } catch (e) {
+      return json({success: false, intent, message: "Error creating workspace"})
+    }
+  }
+
+
   return json({success: false, intent, message: "Some error"})
 }
 
 
 export default function Workspaces() {
   const data = useActionData<typeof action>()
-  const transition = useTransition()
 
-  useSubscription([EventType.CREATE_WORKSPACE, EventType.DELETE_WORKSPACE, EventType.INVITE_MEMBER], !!transition.submission)
+
   useEffect(() => {
     if (data) {
       showNotification({
@@ -73,35 +100,18 @@ export default function Workspaces() {
       <Paper shadow="0" p="md" withBorder mb={24}>
         <Title order={2}>Manage workspaces</Title>
         <Text mt={6} mb={12}>Manage your workspaces and invite members</Text>
-        <Form method={"post"}>
-          <Group position={"right"} spacing={"xs"} my={24}>
-            <TextInput placeholder={"Workspace name"} name={"workspaceName"}/>
-            <PrimaryButton
-              type={"submit"}
-              name={"intent"}
-              value={"createWorkspace"}
-            >
-              Create new workspace
-            </PrimaryButton>
-          </Group>
-        </Form>
-        <Tabs defaultValue="you" color={"gray"}>
-          <Tabs.List>
-            <Tabs.Tab value="you" icon={<IconPhoto size={14}/>}>Yours workspaces</Tabs.Tab>
-            <Tabs.Tab value="collaborate" icon={<IconMessageCircle size={14}/>}>Workspaces your member</Tabs.Tab>
-          </Tabs.List>
-
-          <Tabs.Panel value="you" pt="xs">
-            <Outlet context={"workspaces"}/>
-
-          </Tabs.Panel>
-
-          <Tabs.Panel value="collaborate" pt="xs">
-            <Outlet context={"collaborator"}/>
-          </Tabs.Panel>
-
-        </Tabs>
+        <CreateNewWorkspace />
       </Paper>
+      <Paper shadow="0" p="md" withBorder mb={24}>
+        {/*<Title order={2}>TTTTT</Title>*/}
+        {/*<Text mt={6} mb={12}>DSGSDGSDG</Text>*/}
+        <Group>
+          <Link to="./my">My Workspaces</Link>
+          <Link to="./collaborated">Collaborated</Link>
+        </Group>
+        <Outlet/>
+      </Paper>
+
     </>
   )
 }

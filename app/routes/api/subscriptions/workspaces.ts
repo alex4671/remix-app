@@ -38,6 +38,9 @@ export const loader: LoaderFunction = ({request}) => {
     const handler10 = () => {
       send(EventType.DELETE_COMMENT)
     }
+    const handler11 = () => {
+      send(EventType.REORDER_WORKSPACE)
+    }
 
 
     emitter.addListener(EventType.CREATE_WORKSPACE, handler1)
@@ -50,6 +53,7 @@ export const loader: LoaderFunction = ({request}) => {
     emitter.addListener(EventType.UPDATE_FILE, handler8)
     emitter.addListener(EventType.CREATE_COMMENT, handler9)
     emitter.addListener(EventType.DELETE_COMMENT, handler10)
+    emitter.addListener(EventType.REORDER_WORKSPACE, handler11)
 
     return () => {
       emitter.removeListener(EventType.CREATE_WORKSPACE, handler1)
@@ -62,6 +66,7 @@ export const loader: LoaderFunction = ({request}) => {
       emitter.removeListener(EventType.UPDATE_FILE, handler8)
       emitter.removeListener(EventType.CREATE_COMMENT, handler9)
       emitter.removeListener(EventType.DELETE_COMMENT, handler10)
+      emitter.removeListener(EventType.REORDER_WORKSPACE, handler11)
     }
 
   })

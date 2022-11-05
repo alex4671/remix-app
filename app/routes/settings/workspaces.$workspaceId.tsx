@@ -1,6 +1,6 @@
 import {Badge, Group, Paper, ScrollArea, Table, Text, TextInput, Title} from "@mantine/core";
 import {IconCheck, IconChevronLeft, IconX} from "@tabler/icons";
-import {Form, useActionData, useLoaderData, useNavigate, useTransition} from "@remix-run/react";
+import {Form, useActionData, useLoaderData, useLocation, useNavigate, useTransition} from "@remix-run/react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import {json, redirect} from "@remix-run/node";
@@ -10,7 +10,12 @@ import invariant from "tiny-invariant";
 import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
 import dayjs from "dayjs";
 import {DangerButton} from "~/components/Buttons/DangerButtom";
-import {createCollaborator, deleteCollaborator, updateCollaboratorRights} from "~/models/collaborator.server";
+import {
+  createCollaborator,
+  deleteCollaborator,
+  getCollaborators,
+  updateCollaboratorRights
+} from "~/models/collaborator.server";
 import {getUserByEmail} from "~/models/user.server";
 import {WorkspaceRights} from "~/components/MediaManager/WorkspaceRights";
 import {deleteFileFromS3} from "~/models/storage.server";
@@ -55,8 +60,18 @@ export const action = async ({request, params}: ActionArgs) => {
       if (userToInvite?.email === user.email) {
         return json({success: false, intent, message: `You can't invite yourself`})
       }
+      const collaborators = await getCollaborators(workspaceId)
+
+      const collaboratorsIds = collaborators?.map(c => c.userId)
+
+
+      // if (collaborators.includes(user.id))
 
       if (userToInvite) {
+        if (collaboratorsIds.includes(userToInvite.id)) {
+          return json({success: false, intent, message: `Collaborator already invited`})
+        }
+
         await createCollaborator(workspaceId, userToInvite.id)
 
         emitter.emit(EventType.INVITE_MEMBER)
@@ -122,6 +137,7 @@ export const action = async ({request, params}: ActionArgs) => {
 export default function WorkspaceId() {
   const {user, workspace} = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
+  const {state} = useLocation();
   const navigate = useNavigate()
   const transition = useTransition()
 
@@ -142,7 +158,7 @@ export default function WorkspaceId() {
 
   const handleGoBack = () => {
     // todo figure out where redirect back (use location state)
-    navigate("/settings/workspaces")
+    navigate(state ?? "/")
   }
 
   const isUserOwner = workspace?.owner.email === user.email

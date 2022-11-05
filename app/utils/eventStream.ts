@@ -7,7 +7,7 @@ export const eventStream = (request: Request, init) => {
 
       let send = (event: string, data: string) => {
         controller.enqueue(encoder.encode(`event: ${event}\n`))
-        controller.enqueue(encoder.encode(`data: ${event}\n\n`))
+        controller.enqueue(encoder.encode(`data: ${data}\n\n`))
       }
 
       let cleanup = init(send)

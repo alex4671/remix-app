@@ -30,6 +30,7 @@ model Workspace {
   owner        User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId      String
   name         String
+  sortIndex    String
   collaborator Collaborator[]
   media        Media[]
   createdAt    DateTime       @default(now())

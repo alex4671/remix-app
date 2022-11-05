@@ -66,6 +66,9 @@ export const getUserCollaboratorWorkspacesById = (userId: User["id"]) => {
         }
       }
     },
+    orderBy: {
+      createdAt: "asc"
+    }
   })
 }
 
@@ -133,14 +136,27 @@ export const isUserAllowedViewWorkspace = async (userId: User["id"], workspaceId
   return workspace?.ownerId === userId || workspace?.collaborator.some((c) => c.userId === userId)
 }
 
-export const createWorkspace = (ownerId: Workspace["ownerId"], name: Workspace["name"]) => {
+export const createWorkspace = (ownerId: Workspace["ownerId"], name: Workspace["name"], nextSortIndex: Workspace["sortIndex"]) => {
   return prisma.workspace.create({
     data: {
       name,
-      ownerId
+      ownerId,
+      sortIndex: nextSortIndex,
     }
   })
 }
+
+export const updateWorkspaceSortOrder = (workspaceId: Workspace["id"], newSortIndex: Workspace["sortIndex"]) => {
+  return prisma.workspace.update({
+    where: {
+      id: workspaceId
+    },
+    data: {
+      sortIndex: newSortIndex
+    }
+  })
+}
+
 
 export const deleteWorkspace = (workspaceId: Workspace["id"]) => {
   return prisma.workspace.delete({

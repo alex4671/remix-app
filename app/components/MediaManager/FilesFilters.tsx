@@ -40,7 +40,6 @@ export const FilesFilters = ({searchValue, setSearchValue, filterTypeValue, setF
 
   const handleRangeChange = (date: DateRangePickerValue) => {
     const [from, to] = date
-    console.log("date", date)
     if (from && to) {
       searchParams.set("from", dayjs(from).format('DD-MM-YYYY'))
       searchParams.set("to", dayjs(to).format('DD-MM-YYYY'))

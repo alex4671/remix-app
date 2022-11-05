@@ -2,7 +2,7 @@ import type {LoaderArgs} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {useInputState} from "@mantine/hooks";
-import {useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
+import {useFetcher, useLoaderData, useLocation, useNavigate} from "@remix-run/react";
 import {getAllowedWorkspaces} from "~/models/workspace.server";
 import {
   ActionIcon,
@@ -19,13 +19,11 @@ import {
   Tooltip
 } from "@mantine/core";
 import {IconFiles, IconSettings} from "@tabler/icons";
-import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
-import {DesktopOnly} from "~/components/Utils/DesktopOnly";
-import {MobileOnly} from "~/components/Utils/MobileOnly";
 import {EventType, useSubscription} from "~/hooks/useSubscription";
+import {CreateNewWorkspace} from "~/components/Settings/Workspaces/CreateNewWorkspace";
 
 dayjs.extend(relativeTime)
 
@@ -44,25 +42,22 @@ export default function WorkspacesIndex() {
   const {user, workspaces} = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const fetcher = useFetcher()
-  useSubscription([EventType.CREATE_WORKSPACE, EventType.DELETE_WORKSPACE, EventType.INVITE_MEMBER, EventType.REMOVE_ACCESS], !!fetcher.submission)
-  const [value, setValue] = useInputState('');
+  const location = useLocation()
+
+  useSubscription([EventType.CREATE_WORKSPACE, EventType.DELETE_WORKSPACE, EventType.INVITE_MEMBER, EventType.REMOVE_ACCESS, EventType.REORDER_WORKSPACE], !!fetcher.submission)
   const [searchValue, setSearchValue] = useInputState('');
 
   const handleGoWorkspace = (workspaceId: string) => {
     navigate(`./media/${workspaceId}`)
   }
 
-  const handleCreateWorkspace = () => {
-    fetcher.submit({intent: "createWorkspace", workspaceName: value}, {method: "post", action: "/settings/workspaces"})
-    setValue("")
-  }
-
   const handleGoSettings = (event: any, workspaceId: string) => {
     event.stopPropagation()
-    navigate(`/settings/workspaces/${workspaceId}`)
+    navigate(`/settings/workspaces/${workspaceId}`, {state: location.pathname})
   }
 
   const filteredWorkspaces = workspaces
+    ?.sort((a, b) => a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0)
     ?.filter(workspace => workspace.name.toLowerCase().includes(searchValue.toLowerCase()))
 
   return (
@@ -73,28 +68,25 @@ export default function WorkspacesIndex() {
           <TextInput placeholder={"Search workspace"} value={searchValue} onChange={setSearchValue}/>
         </Grid.Col>
         <Grid.Col xs={12} sm={6}>
-          <DesktopOnly>
-            <Group position={"right"}>
-              <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>
-              <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>
-            </Group>
-          </DesktopOnly>
-          <MobileOnly>
-            <Group grow>
-              <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>
-              <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>
-            </Group>
-          </MobileOnly>
+          <CreateNewWorkspace />
+          {/*<DesktopOnly>*/}
+          {/*  <Group position={"right"}>*/}
+          {/*    <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>*/}
+          {/*    <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>*/}
+          {/*  </Group>*/}
+          {/*</DesktopOnly>*/}
+          {/*<MobileOnly>*/}
+          {/*  <Group grow>*/}
+          {/*    <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>*/}
+          {/*    <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>*/}
+          {/*  </Group>*/}
+          {/*</MobileOnly>*/}
         </Grid.Col>
       </Grid>
-      <Group position={filteredWorkspaces?.length ? "apart" : "right"} spacing={"xs"} my={24}>
-
-
-      </Group>
       {filteredWorkspaces?.length ? (
         <SimpleGrid
           cols={4}
-          mb={24}
+          my={24}
           breakpoints={[
             {maxWidth: 'md', cols: 3},
             {maxWidth: 'sm', cols: 2},

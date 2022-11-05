@@ -1,6 +1,18 @@
 import type {Collaborator} from "@prisma/client";
 import {prisma} from "~/server/db.server";
 
+
+export const getCollaborators = (workspaceId: Collaborator["workspaceId"]) => {
+  return prisma.collaborator.findMany({
+    where: {
+      workspaceId
+    },
+    select: {
+      userId: true
+    },
+  })
+}
+
 export const createCollaborator = (workspaceId: Collaborator["workspaceId"], userId: Collaborator["userId"]) => {
   return prisma.collaborator.create({
     data: {
