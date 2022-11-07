@@ -29,6 +29,24 @@ export const SettingsLinks = () => {
     <Stack spacing={0} sx={{position: "sticky", top: "20px" }}>
       <NavLink
         component={Link}
+        to="./workspaces/my"
+        label="Workspaces"
+        icon={<IconUsers size={16} stroke={1.5}/>}
+        className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("workspaces") })}
+        variant="filled"
+        prefetch={"intent"}
+      />
+      <NavLink
+        component={Link}
+        to="./files"
+        label="Files"
+        icon={<IconUser size={16} stroke={1.5}/>}
+        className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("files") })}
+        variant="filled"
+        prefetch={"intent"}
+      />
+      <NavLink
+        component={Link}
         to="./account"
         label="Account"
         icon={<IconUser size={16} stroke={1.5}/>}
@@ -54,15 +72,7 @@ export const SettingsLinks = () => {
       {/*  variant="filled"*/}
       {/*  prefetch={"intent"}*/}
       {/*/>*/}
-      <NavLink
-        component={Link}
-        to="./workspaces/my"
-        label="Workspaces"
-        icon={<IconUsers size={16} stroke={1.5}/>}
-        className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("workspaces") })}
-        variant="filled"
-        prefetch={"intent"}
-      />
+
       <NavLink
         component={Link}
         to="./danger"

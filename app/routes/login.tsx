@@ -7,6 +7,7 @@ import {validateEmail} from "~/utils/utils";
 import {Anchor, Checkbox, Container, Group, PasswordInput, Text, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
+import {randomId} from "@mantine/hooks";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -83,6 +84,10 @@ export default function LoginPage() {
     }
   }, [actionData]);
 
+  const handleCreateSessionId = () => {
+    sessionStorage.setItem("sessionId", randomId())
+  }
+
   return (
     <Container size={"xs"} mt={"20%"} p={"md"}>
       <Title
@@ -137,7 +142,7 @@ export default function LoginPage() {
             Sign up
           </Anchor>
         </Text>
-        <PrimaryButton fullWidth mt="xl" type={"submit"} loading={isLoading}>
+        <PrimaryButton fullWidth mt="xl" type={"submit"} loading={isLoading} onClick={handleCreateSessionId}>
           Sign in
         </PrimaryButton>
         <input type="hidden" name="redirectTo" value={redirectTo} />

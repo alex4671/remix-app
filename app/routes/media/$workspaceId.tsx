@@ -5,19 +5,20 @@ import dayjs from "dayjs";
 import {deleteFile, deleteFiles, getUserFilesSize, saveFiles, togglePublic} from "~/models/media.server";
 import invariant from "tiny-invariant";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
-import {getFileKey} from "~/utils/utils";
-import {useActionData, useLoaderData, useTransition} from "@remix-run/react";
+import {getFileKey, useUser} from "~/utils/utils";
+import {useActionData, useLoaderData} from "@remix-run/react";
 import {useEffect, useState} from "react";
 import {useInputState} from "@mantine/hooks";
 import {UploadFile} from "~/components/MediaManager/UploadFile";
 import {FilesFilters} from "~/components/MediaManager/FilesFilters";
 import {FilesGrid} from "~/components/MediaManager/FilesGrid";
-import {getWorkspaceFilesById, isUserAllowedViewWorkspace} from "~/models/workspace.server";
+import {getWorkspaceFilesById, getWorkspacesById, isUserAllowedViewWorkspace} from "~/models/workspace.server";
 import {createComment, deleteComment} from "~/models/comments.server";
 import {showNotification} from "@mantine/notifications";
 import {IconCheck, IconX} from "@tabler/icons";
-import {EventType, useSubscription} from "~/hooks/useSubscription";
+import {EventType} from "~/hooks/useSubscription";
 import {emitter} from "~/server/emitter.server";
+import {useFilesSubscription} from "~/hooks/useFilesSubscription";
 
 type Rights = {
   delete: boolean;
@@ -72,8 +73,17 @@ export const action = async ({request, params}: ActionArgs) => {
 
   invariant(CLOUDFLARE_PUBLIC_FILE_URL, "CLOUDFLARE_PUBLIC_FILE_URL must be set")
 
+  const workspace = await getWorkspacesById(workspaceId)
+
+  const set = new Set()
+  workspace?.collaborator.map(c => set.add(c.userId))
+
+  const usersToNotify = [workspace?.owner.id, ...Array.from(set)]
+
   const formData = await request.formData();
   const intent = formData.get("intent");
+
+  const sessionId = formData.get("sessionId")?.toString() ?? "";
 
   if (intent === "uploadFiles") {
     const filesSize = await getUserFilesSize(user.id)
@@ -87,6 +97,10 @@ export const action = async ({request, params}: ActionArgs) => {
     }
 
     const filesToDB = []
+
+    if (!files.length) {
+      return json({success: false, intent, message: "Select at leas one file"})
+    }
 
     for (const file of files) {
       const key = `${user.id}/workspace/${workspaceId}/${Date.now()}--${file.name}`
@@ -111,7 +125,7 @@ export const action = async ({request, params}: ActionArgs) => {
 
     await saveFiles(filesToDB)
 
-    emitter.emit(EventType.UPLOAD_FILE)
+    emitter.emit(EventType.UPLOAD_FILE, usersToNotify, sessionId)
 
     return json({success: true, intent, message: `${filesToDB.length} files uploaded`})
   }
@@ -127,8 +141,7 @@ export const action = async ({request, params}: ActionArgs) => {
       return json({success: false, intent, message: "Error deleting avatar"})
     }
 
-
-    emitter.emit(EventType.DELETE_FILE)
+    emitter.emit(EventType.DELETE_FILE, usersToNotify, sessionId)
     return json({success: true, intent, message: "File deleted"})
   }
 
@@ -149,7 +162,7 @@ export const action = async ({request, params}: ActionArgs) => {
       return json({success: false, intent, message: "Error deleting files"})
     }
 
-    emitter.emit(EventType.DELETE_FILE)
+    emitter.emit(EventType.DELETE_FILE, usersToNotify, sessionId)
     return json({success: true, intent, message: `${parsedFilesIdsToDelete.length} files deleted`})
   }
 
@@ -160,7 +173,7 @@ export const action = async ({request, params}: ActionArgs) => {
     try {
       await togglePublic(fileId, checked === "true")
 
-      emitter.emit(EventType.UPDATE_FILE)
+      emitter.emit(EventType.UPDATE_FILE, usersToNotify, sessionId)
       return json({success: true, intent, message: `File now ${checked ? "Public" : "Private"}`})
     } catch (e) {
       return json({success: false, intent, message: `Error making file ${checked ? "Public" : "Private"}`})
@@ -174,7 +187,7 @@ export const action = async ({request, params}: ActionArgs) => {
     try {
       await createComment(user.id, comment, mediaId)
 
-      emitter.emit(EventType.CREATE_COMMENT)
+      emitter.emit(EventType.CREATE_COMMENT, usersToNotify, sessionId)
       return json({success: true, intent, message: `Comment added`})
     } catch (e) {
       return json({success: false, intent, message: `Error adding comment`})
@@ -187,7 +200,7 @@ export const action = async ({request, params}: ActionArgs) => {
     try {
       await deleteComment(commentId)
 
-      emitter.emit(EventType.DELETE_COMMENT)
+      emitter.emit(EventType.DELETE_COMMENT, usersToNotify, sessionId)
       return json({success: true, intent, message: `Comment deleted`})
     } catch (e) {
       return json({success: false, intent, message: `Error deleting comment`})
@@ -201,14 +214,28 @@ export const action = async ({request, params}: ActionArgs) => {
 // todo maybe add valtio for state managment
 
 export default function WorkspaceId() {
+  const user = useUser()
   const {userFiles} = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
-  const transition = useTransition()
+
   const [selectedFiles, setSelectedFiles] = useState<string[]>([])
   const [selectedFilesUrls, setSelectedFilesUrls] = useState<string[]>([])
   const [searchValue, setSearchValue] = useInputState('');
   const [filterTypeValue, setFilterTypeValue] = useState<string[]>([]);
-  useSubscription([EventType.REMOVE_ACCESS, EventType.UPLOAD_FILE, EventType.DELETE_FILE, EventType.DELETE_WORKSPACE, EventType.UPDATE_RIGHTS, EventType.UPDATE_FILE, EventType.CREATE_COMMENT, EventType.DELETE_COMMENT], !!transition.submission)
+
+  useFilesSubscription(
+    `/api/subscriptions/files/${user.id}`,
+    [
+      EventType.DELETE_WORKSPACE,
+      EventType.REMOVE_ACCESS,
+      EventType.UPLOAD_FILE,
+			EventType.DELETE_FILE,
+			EventType.UPDATE_FILE,
+			EventType.CREATE_COMMENT,
+			EventType.DELETE_COMMENT,
+			EventType.UPDATE_RIGHTS,
+    ])
+
   useEffect(() => {
     if (actionData) {
       showNotification({

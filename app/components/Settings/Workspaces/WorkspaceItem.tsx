@@ -6,7 +6,7 @@ import {IconGripVertical} from "@tabler/icons";
 import dayjs from "dayjs";
 import {DangerButton} from "~/components/Buttons/DangerButtom";
 
-export const WorkspaceItem = ({workspace, isDraggable}: {workspace: any, isDraggable: boolean}) => {
+export const WorkspaceItem = ({workspace, isMyWorkspaces = true}: { workspace: any, isMyWorkspaces?: boolean }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const fetcher = useFetcher()
@@ -33,6 +33,7 @@ export const WorkspaceItem = ({workspace, isDraggable}: {workspace: any, isDragg
     e.stopPropagation()
     fetcher.submit({
       intent: "deleteWorkspace",
+      sessionId: sessionStorage.getItem("sessionId") ?? ""
     }, {
       method: "post",
       action: `/settings/workspaces/${workspaceId}`
@@ -52,8 +53,8 @@ export const WorkspaceItem = ({workspace, isDraggable}: {workspace: any, isDragg
       px={12}
     >
       <Group position={"apart"}>
-        <Group >
-          {isDraggable ? (
+        <Group>
+          {isMyWorkspaces ? (
             <ActionIcon size="sm" color={"zinc"} {...listeners} {...attributes}>
               <IconGripVertical/>
             </ActionIcon>
@@ -61,9 +62,10 @@ export const WorkspaceItem = ({workspace, isDraggable}: {workspace: any, isDragg
           <Text>{workspace.name}</Text>
 
 
-
         </Group>
-        <DangerButton compact onClick={(e) => handleDelete(e, workspace.id) }>Delete</DangerButton>
+        {isMyWorkspaces ? (
+          <DangerButton compact onClick={(e: any) => handleDelete(e, workspace.id)}>Delete</DangerButton>
+        ) : null}
       </Group>
       <Text size={"sm"} color={"dimmed"}>{dayjs(workspace.createdAt).format("DD/MM/YYYY")}</Text>
     </Paper>

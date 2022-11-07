@@ -6,11 +6,13 @@ import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {Link, Outlet, useActionData, useLocation} from "@remix-run/react";
-import {createWorkspace, getUserWorkspacesById, updateWorkspaceSortOrder} from "~/models/workspace.server";
+import {createWorkspace, getAllowedWorkspaces, updateWorkspaceSortOrder} from "~/models/workspace.server";
 import {emitter} from "~/server/emitter.server";
-import {EventType} from "~/hooks/useSubscription";
 import {generateKeyBetween} from "~/utils/generateIndex";
 import {CreateNewWorkspace} from "~/components/Settings/Workspaces/CreateNewWorkspace";
+import {EventType} from "~/hooks/useSubscription";
+import {useWorkspaceSubscription} from "~/hooks/useWorkspaceSubscription";
+import {useUser} from "~/utils/utils";
 
 export const meta: MetaFunction = () => {
   return {
@@ -33,8 +35,9 @@ export const action = async ({request}: ActionArgs) => {
 
   if (intent === "createWorkspace") {
     const workspaceName = formData.get("workspaceName")?.toString() ?? "";
+    const sessionId = formData.get("sessionId")?.toString() ?? "";
 
-    const workspaces = await getUserWorkspacesById(user.id)
+    const workspaces = await getAllowedWorkspaces(user.id)
 
     const lastSortIndexValue = workspaces
       ?.sort((a, b) => a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0)
@@ -47,7 +50,7 @@ export const action = async ({request}: ActionArgs) => {
 
       await createWorkspace(user.id, workspaceName, nextSortIndex)
 
-      emitter.emit(EventType.CREATE_WORKSPACE)
+      emitter.emit(EventType.CREATE_WORKSPACE, [user.id], sessionId)
 
       return json({success: true, intent, message: `Workspace ${workspaceName} created`})
     } catch (e) {
@@ -59,12 +62,13 @@ export const action = async ({request}: ActionArgs) => {
   if (intent === "changeSortOrder") {
     const workspaceId = formData.get("workspaceId")?.toString() ?? "";
     const newSortIndex = formData.get("newSortIndex")?.toString() ?? "";
+    const sessionId = formData.get("sessionId")?.toString() ?? "";
 
     try {
+      const workspaceToUpdate = await updateWorkspaceSortOrder(workspaceId, newSortIndex)
 
-      await updateWorkspaceSortOrder(workspaceId, newSortIndex)
 
-      emitter.emit(EventType.REORDER_WORKSPACE)
+      emitter.emit(EventType.REORDER_WORKSPACE, [workspaceToUpdate.ownerId], sessionId)
 
       return json({success: true, intent, message: `REMOVE Sort index updated`})
     } catch (e) {
@@ -78,8 +82,22 @@ export const action = async ({request}: ActionArgs) => {
 
 
 export default function Workspaces() {
+  const user = useUser()
   const data = useActionData<typeof action>()
   const location = useLocation()
+
+  useWorkspaceSubscription(
+    `/api/subscriptions/workspaces/${user.id}`,
+    [
+      EventType.CREATE_WORKSPACE,
+      EventType.DELETE_WORKSPACE,
+      EventType.INVITE_MEMBER,
+      EventType.REMOVE_ACCESS,
+      EventType.REORDER_WORKSPACE,
+      EventType.UPDATE_NAME_WORKSPACE,
+      EventType.UPDATE_RIGHTS
+    ])
+
 
   useEffect(() => {
     if (data) {
@@ -93,7 +111,6 @@ export default function Workspaces() {
     }
   }, [data])
 
-  console.log("location.pathname", location.pathname)
   return (
     <>
       <Paper shadow="0" p="md" withBorder mb={24}>

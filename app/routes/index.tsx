@@ -22,8 +22,9 @@ import {IconFiles, IconSettings} from "@tabler/icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
-import {EventType, useSubscription} from "~/hooks/useSubscription";
 import {CreateNewWorkspace} from "~/components/Settings/Workspaces/CreateNewWorkspace";
+import {useWorkspaceSubscription} from "~/hooks/useWorkspaceSubscription";
+import {EventType} from "~/hooks/useSubscription";
 
 dayjs.extend(relativeTime)
 
@@ -40,12 +41,23 @@ export const loader = async ({request}: LoaderArgs) => {
 
 export default function WorkspacesIndex() {
   const {user, workspaces} = useLoaderData<typeof loader>()
+
   const navigate = useNavigate()
   const fetcher = useFetcher()
   const location = useLocation()
 
-  useSubscription([EventType.CREATE_WORKSPACE, EventType.DELETE_WORKSPACE, EventType.INVITE_MEMBER, EventType.REMOVE_ACCESS, EventType.REORDER_WORKSPACE], !!fetcher.submission)
   const [searchValue, setSearchValue] = useInputState('');
+
+  useWorkspaceSubscription(
+    `/api/subscriptions/workspaces/${user.id}`,
+    [
+      EventType.CREATE_WORKSPACE,
+      EventType.DELETE_WORKSPACE,
+      EventType.INVITE_MEMBER,
+      EventType.REMOVE_ACCESS,
+      EventType.REORDER_WORKSPACE,
+      EventType.UPDATE_NAME_WORKSPACE
+    ])
 
   const handleGoWorkspace = (workspaceId: string) => {
     navigate(`./media/${workspaceId}`)

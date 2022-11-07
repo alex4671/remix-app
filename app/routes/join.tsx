@@ -6,8 +6,8 @@ import {createUser, generateInviteLink, getUserByEmail} from "~/models/user.serv
 import {validateEmail} from "~/utils/utils";
 import {Anchor, Container, PasswordInput, Text, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
-import {postmarkClient} from "~/server/postmark.server";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
+import {randomId} from "@mantine/hooks";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -99,6 +99,10 @@ export default function Join() {
     }
   }, [actionData]);
 
+  const handleCreateSessionId = () => {
+    sessionStorage.setItem("sessionId", randomId())
+  }
+
   return (
     <Container size={"xs"} mt={"20%"} p={"md"}>
       <Title
@@ -147,7 +151,7 @@ export default function Join() {
             Login
           </Anchor>
         </Text>
-        <PrimaryButton fullWidth mt="xl" type={"submit"} loading={isLoading}>
+        <PrimaryButton fullWidth mt="xl" type={"submit"} loading={isLoading} onClick={handleCreateSessionId}>
           Sign up
         </PrimaryButton>
         <input type="hidden" name="redirectTo" value={redirectTo} />

@@ -1,11 +1,16 @@
 import {Badge, Group, Paper, ScrollArea, Table, Text, TextInput, Title} from "@mantine/core";
 import {IconCheck, IconChevronLeft, IconX} from "@tabler/icons";
-import {Form, useActionData, useLoaderData, useLocation, useNavigate, useTransition} from "@remix-run/react";
+import {Form, useActionData, useFetcher, useLoaderData, useLocation, useNavigate} from "@remix-run/react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import {json, redirect} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
-import {deleteWorkspace, getWorkspacesById, isUserAllowedViewWorkspace} from "~/models/workspace.server";
+import {
+  deleteWorkspace,
+  getWorkspacesById,
+  isUserAllowedViewWorkspace,
+  updateWorkspaceName
+} from "~/models/workspace.server";
 import invariant from "tiny-invariant";
 import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
 import dayjs from "dayjs";
@@ -23,7 +28,9 @@ import {getFileKey} from "~/utils/utils";
 import {useEffect} from "react";
 import {showNotification} from "@mantine/notifications";
 import {emitter} from "~/server/emitter.server";
-import {EventType, useSubscription} from "~/hooks/useSubscription";
+import {EventType} from "~/hooks/useSubscription";
+import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
+import {useWorkspaceSubscription} from "~/hooks/useWorkspaceSubscription";
 
 export const loader = async ({request, params}: LoaderArgs) => {
   const user = await requireUser(request)
@@ -53,6 +60,7 @@ export const action = async ({request, params}: ActionArgs) => {
 
   if (intent === "inviteMember") {
     const memberEmail = formData.get("memberEmail")?.toString() ?? "";
+    const sessionId = formData.get("sessionId")?.toString() ?? "";
 
     try {
       const userToInvite = await getUserByEmail(memberEmail)
@@ -74,23 +82,25 @@ export const action = async ({request, params}: ActionArgs) => {
 
         await createCollaborator(workspaceId, userToInvite.id)
 
-        emitter.emit(EventType.INVITE_MEMBER)
+        emitter.emit(EventType.INVITE_MEMBER, [user.id, userToInvite.id], sessionId)
         return json({success: true, intent, message: `Collaborator ${userToInvite.email} added`})
       }
 
       return json({success: false, intent, message: `User not found`})
     } catch (e) {
-      return json({success: false, intent, message: "Error creating workspace"})
+      console.log("e", e)
+      return json({success: false, intent, message: "Error inviting member"})
     }
   }
 
   if (intent === "removeAccess") {
     const collaboratorId = formData.get("collaboratorId")?.toString() ?? "";
+    const sessionId = formData.get("sessionId")?.toString() ?? "";
 
     try {
-      await deleteCollaborator(collaboratorId)
+      const deletedCollaborator = await deleteCollaborator(collaboratorId)
 
-      emitter.emit(EventType.REMOVE_ACCESS)
+      emitter.emit(EventType.REMOVE_ACCESS, [user.id, deletedCollaborator.userId], sessionId)
       return json({success: true, intent, message: `Collaborator removed`})
     } catch (e) {
       return json({success: false, intent, message: "Error removing collaborator"})
@@ -98,9 +108,14 @@ export const action = async ({request, params}: ActionArgs) => {
   }
 
   if (intent === "deleteWorkspace") {
+    const sessionId = formData.get("sessionId")?.toString() ?? "";
 
     try {
       const workspaceToDelete = await deleteWorkspace(workspaceId)
+      const set = new Set()
+      workspaceToDelete.collaborator.map(c => set.add(c.userId))
+
+      const usersToNotify = [workspaceToDelete.ownerId, ...Array.from(set)]
 
       if (workspaceToDelete?.media?.length) {
         for (const {fileUrl} of workspaceToDelete?.media) {
@@ -108,7 +123,7 @@ export const action = async ({request, params}: ActionArgs) => {
         }
       }
 
-      emitter.emit(EventType.DELETE_WORKSPACE)
+      emitter.emit(EventType.DELETE_WORKSPACE, usersToNotify, sessionId)
       return json({success: true, intent, message: `Workspace deleted`})
     } catch (e) {
       return json({success: false, intent, message: "Error deleting workspace"})
@@ -117,16 +132,39 @@ export const action = async ({request, params}: ActionArgs) => {
   if (intent === "updateRights") {
     const workspaceRights = formData.get("workspaceRights")?.toString() ?? "";
     const collaboratorId = formData.get("collaboratorId")?.toString() ?? "";
-
+    const sessionId = formData.get("sessionId")?.toString() ?? "";
 
     try {
       await updateCollaboratorRights(collaboratorId, workspaceRights)
+      const workspace = await getWorkspacesById(workspaceId)
 
+      const set = new Set()
+      workspace?.collaborator.map(c => set.add(c.userId))
 
-      emitter.emit(EventType.UPDATE_RIGHTS)
+      const usersToNotify = [workspace?.owner.id, ...Array.from(set)]
+
+      emitter.emit(EventType.UPDATE_RIGHTS, usersToNotify, sessionId)
       return json({success: true, intent, message: `Rights updated`})
     } catch (e) {
       return json({success: false, intent, message: "Error updating rights"})
+    }
+  }
+  if (intent === "updateWorkspaceName") {
+    const newName = formData.get("newName")?.toString() ?? "";
+    const sessionId = formData.get("sessionId")?.toString() ?? "";
+
+    try {
+      const workspaceUpdate = await updateWorkspaceName(workspaceId, newName)
+
+      const set = new Set()
+      workspaceUpdate.collaborator.map(c => set.add(c.userId))
+
+      const usersToNotify = [workspaceUpdate.ownerId, ...Array.from(set)]
+
+      emitter.emit(EventType.UPDATE_NAME_WORKSPACE, usersToNotify, sessionId)
+      return json({success: true, intent, message: `Workspace name updated`})
+    } catch (e) {
+      return json({success: false, intent, message: "Error updating workspace name"})
     }
   }
 
@@ -137,11 +175,21 @@ export const action = async ({request, params}: ActionArgs) => {
 export default function WorkspaceId() {
   const {user, workspace} = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
+  const fetcher = useFetcher()
   const {state} = useLocation();
   const navigate = useNavigate()
-  const transition = useTransition()
 
-  useSubscription([EventType.UPDATE_RIGHTS, EventType.REMOVE_ACCESS], !!transition.submission)
+  useWorkspaceSubscription(
+    `/api/subscriptions/workspaces/${user.id}`,
+    [
+      EventType.DELETE_WORKSPACE,
+      EventType.INVITE_MEMBER,
+      EventType.REMOVE_ACCESS,
+      EventType.UPDATE_NAME_WORKSPACE,
+      EventType.UPDATE_RIGHTS
+    ])
+
+
   useEffect(() => {
     if (actionData) {
       showNotification({
@@ -157,7 +205,6 @@ export default function WorkspaceId() {
 
 
   const handleGoBack = () => {
-    // todo figure out where redirect back (use location state)
     navigate(state ?? "/")
   }
 
@@ -176,6 +223,7 @@ export default function WorkspaceId() {
         <td>
           <Form method={"post"}>
             <input type="hidden" name={"collaboratorId"} value={c.id}/>
+            <input type="hidden" name={"sessionId"} value={sessionStorage.getItem("sessionId") ?? ""}/>
             <DangerButton
               disabled={!isUserOwner}
               compact
@@ -192,16 +240,35 @@ export default function WorkspaceId() {
     </tr>
   ));
 
+  const handleBlur = (e: any) => {
+    fetcher.submit({
+      newName: e.currentTarget.textContent,
+      intent: "updateWorkspaceName",
+      sessionId: sessionStorage.getItem("sessionId") ?? ""
+    }, {
+      method: "post"
+    })
+  }
+
   return (
     <Paper shadow="0" p="md" withBorder mb={24}>
       <SecondaryButton onClick={handleGoBack} leftIcon={<IconChevronLeft size={14}/>} compact>Go back</SecondaryButton>
       <Group spacing={6} mt={12}>
-        <Title order={2}>{workspace?.name}</Title>
+        <Title
+          order={2}
+          contentEditable={isUserOwner}
+          // style={{ border: "1px solid black" }}
+          suppressContentEditableWarning
+          onBlur={handleBlur}
+        >
+          {workspace?.name}
+        </Title>
         <Badge color={isUserOwner ? "emerald" : "yellow"}>Owner ({isUserOwner ? "You" : workspace?.owner.email})</Badge>
       </Group>
       <Text mt={6}>Manage workspace settings and invite members</Text>
       {isUserOwner ? (
         <Form method={"post"}>
+          <HiddenSessionId />
           <Group position="apart">
             <Group spacing={"xs"} mt={24}>
               <TextInput placeholder={"New member email"} name={"memberEmail"}/>

@@ -6,6 +6,7 @@ const FILES_SUBSCRIPTION_PATH = "/api/subscriptions/workspaces"
 export enum EventType {
   CREATE_WORKSPACE = "CREATE_WORKSPACE",
   DELETE_WORKSPACE = "DELETE_WORKSPACE",
+  UPDATE_NAME_WORKSPACE = "UPDATE_NAME_WORKSPACE",
   UPDATE_RIGHTS = "UPDATE_RIGHTS",
   INVITE_MEMBER = "INVITE_MEMBER",
   REMOVE_ACCESS = "REMOVE_ACCESS",
@@ -18,8 +19,10 @@ export enum EventType {
 }
 
 
-export function useSubscription(events: EventType[] = [], isSubmitting: boolean) {
+export function useSubscription(events: EventType[] = []) {
   let {refresh} = useDataRefresh();
+
+  console.log("Object.keys(EventType)", Object.keys(EventType))
 
   useEffect(() => {
     let eventSource = new EventSource(FILES_SUBSCRIPTION_PATH);
@@ -29,9 +32,7 @@ export function useSubscription(events: EventType[] = [], isSubmitting: boolean)
     })
 
     function handler(event: MessageEvent) {
-      if (!isSubmitting) {
-        refresh()
-      }
+      refresh()
     }
 
 

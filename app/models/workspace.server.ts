@@ -153,10 +153,28 @@ export const updateWorkspaceSortOrder = (workspaceId: Workspace["id"], newSortIn
     },
     data: {
       sortIndex: newSortIndex
-    }
+    },
   })
 }
 
+export const updateWorkspaceName = (workspaceId: Workspace["id"], newName: Workspace["name"]) => {
+  return prisma.workspace.update({
+    where: {
+      id: workspaceId
+    },
+    data: {
+      name: newName
+    },
+    select: {
+      ownerId: true,
+      collaborator: {
+        select: {
+          userId: true
+        }
+      },
+    }
+  })
+}
 
 export const deleteWorkspace = (workspaceId: Workspace["id"]) => {
   return prisma.workspace.delete({
@@ -164,6 +182,12 @@ export const deleteWorkspace = (workspaceId: Workspace["id"]) => {
       id: workspaceId
     },
     select: {
+      ownerId: true,
+      collaborator: {
+        select: {
+          userId: true
+        }
+      },
       media: {
         select: {
           fileUrl: true
@@ -172,5 +196,6 @@ export const deleteWorkspace = (workspaceId: Workspace["id"]) => {
     }
   })
 }
+
 
 

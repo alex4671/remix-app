@@ -12,6 +12,7 @@ export const CreateNewWorkspace = () => {
     fetcher.submit({
       intent: "createWorkspace",
       workspaceName: value,
+      sessionId: sessionStorage.getItem("sessionId") ?? ""
     }, {
       method: "post",
       action: "/settings/workspaces"

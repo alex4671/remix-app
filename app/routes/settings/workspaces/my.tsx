@@ -1,5 +1,5 @@
 import {Box, Title} from "@mantine/core";
-import {useFetcher, useLoaderData, useTransition} from "@remix-run/react";
+import {useFetcher, useLoaderData} from "@remix-run/react";
 import type {LoaderArgs} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
@@ -9,7 +9,6 @@ import {SortableContext, sortableKeyboardCoordinates, verticalListSortingStrateg
 import {restrictToVerticalAxis} from "@dnd-kit/modifiers";
 import {generateKeyBetween} from "~/utils/generateIndex";
 import {WorkspaceItem} from "~/components/Settings/Workspaces/WorkspaceItem";
-import {EventType, useSubscription} from "~/hooks/useSubscription";
 import {useEffect, useState} from "react";
 
 export const loader = async ({request}: LoaderArgs) => {
@@ -22,7 +21,6 @@ export const loader = async ({request}: LoaderArgs) => {
 export default function MyWorkspaces() {
   const {workspaces} = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
-  const transition = useTransition()
 
   const [workspacesCopy, setWorkspacesCopy] = useState(workspaces)
 
@@ -32,7 +30,6 @@ export default function MyWorkspaces() {
 
   }, [workspaces])
 
-  useSubscription([EventType.CREATE_WORKSPACE, EventType.DELETE_WORKSPACE, EventType.INVITE_MEMBER, EventType.REORDER_WORKSPACE], !!transition.submission)
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -57,7 +54,7 @@ export default function MyWorkspaces() {
             items={sortedCopy}
             strategy={verticalListSortingStrategy}
           >
-            {sortedCopy.map(w => (<WorkspaceItem key={w.id} workspace={w} isDraggable={true}/>))}
+            {sortedCopy.map(w => (<WorkspaceItem key={w.id} workspace={w}/>))}
           </SortableContext>
         </DndContext>
       ) : (
@@ -93,7 +90,12 @@ export default function MyWorkspaces() {
         }
 
 
-        fetcher.submit({intent: "changeSortOrder", workspaceId: active.id, newSortIndex}, {
+        fetcher.submit({
+          intent: "changeSortOrder",
+          workspaceId: active.id,
+          newSortIndex,
+          sessionId: sessionStorage.getItem("sessionId") ?? ""
+        }, {
           method: "post",
           action: "/settings/workspaces"
         })

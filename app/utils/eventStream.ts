@@ -6,7 +6,7 @@ export function eventStream(request: Request, init: InitFunction) {
   let stream = new ReadableStream({
     start(controller) {
       let encoder = new TextEncoder();
-      let send = (event: string, data: string) => {
+      let send = (event: string, data?: string) => {
         controller.enqueue(encoder.encode(`event: ${event}\n`));
         controller.enqueue(encoder.encode(`data: ${data}\n\n`));
       };
