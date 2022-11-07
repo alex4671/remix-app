@@ -9,6 +9,7 @@ import {showNotification} from "@mantine/notifications";
 import type {action, loader} from "~/routes/media/$workspaceId";
 import type {Dispatch, SetStateAction} from "react";
 import { useEffect, useRef, useState} from "react";
+import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
 
 interface Props {
   selectedFiles: string[];
@@ -91,6 +92,7 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
   // todo bug with usage count when filtering
   return (
     <Form method={"post"} encType={"multipart/form-data"}>
+      <HiddenSessionId/>
       <Group position={"apart"}>
         <Group>
           {selectedFiles.length ? (

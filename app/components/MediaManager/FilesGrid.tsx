@@ -26,6 +26,7 @@ import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import type {loader} from "~/routes/media/$workspaceId";
 import {useEffect} from "react";
 import {showNotification} from "@mantine/notifications";
+import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
 
 interface Props {
   setSelectedFiles: Dispatch<SetStateAction<string[]>>
@@ -70,7 +71,12 @@ export const FilesGrid = ({
   const handleMakePublic = (event: any, fileId: string) => {
     const {checked} = event.currentTarget
 
-    fetcher.submit({intent: "togglePublic", fileId, checked}, {method: "post", replace: true})
+    fetcher.submit({
+      intent: "togglePublic",
+      fileId,
+      checked,
+      sessionId: sessionStorage.getItem("sessionId") ?? ""
+    }, {method: "post", replace: true})
   }
 
   // todo refactor component
@@ -141,6 +147,7 @@ export const FilesGrid = ({
                     </Group>
                     <fetcher.Form method={"post"}>
                       <input type="hidden" name={"fileId"} value={file.id}/>
+                      <HiddenSessionId />
                       <Group spacing={4}>
                         <Popover width={250} withArrow position="bottom" shadow={"sm"}>
                           <Popover.Target>

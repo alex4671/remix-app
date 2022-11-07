@@ -8,6 +8,7 @@ import {useFetcher} from "@remix-run/react";
 import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {DangerButton} from "~/components/Buttons/DangerButtom";
 import {showNotification} from "@mantine/notifications";
+import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
 
 interface Props {
   comments: any;
@@ -59,6 +60,7 @@ export const FileComments = ({comments, mediaId}: Props) => {
                         </Group>
                         <fetcher.Form method={"post"}>
                           <input type="hidden" name={"commentId"} value={c.id}/>
+                          <HiddenSessionId/>
                           <DangerButton
                             compact
                             type={"submit"}
@@ -97,6 +99,7 @@ export const FileComments = ({comments, mediaId}: Props) => {
         </ScrollArea>
         <fetcher.Form method={"post"}>
           <Stack my={12}>
+            <HiddenSessionId/>
             <input type="hidden" name={"mediaId"} value={mediaId}/>
             <Textarea
               placeholder="Your comment"
