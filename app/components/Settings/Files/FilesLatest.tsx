@@ -1,8 +1,21 @@
-import {Box, Paper, ScrollArea, Table, Title, Text, createStyles, UnstyledButton, Group, Center, Badge, Anchor} from "@mantine/core";
+import {
+  Anchor,
+  Badge,
+  Box,
+  Center,
+  createStyles,
+  Group,
+  Paper,
+  ScrollArea,
+  Table,
+  Text,
+  Title,
+  UnstyledButton
+} from "@mantine/core";
 import {useState} from "react";
 import {IconChevronDown, IconChevronUp, IconSelector} from "@tabler/icons";
-import {Link, useLoaderData} from "@remix-run/react";
-import {loader} from "~/routes/settings/files";
+import {useLoaderData} from "@remix-run/react";
+import type {loader} from "~/routes/settings/files";
 import {formatBytes} from "~/utils/utils";
 import dayjs from "dayjs";
 

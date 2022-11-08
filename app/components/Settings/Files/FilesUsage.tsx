@@ -1,4 +1,4 @@
-import {Box, Group, Paper, Select, Text, Title} from "@mantine/core";
+import {Box, Group, Overlay, Paper, Select, Text, Title} from "@mantine/core";
 import {CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
 
@@ -35,7 +35,8 @@ const data = [
 
 export const FilesUsage = () => {
   return (
-    <Paper shadow="0" p="md" withBorder mb={24}>
+    <Paper shadow="0" p="md" withBorder mb={24} pos={"relative"}>
+      <Overlay  opacity={0.1} color="#000" zIndex={5} blur={1} />
       <Title order={2}>Usage</Title>
       <Text mt={6} mb={12}>View storage usage and latest files</Text>
       <Group position={"right"} mt={24} mb={36}>
@@ -51,11 +52,9 @@ export const FilesUsage = () => {
           ]}
         />
       </Group>
-      <Box sx={{border: "1px solid blue", height: "300px"}} py={12}>
+      <Box sx={{height: "200px"}} py={12}>
         <ResponsiveContainer width="100%" height="100%" >
           <LineChart
-            // width={500}
-            // height={300}
             data={data}
             margin={{
               top: 5,
@@ -64,10 +63,10 @@ export const FilesUsage = () => {
               bottom: 5,
             }}
           >
-            <XAxis dataKey="name" />
-            <YAxis />
+            {/*<XAxis dataKey="name" />*/}
+            {/*<YAxis />*/}
             <Tooltip cursor={false}/>
-            <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
+            <Line type="monotone" isAnimationActive={false} dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
           </LineChart>
         </ResponsiveContainer>
       </Box>
