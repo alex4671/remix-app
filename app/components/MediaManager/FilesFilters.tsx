@@ -1,5 +1,5 @@
 import {ActionIcon, Badge, Button, Drawer, Grid, Group, Select, Stack, TextInput} from "@mantine/core";
-import {IconCircleX, IconX} from "@tabler/icons";
+import {IconCircleX, IconLayoutGrid, IconLayoutList, IconX} from "@tabler/icons";
 import {Filter} from "~/components/MediaManager/Filter";
 import type {Dispatch, SetStateAction} from "react";
 import {useState} from "react";
@@ -18,9 +18,11 @@ interface Props {
   setSearchValue: (value: any) => void;
   filterTypeValue: string[];
   setFilterTypeValue: Dispatch<SetStateAction<string[]>>;
+  viewType: "grid" | "list";
+  setViewType: (value: "grid" | "list") => void
 }
 
-export const FilesFilters = ({searchValue, setSearchValue, filterTypeValue, setFilterTypeValue}: Props) => {
+export const FilesFilters = ({searchValue, setSearchValue, filterTypeValue, setFilterTypeValue, viewType, setViewType}: Props) => {
   const {userFiles} = useLoaderData<typeof loader>()
   const [searchParams, setSearchParams] = useSearchParams();
   const defaultFrom = searchParams.get("from")
@@ -95,6 +97,14 @@ export const FilesFilters = ({searchValue, setSearchValue, filterTypeValue, setF
         </Grid.Col>
         <Grid.Col xs={12} sm={6}>
           <Group position={"right"}>
+            <Group spacing={4}>
+              <ActionIcon variant={viewType === "grid" ? "filled" : "subtle"} color="dark" onClick={() => setViewType("grid")}>
+                <IconLayoutGrid size={18} />
+              </ActionIcon>
+              <ActionIcon variant={viewType === "list" ? "filled" : "subtle"} color="dark" onClick={() => setViewType("list")}>
+                <IconLayoutList size={18} />
+              </ActionIcon>
+            </Group>
             <Drawer
               opened={opened}
               onClose={() => setOpened(false)}
