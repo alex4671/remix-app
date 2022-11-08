@@ -1,6 +1,6 @@
 import {createStyles, NavLink, Stack} from "@mantine/core";
 import {Link, useLocation} from "@remix-run/react";
-import {IconAlertCircle, IconCreditCard, IconUser, IconUsers} from "@tabler/icons";
+import {IconAlertCircle, IconBell, IconCreditCard, IconFiles, IconFolder, IconUser} from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -31,7 +31,7 @@ export const SettingsLinks = () => {
         component={Link}
         to="./workspaces/my"
         label="Workspaces"
-        icon={<IconUsers size={16} stroke={1.5}/>}
+        icon={<IconFolder size={16} stroke={1.5}/>}
         className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("workspaces") })}
         variant="filled"
         prefetch={"intent"}
@@ -40,7 +40,7 @@ export const SettingsLinks = () => {
         component={Link}
         to="./files"
         label="Files"
-        icon={<IconUser size={16} stroke={1.5}/>}
+        icon={<IconFiles size={16} stroke={1.5}/>}
         className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("files") })}
         variant="filled"
         prefetch={"intent"}
@@ -72,7 +72,15 @@ export const SettingsLinks = () => {
       {/*  variant="filled"*/}
       {/*  prefetch={"intent"}*/}
       {/*/>*/}
-
+      <NavLink
+        component={Link}
+        to="./notifications"
+        label="Notifications"
+        icon={<IconBell size={16} stroke={1.5}/>}
+        className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("notifications") })}
+        variant="filled"
+        prefetch={"intent"}
+      />
       <NavLink
         component={Link}
         to="./danger"

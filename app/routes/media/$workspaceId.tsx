@@ -19,6 +19,7 @@ import {IconCheck, IconX} from "@tabler/icons";
 import {EventType} from "~/hooks/useSubscription";
 import {emitter} from "~/server/emitter.server";
 import {useFilesSubscription} from "~/hooks/useFilesSubscription";
+import {FilesList} from "~/components/MediaManager/FilesList";
 
 type Rights = {
   delete: boolean;
@@ -222,6 +223,7 @@ export default function WorkspaceId() {
   const [selectedFilesUrls, setSelectedFilesUrls] = useState<string[]>([])
   const [searchValue, setSearchValue] = useInputState('');
   const [filterTypeValue, setFilterTypeValue] = useState<string[]>([]);
+  const [viewType, setViewType] = useState<"grid" | "list">("grid");
 
   useFilesSubscription(
     `/api/subscriptions/files/${user.id}`,
@@ -269,14 +271,27 @@ export default function WorkspaceId() {
         searchValue={searchValue}
         setFilterTypeValue={setFilterTypeValue}
         setSearchValue={setSearchValue}
+        viewType={viewType}
+        setViewType={setViewType}
       />
-      <FilesGrid
-        setSelectedFiles={setSelectedFiles}
-        setSelectedFilesUrls={setSelectedFilesUrls}
-        filteredUserFiles={filteredUserFiles}
-        filterTypeValue={filterTypeValue}
-        selectedFiles={selectedFiles}
-      />
+      {viewType === "grid" ? (
+        <FilesGrid
+          setSelectedFiles={setSelectedFiles}
+          setSelectedFilesUrls={setSelectedFilesUrls}
+          filteredUserFiles={filteredUserFiles}
+          filterTypeValue={filterTypeValue}
+          selectedFiles={selectedFiles}
+        />
+      ) : (
+        <FilesList
+          setSelectedFiles={setSelectedFiles}
+          setSelectedFilesUrls={setSelectedFilesUrls}
+          filteredUserFiles={filteredUserFiles}
+          filterTypeValue={filterTypeValue}
+          selectedFiles={selectedFiles}
+        />
+      )}
+
 
     </>
   )

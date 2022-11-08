@@ -10,19 +10,20 @@ datasource db {
 }
 
 model User {
-  id             String               @id @default(cuid())
-  email          String               @unique
-  avatarUrl      String?
-  password       Password?
-  isConfirmed    Boolean              @default(false)
-  payment        UserPayment?
-  paymentHistory UserPaymentHistory[]
-  workspace      Workspace[]
-  collaborator   Collaborator[]
-  media          Media[]
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  comments       Comments[]
+  id                   String                @id @default(cuid())
+  email                String                @unique
+  avatarUrl            String?
+  password             Password?
+  isConfirmed          Boolean               @default(false)
+  payment              UserPayment?
+  paymentHistory       UserPaymentHistory[]
+  workspace            Workspace[]
+  collaborator         Collaborator[]
+  media                Media[]
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  comments             Comments[]
+  notificationSettings NotificationSettings?
 }
 
 model Workspace {
@@ -121,8 +122,23 @@ model Comments {
   comment   String   @db.Text
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   media     Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
   mediaId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NotificationSettings {
+  id                       String   @id @default(uuid())
+  user                     User     @relation(fields: [userId], references: [id])
+  userId                   String   @unique
+  outOfSpace               Boolean  @default(false)
+  deleteLargeNumberOfFiles Boolean  @default(false)
+  newCollaborator          Boolean  @default(false)
+  newFeaturesAndUpdates    Boolean  @default(false)
+  tips                     Boolean  @default(false)
+  sharedActivity           Boolean  @default(false)
+  comments                 Boolean  @default(false)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
 }
