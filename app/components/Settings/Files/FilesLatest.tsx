@@ -1,12 +1,20 @@
-import {Box, Paper, ScrollArea, Table, Title, Text, createStyles, UnstyledButton, Group, Center} from "@mantine/core";
+import {Box, Paper, ScrollArea, Table, Title, Text, createStyles, UnstyledButton, Group, Center, Badge, Anchor} from "@mantine/core";
 import {useState} from "react";
 import {IconChevronDown, IconChevronUp, IconSelector} from "@tabler/icons";
+import {Link, useLoaderData} from "@remix-run/react";
+import {loader} from "~/routes/settings/files";
+import {formatBytes} from "~/utils/utils";
+import dayjs from "dayjs";
 
 
 interface RowData {
   name: string;
-  email: string;
-  company: string;
+  fileUrl: string;
+  public: boolean;
+  size: number;
+  type: string;
+  createdAt: string;
+
 }
 
 
@@ -37,89 +45,6 @@ const useStyles = createStyles((theme) => ({
     borderRadius: 21,
   },
 }));
-
-const  data = [
-  {
-    "name": "Athena Weissnat",
-    "company": "Little - Rippin",
-    "email": "Elouise.Prohaska@yahoo.com"
-  },
-  {
-    "name": "Deangelo Runolfsson",
-    "company": "Greenfelder - Krajcik",
-    "email": "Kadin_Trantow87@yahoo.com"
-  },
-  {
-    "name": "Danny Carter",
-    "company": "Kohler and Sons",
-    "email": "Marina3@hotmail.com"
-  },
-  {
-    "name": "Trace Tremblay PhD",
-    "company": "Crona, Aufderhar and Senger",
-    "email": "Antonina.Pouros@yahoo.com"
-  },
-  {
-    "name": "Derek Dibbert",
-    "company": "Gottlieb LLC",
-    "email": "Abagail29@hotmail.com"
-  },
-  {
-    "name": "Viola Bernhard",
-    "company": "Funk, Rohan and Kreiger",
-    "email": "Jamie23@hotmail.com"
-  },
-  {
-    "name": "Austin Jacobi",
-    "company": "Botsford - Corwin",
-    "email": "Genesis42@yahoo.com"
-  },
-  {
-    "name": "Hershel Mosciski",
-    "company": "Okuneva, Farrell and Kilback",
-    "email": "Idella.Stehr28@yahoo.com"
-  },
-  {
-    "name": "Mylene Ebert",
-    "company": "Kirlin and Sons",
-    "email": "Hildegard17@hotmail.com"
-  },
-  {
-    "name": "Lou Trantow",
-    "company": "Parisian - Lemke",
-    "email": "Hillard.Barrows1@hotmail.com"
-  },
-  {
-    "name": "Dariana Weimann",
-    "company": "Schowalter - Donnelly",
-    "email": "Colleen80@gmail.com"
-  },
-  {
-    "name": "Dr. Christy Herman",
-    "company": "VonRueden - Labadie",
-    "email": "Lilyan98@gmail.com"
-  },
-  {
-    "name": "Katelin Schuster",
-    "company": "Jacobson - Smitham",
-    "email": "Erich_Brekke76@gmail.com"
-  },
-  {
-    "name": "Melyna Macejkovic",
-    "company": "Schuster LLC",
-    "email": "Kylee4@yahoo.com"
-  },
-  {
-    "name": "Pinkie Rice",
-    "company": "Wolf, Trantow and Zulauf",
-    "email": "Fiona.Kutch@hotmail.com"
-  },
-  {
-    "name": "Brain Kreiger",
-    "company": "Lueilwitz Group",
-    "email": "Rico98@hotmail.com"
-  }
-]
 
 
 function Th({ children, reversed, sorted, onSort }: ThProps) {
@@ -154,7 +79,7 @@ function sortData(
 
   return [...data].sort((a, b) => {
     if (payload.reversed) {
-      return b[sortBy].localeCompare(a[sortBy]);
+      return b[sortBy].toString().localeCompare(a[sortBy]);
     }
 
     return a[sortBy].localeCompare(b[sortBy]);
@@ -162,7 +87,11 @@ function sortData(
 }
 
 export const FilesLatest = () => {
-  const [sortedData, setSortedData] = useState(data);
+  const {userFiles} = useLoaderData<typeof loader>()
+
+  console.log("userFiels", userFiles)
+
+  const [sortedData, setSortedData] = useState(userFiles);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
@@ -170,15 +99,19 @@ export const FilesLatest = () => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed }));
+    setSortedData(sortData(userFiles, { sortBy: field, reversed }));
   };
 
 
   const rows = sortedData.map((row) => (
-    <tr key={row.name}>
-      <td>{row.name}</td>
-      <td>{row.email}</td>
-      <td>{row.company}</td>
+    <tr key={row.id}>
+      <td><Anchor href={row.fileUrl} target={"_blank"}>File</Anchor></td>
+      <td>
+        <Badge color={row.public ? "emerald" : "red"}>{row.public ? "Public" : "Private"}</Badge>
+      </td>
+      <td>{formatBytes(row.size)}</td>
+      <td><Badge color="gray" variant="outline">{row.type.split('/')[1]}</Badge></td>
+      <td>{dayjs(row.createdAt).format("MMMM D, YYYY")}</td>
     </tr>
   ));
 
@@ -195,26 +128,16 @@ export const FilesLatest = () => {
           >
             <thead>
             <tr>
+              <th>Url</th>
+              <th>Public</th>
+              <th>Size</th>
+              <th>Type</th>
               <Th
-                sorted={sortBy === 'name'}
+                sorted={sortBy === 'createdAt'}
                 reversed={reverseSortDirection}
-                onSort={() => setSorting('name')}
+                onSort={() => setSorting('createdAt')}
               >
-                Name
-              </Th>
-              <Th
-                sorted={sortBy === 'email'}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting('email')}
-              >
-                Email
-              </Th>
-              <Th
-                sorted={sortBy === 'company'}
-                reversed={reverseSortDirection}
-                onSort={() => setSorting('company')}
-              >
-                Company
+                CreatedAt
               </Th>
             </tr>
             </thead>
@@ -223,7 +146,7 @@ export const FilesLatest = () => {
               rows
             ) : (
               <tr>
-                <td colSpan={Object.keys(data[0]).length}>
+                <td colSpan={Object.keys(userFiles).length}>
                   <Text weight={500} align="center">
                     Nothing found
                   </Text>
