@@ -10,6 +10,7 @@ import type {action} from "~/routes/media/$workspaceId";
 type Rights = {
   delete: boolean;
   upload: boolean;
+  comment: boolean;
 };
 
 interface Props {
@@ -20,7 +21,11 @@ interface Props {
 
 export const WorkspaceRights = ({rights, collaboratorId, isOwner}: Props) => {
   const fetcher = useFetcher<typeof action>()
-  const [workspaceRights, setWorkspaceRights] = useState({delete: rights?.delete, upload: rights?.upload})
+  const [workspaceRights, setWorkspaceRights] = useState({
+    delete: rights?.delete,
+    upload: rights?.upload,
+    comment: rights?.comment
+  })
   const [opened, setOpened] = useState(false);
 
   useEffect(() => {
@@ -37,7 +42,14 @@ export const WorkspaceRights = ({rights, collaboratorId, isOwner}: Props) => {
   }, [fetcher.data])
 
   const handleUpdateRights = () => {
-    fetcher.submit({workspaceRights: JSON.stringify(workspaceRights), collaboratorId, intent: "updateRights"}, {method: "post"})
+    fetcher.submit({
+      workspaceRights: JSON.stringify(workspaceRights),
+      collaboratorId,
+      intent: "updateRights",
+      sessionId: sessionStorage.getItem("sessionId") ?? ""
+    }, {
+      method: "post"
+    })
     setOpened(false)
   }
 
@@ -53,6 +65,10 @@ export const WorkspaceRights = ({rights, collaboratorId, isOwner}: Props) => {
           <Text>Delete: </Text>
           <Badge color={rights.delete ? "emerald" : "red"}>{rights.delete ? "Yes" : "No"}</Badge>
         </Group>
+        <Group spacing={0}>
+          <Text>Comment: </Text>
+          <Badge color={rights.comment ? "emerald" : "red"}>{rights.comment ? "Yes" : "No"}</Badge>
+        </Group>
         {isOwner ? (
           <Popover width={250} withArrow position="top" shadow={"sm"} withinPortal opened={opened} onChange={setOpened}>
             <Popover.Target>
@@ -67,14 +83,33 @@ export const WorkspaceRights = ({rights, collaboratorId, isOwner}: Props) => {
                   label="Upload"
                   name={"rightsUpload"}
                   checked={workspaceRights.upload}
-                  onChange={(event) => setWorkspaceRights({delete: workspaceRights.delete, upload: event.currentTarget.checked})}
+                  onChange={(event) => setWorkspaceRights({
+                    delete: workspaceRights.delete,
+                    comment: workspaceRights.comment,
+                    upload: event.currentTarget.checked
+                  })}
                   color={"emerald"}
                 />
                 <Switch
                   label="Delete"
                   name={"rightsDelete"}
                   checked={workspaceRights.delete}
-                  onChange={(event) => setWorkspaceRights({upload: workspaceRights.upload, delete: event.currentTarget.checked})}
+                  onChange={(event) => setWorkspaceRights({
+                    upload: workspaceRights.upload,
+                    comment: workspaceRights.comment,
+                    delete: event.currentTarget.checked
+                  })}
+                  color={"emerald"}
+                />
+                <Switch
+                  label="Comment"
+                  name={"rightsComment"}
+                  checked={workspaceRights.comment}
+                  onChange={(event) => setWorkspaceRights({
+                    upload: workspaceRights.upload,
+                    delete: workspaceRights?.delete,
+                    comment: event.currentTarget.checked
+                  })}
                   color={"emerald"}
                 />
                 <Button

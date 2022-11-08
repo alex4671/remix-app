@@ -24,6 +24,7 @@ import {FilesList} from "~/components/MediaManager/FilesList";
 type Rights = {
   delete: boolean;
   upload: boolean;
+  comment: boolean;
 };
 
 export const loader = async ({request, params}: LoaderArgs) => {
@@ -52,7 +53,7 @@ export const loader = async ({request, params}: LoaderArgs) => {
 
   const rights =
     userFiles?.ownerId === user.id
-      ? {upload: true, delete: true}
+      ? {upload: true, delete: true, comment: true}
       : userFiles?.collaborator?.find(c => c.userId === user.id)?.rights as Rights
 
   return json({

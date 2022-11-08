@@ -18,7 +18,7 @@ export const createCollaborator = (workspaceId: Collaborator["workspaceId"], use
     data: {
       workspaceId,
       userId,
-      rights: {upload: false, delete: false},
+      rights: {upload: false, delete: false, comment: false},
       role: "COLLABORATOR",
     }
   })

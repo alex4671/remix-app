@@ -11,11 +11,13 @@ import {showNotification} from "@mantine/notifications";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
 
 interface Props {
+  disabled: boolean;
   comments: any;
   mediaId: string;
 }
 
-export const FileComments = ({comments, mediaId}: Props) => {
+export const FileComments = ({disabled, comments, mediaId}: Props) => {
+
   const user = useUser()
   const fetcher = useFetcher()
   const [opened, setOpened] = useState(false);
@@ -111,7 +113,7 @@ export const FileComments = ({comments, mediaId}: Props) => {
       </Drawer>
 
       <Group spacing={0}>
-        <ActionIcon onClick={() => setOpened(true)}>
+        <ActionIcon onClick={() => setOpened(true)} disabled={disabled}>
           <IconMessage2 size={18}/>
         </ActionIcon>
         <Text size={"xs"} color={"dimmed"}>{comments?.length}</Text>

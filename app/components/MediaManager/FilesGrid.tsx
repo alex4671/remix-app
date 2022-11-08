@@ -189,7 +189,7 @@ export const FilesGrid = ({
                         <ActionIcon type={"submit"} name={"intent"} value={"deleteFile"} disabled={!rights?.delete}>
                           <IconTrash size={18}/>
                         </ActionIcon>
-                        <FileComments comments={file.comments} mediaId={file.id} />
+                        <FileComments disabled={!rights?.comment} comments={file.comments} mediaId={file.id} />
                       </Group>
                     </fetcher.Form>
                   </Group>
