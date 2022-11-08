@@ -30,8 +30,6 @@ export const loader = async ({request}: LoaderArgs) => {
 export default function Files() {
   // const {userFiles, userFilesSize, maxSizeLimit} = useLoaderData<typeof loader>()
 
-
-
   return (
     <>
       <FilesStorage/>
