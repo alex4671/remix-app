@@ -11,8 +11,6 @@ export const useWorkspaceSubscription = (href: string, events: string[]) => {
     const handler = (event: MessageEvent) => {
       const sessionId = sessionStorage.getItem("sessionId") ?? ""
 
-      console.log("event", event)
-
       if (events.includes(event.type)) {
         if (event.data !== sessionId) {
           refresh()
