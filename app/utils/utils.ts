@@ -100,7 +100,7 @@ export const formatMoney = (amount?: string | number, currency: string = "USD"):
 }
 
 export const formatBytes = (bytes: number | undefined, decimals = 2) => {
-  if (!bytes) return ""
+  if (!bytes) return "0"
   if (!+bytes) return '0 Bytes'
 
   const k = 1024
