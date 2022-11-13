@@ -292,8 +292,6 @@ export default function WorkspaceId() {
           selectedFiles={selectedFiles}
         />
       )}
-
-
     </>
   )
 }

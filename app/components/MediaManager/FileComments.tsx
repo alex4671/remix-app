@@ -45,71 +45,76 @@ export const FileComments = ({disabled, comments, mediaId}: Props) => {
         size="xl"
         position={"right"}
       >
-        <ScrollArea style={{height: "75%"}} offsetScrollbars>
-          <Stack>
-            {comments?.length ?
-              comments?.map(c => {
-                if (c.user.email === user.email) {
-                  return (
-                    <Paper withBorder p={"sm"} mr={36} key={c.id}>
-                      <Group position={"apart"}>
-                        <Group>
-                          <Avatar src={c.user.avatarUrl} alt={c.user.email} radius="xl"/>
+        <Stack justify="space-between" h={"100%"}>
+
+          <ScrollArea offsetScrollbars>
+            <Stack>
+              {comments?.length ?
+                comments?.map(c => {
+                  if (c.user.email === user.email) {
+                    return (
+                      <Paper withBorder p={"sm"} mr={36} key={c.id}>
+                        <Group position={"apart"}>
+                          <Group>
+                            <Avatar src={c.user.avatarUrl} alt={c.user.email} radius="xl"/>
+                            <div>
+                              <Text size="sm">{c.user.email}</Text>
+                              <Text size="xs" color="dimmed">{dayjs(c.createdAt).format("DD/MM/YYYY")}</Text>
+                            </div>
+                          </Group>
+                          <fetcher.Form method={"post"}>
+                            <input type="hidden" name={"commentId"} value={c.id}/>
+                            <HiddenSessionId/>
+                            <DangerButton
+                              compact
+                              type={"submit"}
+                              name={"intent"}
+                              value={"deleteComment"}
+                            >
+                              Delete
+                            </DangerButton>
+                          </fetcher.Form>
+                        </Group>
+                        <p>{c.comment}</p>
+                      </Paper>
+                    )
+                  } else {
+                    return (
+                      <Paper withBorder p={"sm"} ml={36} key={c.id}>
+                        <Group position={"right"}>
                           <div>
                             <Text size="sm">{c.user.email}</Text>
                             <Text size="xs" color="dimmed">{dayjs(c.createdAt).format("DD/MM/YYYY")}</Text>
                           </div>
+                          <Avatar src={c.user.avatarUrl} alt={c.user.email} radius="xl"/>
                         </Group>
-                        <fetcher.Form method={"post"}>
-                          <input type="hidden" name={"commentId"} value={c.id}/>
-                          <HiddenSessionId/>
-                          <DangerButton
-                            compact
-                            type={"submit"}
-                            name={"intent"}
-                            value={"deleteComment"}
-                          >
-                            Delete
-                          </DangerButton>
-                        </fetcher.Form>
-                      </Group>
-                      <p>{c.comment}</p>
-                    </Paper>
-                  )
-                } else {
-                  return (
-                    <Paper withBorder p={"sm"} ml={36} key={c.id}>
-                      <Group position={"right"}>
-                        <div>
-                          <Text size="sm">{c.user.email}</Text>
-                          <Text size="xs" color="dimmed">{dayjs(c.createdAt).format("DD/MM/YYYY")}</Text>
-                        </div>
-                        <Avatar src={c.user.avatarUrl} alt={c.user.email} radius="xl"/>
-                      </Group>
-                      <Group position={"right"}>
-                        <p>{c.comment}</p>
-                      </Group>
-                    </Paper>
-                  )
-                }
-              })
-              : (
-                <Title order={4} align={"center"} mt={24}>No comments</Title>
-              )}
+                        <Group position={"right"}>
+                          <p>{c.comment}</p>
+                        </Group>
+                      </Paper>
+                    )
+                  }
+                })
+                : (
+                  <Title order={4} align={"center"} mt={24}>No comments</Title>
+                )}
 
-          </Stack>
-        </ScrollArea>
-        <fetcher.Form method={"post"}>
-          <Stack my={12}>
-            <HiddenSessionId/>
-            <input type="hidden" name={"mediaId"} value={mediaId}/>
-            <Textarea
-              placeholder="Your comment"
-              name={"comment"}
-            />
-            <PrimaryButton type={"submit"} name={"intent"} value={"createComment"}>Post comment</PrimaryButton>
-          </Stack>
-        </fetcher.Form>
+            </Stack>
+          </ScrollArea>
+          <fetcher.Form method={"post"} style={{marginBottom: "2rem"}}>
+            <Stack>
+              <HiddenSessionId/>
+              <input type="hidden" name={"mediaId"} value={mediaId}/>
+              <Textarea
+                placeholder="Your comment"
+                name={"comment"}
+              />
+              <PrimaryButton type={"submit"} name={"intent"} value={"createComment"}>Post comment</PrimaryButton>
+            </Stack>
+          </fetcher.Form>
+
+        </Stack>
+
       </Drawer>
 
       <Group spacing={0}>

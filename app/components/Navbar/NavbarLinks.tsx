@@ -97,7 +97,7 @@ export const NavbarLinks = () => {
         <ActionIcon size="xl" variant="transparent" mr={"xs"} onClick={handleLogoRedirect}>
           <IconBolt size={32} strokeWidth={1.5}/>
         </ActionIcon>
-        <Group spacing={5} className={classes.links} ml={12}>
+        <Group spacing={5} className={classes.links}>
           {items}
         </Group>
         <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />
