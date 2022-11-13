@@ -1,6 +1,6 @@
 import {ActionIcon, Avatar, Drawer, Group, Paper, ScrollArea, Stack, Text, Textarea, Title} from "@mantine/core";
 import {IconCheck, IconMessage2, IconX} from "@tabler/icons";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import {useUser} from "~/utils/utils";
 import dayjs from "dayjs";
@@ -17,10 +17,10 @@ interface Props {
 }
 
 export const FileComments = ({disabled, comments, mediaId}: Props) => {
-
   const user = useUser()
   const fetcher = useFetcher()
   const [opened, setOpened] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (fetcher?.data) {
@@ -31,6 +31,7 @@ export const FileComments = ({disabled, comments, mediaId}: Props) => {
         autoClose: 2000,
         icon: fetcher?.data?.success ? <IconCheck/> : <IconX/>
       })
+      formRef?.current?.reset()
     }
   }, [fetcher?.data])
 
@@ -46,7 +47,6 @@ export const FileComments = ({disabled, comments, mediaId}: Props) => {
         position={"right"}
       >
         <Stack justify="space-between" h={"100%"}>
-
           <ScrollArea offsetScrollbars>
             <Stack>
               {comments?.length ?
@@ -101,7 +101,7 @@ export const FileComments = ({disabled, comments, mediaId}: Props) => {
 
             </Stack>
           </ScrollArea>
-          <fetcher.Form method={"post"} style={{marginBottom: "2rem"}}>
+          <fetcher.Form method={"post"} style={{marginBottom: "2rem"}} ref={formRef}>
             <Stack>
               <HiddenSessionId/>
               <input type="hidden" name={"mediaId"} value={mediaId}/>
