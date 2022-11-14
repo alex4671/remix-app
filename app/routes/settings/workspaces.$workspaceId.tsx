@@ -224,13 +224,15 @@ export default function WorkspaceId() {
   ));
 
   const handleBlur = (e: any) => {
-    fetcher.submit({
-      newName: e.currentTarget.textContent,
-      intent: "updateWorkspaceName",
-      sessionId: sessionStorage.getItem("sessionId") ?? ""
-    }, {
-      method: "post"
-    })
+    if (workspace?.name !== e.currentTarget.textContent) {
+      fetcher.submit({
+        newName: e.currentTarget.textContent,
+        intent: "updateWorkspaceName",
+        sessionId: sessionStorage.getItem("sessionId") ?? ""
+      }, {
+        method: "post"
+      })
+    }
   }
 
   return (
@@ -256,7 +258,7 @@ export default function WorkspaceId() {
           <fetcher.Form method={"post"}>
             <Group spacing={"xs"} mt={24}>
               <HiddenSessionId/>
-              <TextInput placeholder={"New member email"} name={"memberEmail"}/>
+              <TextInput placeholder={"New member email"} name={"memberEmail"} required/>
               <PrimaryButton type={"submit"} name={"intent"} value={"inviteMember"}>Invite member</PrimaryButton>
             </Group>
           </fetcher.Form>
