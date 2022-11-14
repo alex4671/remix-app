@@ -2,7 +2,7 @@ import type {LoaderArgs} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {useInputState} from "@mantine/hooks";
-import {useFetcher, useLoaderData, useLocation, useNavigate} from "@remix-run/react";
+import {useLoaderData, useLocation, useNavigate} from "@remix-run/react";
 import {getAllowedWorkspaces} from "~/models/workspace.server";
 import {
   ActionIcon,
@@ -13,6 +13,7 @@ import {
   Group,
   Paper,
   SimpleGrid,
+  Switch,
   Text,
   TextInput,
   Title,
@@ -24,6 +25,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import {CreateNewWorkspace} from "~/components/Settings/Workspaces/CreateNewWorkspace";
 import {useWorkspaceSubscription} from "~/hooks/useWorkspaceSubscription";
 import {EventType} from "~/hooks/useSubscription";
+import {useState} from "react";
 
 dayjs.extend(relativeTime)
 
@@ -36,13 +38,12 @@ export const loader = async ({request}: LoaderArgs) => {
 }
 
 
-// todo maybe add valtio for state managment
+// todo maybe add valtio for state management
 
 export default function WorkspacesIndex() {
   const {user, workspaces} = useLoaderData<typeof loader>()
-
+  const [checked, setChecked] = useState(false);
   const navigate = useNavigate()
-  const fetcher = useFetcher()
   const location = useLocation()
 
   const [searchValue, setSearchValue] = useInputState('');
@@ -70,6 +71,7 @@ export default function WorkspacesIndex() {
   const filteredWorkspaces = workspaces
     ?.sort((a, b) => a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0)
     ?.filter(workspace => workspace.name.toLowerCase().includes(searchValue.toLowerCase()))
+    ?.filter(workspace => checked ? workspace.ownerId === user.id : true)
 
   return (
     <Box>
@@ -78,7 +80,7 @@ export default function WorkspacesIndex() {
           <TextInput placeholder={"Search workspace"} value={searchValue} onChange={setSearchValue}/>
         </Grid.Col>
         <Grid.Col xs={12} sm={6}>
-          <CreateNewWorkspace />
+          <CreateNewWorkspace/>
           {/*<DesktopOnly>*/}
           {/*  <Group position={"right"}>*/}
           {/*    <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>*/}
@@ -93,6 +95,13 @@ export default function WorkspacesIndex() {
           {/*</MobileOnly>*/}
         </Grid.Col>
       </Grid>
+      <Group position={"right"} my={12}>
+        <Switch
+          label="Only my workspaces"
+          checked={checked}
+          onChange={(event) => setChecked(event.currentTarget.checked)}
+        />
+      </Group>
       {filteredWorkspaces?.length ? (
         <SimpleGrid
           cols={4}
@@ -137,11 +146,13 @@ export default function WorkspacesIndex() {
                           withArrow
                           label={
                             <>
-                              {w.collaborator.filter(c => c.user.email !== user.email).slice(2).map(c => <div key={c.id}>{c.user.email}</div>)}
+                              {w.collaborator.filter(c => c.user.email !== user.email).slice(2).map(c => <div
+                                key={c.id}>{c.user.email}</div>)}
                             </>
                           }
                         >
-                          <Avatar radius="xl" size={"sm"}>+{w.collaborator.filter(c => c.user.email !== user.email).slice(2).length}</Avatar>
+                          <Avatar radius="xl"
+                                  size={"sm"}>+{w.collaborator.filter(c => c.user.email !== user.email).slice(2).length}</Avatar>
                         </Tooltip>
                       ) : null}
                     </Avatar.Group>

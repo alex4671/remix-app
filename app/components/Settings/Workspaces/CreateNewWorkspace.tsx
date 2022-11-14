@@ -19,7 +19,7 @@ export const CreateNewWorkspace = () => {
     <fetcher.Form method={"post"} action={"/settings/workspaces"} ref={formRef}>
       <Group position={"right"}>
         <HiddenSessionId/>
-        <TextInput placeholder={"Workspace name"} required/>
+        <TextInput placeholder={"Workspace name"} required name={"workspaceName"}/>
         <PrimaryButton type={"submit"} name={"intent"} value={"createWorkspace"}>Create new workspace</PrimaryButton>
       </Group>
     </fetcher.Form>

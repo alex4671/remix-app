@@ -1,12 +1,10 @@
 import {completeNavigationProgress, startNavigationProgress} from "@mantine/nprogress";
 import {useEffect} from "react";
-import {useFetchers, useTransition} from "@remix-run/react";
+import {useGlobalPendingState} from "remix-utils";
 
 
 export const useLoadingProgress = () => {
-  const transition = useTransition()
-  const fetchers = useFetchers()
-  const state = fetchers.map(f => f.state)?.[0] ?? transition.state
+  let state = useGlobalPendingState();
 
   useEffect(() => {
     if (state === "idle") completeNavigationProgress()
