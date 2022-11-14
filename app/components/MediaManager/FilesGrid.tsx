@@ -14,7 +14,8 @@ import {
   Stack,
   Switch,
   Text,
-  Title
+  Title,
+  Tooltip
 } from "@mantine/core";
 import {formatBytes} from "~/utils/utils";
 import {useFetcher, useLoaderData} from "@remix-run/react";
@@ -84,36 +85,39 @@ export const FilesGrid = ({
                 sx={(theme) => ({outline: selectedFiles.includes(file.id) ? `2px solid ${theme.colors.gray[6]}` : "none"})}
               >
                 <Card.Section>
-                  <AspectRatio ratio={16 / 9}>
-                    {file.type.includes("image") ? (
-                      <Image
-                        src={file.fileUrl}
-                        alt={file.fileUrl}
-                      />
-                    ) : file.type.includes("video") ? (
-                      <video controls preload="metadata">
-                        <source src={`${file.fileUrl}#t=0.5`} type={file.type}/>
-                      </video>
-                    ) : file.type.includes("audio") ? (
-                      <Box
-                        sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
-                        <audio controls>
-                          <source src={file.fileUrl} type={file.type}/>
-                        </audio>
-                      </Box>
-                    ) : file.type.includes("pdf") ? (
-                      <embed
-                        type={file.type}
-                        src={file.fileUrl}
-                      />
-                    ) : (
-                      <Box
-                        sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}
-                      >
-                        <Text align={"center"}>{upperFirst(file.type.split("/")[1])}</Text>
-                      </Box>
-                    )}
-                  </AspectRatio>
+                  <Tooltip label={file.name} position={"top"} withinPortal={true} multiline>
+                    <AspectRatio ratio={16 / 9}>
+                      {file.type.includes("image") ? (
+                        <Image
+                          src={file.fileUrl}
+                          alt={file.fileUrl}
+                        />
+                      ) : file.type.includes("video") ? (
+                        <video controls preload="metadata">
+                          <source src={`${file.fileUrl}#t=0.5`} type={file.type}/>
+                        </video>
+                      ) : file.type.includes("audio") ? (
+                        <Box
+                          sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}>
+                          <audio controls>
+                            <source src={file.fileUrl} type={file.type}/>
+                          </audio>
+                        </Box>
+                      ) : file.type.includes("pdf") ? (
+                        <embed
+                          type={file.type}
+                          src={file.fileUrl}
+                        />
+                      ) : (
+                        <Box
+                          sx={(theme) => ({background: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]})}
+                        >
+                          <Text align={"center"}>{upperFirst(file.type.split("/")[1])}</Text>
+                        </Box>
+                      )}
+                    </AspectRatio>
+                  </Tooltip>
+
                 </Card.Section>
 
                 <Card.Section py="lg" px={"md"}>
