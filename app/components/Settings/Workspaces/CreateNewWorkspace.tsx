@@ -1,29 +1,27 @@
 import {Group, TextInput} from "@mantine/core";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import {useFetcher} from "@remix-run/react";
-import {useInputState} from "@mantine/hooks";
+import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
+import {useEffect, useRef} from "react";
 
 export const CreateNewWorkspace = () => {
   const fetcher = useFetcher()
-  const [value, setValue] = useInputState('');
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleCreateWorkspace = () => {
+  useEffect(() => {
+    if (fetcher?.data) {
+      formRef?.current?.reset()
 
-    fetcher.submit({
-      intent: "createWorkspace",
-      workspaceName: value,
-      sessionId: sessionStorage.getItem("sessionId") ?? ""
-    }, {
-      method: "post",
-      action: "/settings/workspaces"
-    })
-    setValue("")
-  }
+    }
+  }, [fetcher?.data])
 
   return (
-    <Group position={"right"}>
-      <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>
-      <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>
-    </Group>
+    <fetcher.Form method={"post"} action={"/settings/workspaces"} ref={formRef}>
+      <Group position={"right"}>
+        <HiddenSessionId/>
+        <TextInput placeholder={"Workspace name"} required/>
+        <PrimaryButton type={"submit"} name={"intent"} value={"createWorkspace"}>Create new workspace</PrimaryButton>
+      </Group>
+    </fetcher.Form>
   )
 }
