@@ -8,7 +8,7 @@ export const useNotification = () => {
   const activeData = fetchers.find(f => f.state === "loading")?.data
 
   useEffect(() => {
-    if (activeData) {
+    if (activeData?.intent) {
       showNotification({
         title: activeData?.message,
         message: undefined,
