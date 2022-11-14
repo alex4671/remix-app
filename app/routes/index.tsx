@@ -21,7 +21,6 @@ import {
 import {IconFiles, IconSettings} from "@tabler/icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
-import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {CreateNewWorkspace} from "~/components/Settings/Workspaces/CreateNewWorkspace";
 import {useWorkspaceSubscription} from "~/hooks/useWorkspaceSubscription";
 import {EventType} from "~/hooks/useSubscription";
@@ -74,7 +73,6 @@ export default function WorkspacesIndex() {
 
   return (
     <Box>
-      <LoadingProgress state={fetcher.state}/>
       <Grid>
         <Grid.Col xs={12} sm={6}>
           <TextInput placeholder={"Search workspace"} value={searchValue} onChange={setSearchValue}/>

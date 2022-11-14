@@ -22,10 +22,9 @@ import {useState} from "react";
 import {upperFirst} from "@mantine/hooks";
 import {useUser} from "~/utils/utils";
 import {requireUser} from "~/server/session.server";
-import {useActionData, useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
+import {useFetcher, useLoaderData, useNavigate} from "@remix-run/react";
 import {IconCurrencyDollar} from "@tabler/icons";
 import dayjs from "dayjs";
-import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import invariant from "tiny-invariant";
 
 
@@ -302,7 +301,6 @@ export default function Pro() {
 
   return (
     <>
-      <LoadingProgress state={fetcher.state}/>
       <Paper shadow="0" p="md" mb={6} withBorder>
         <Stack align="flex-start">
           <Text>Selected plan: <Text component="span" weight={700}>{upperFirst(plans[selectedPlan])}</Text></Text>

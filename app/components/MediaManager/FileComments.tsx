@@ -1,13 +1,11 @@
 import {ActionIcon, Avatar, Drawer, Group, Paper, ScrollArea, Stack, Text, Textarea, Title} from "@mantine/core";
-import {IconCheck, IconMessage2, IconX} from "@tabler/icons";
+import {IconMessage2} from "@tabler/icons";
 import {useEffect, useRef, useState} from "react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import {useUser} from "~/utils/utils";
 import dayjs from "dayjs";
 import {useFetcher} from "@remix-run/react";
-import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {DangerButton} from "~/components/Buttons/DangerButtom";
-import {showNotification} from "@mantine/notifications";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
 
 interface Props {
@@ -24,20 +22,13 @@ export const FileComments = ({disabled, comments, mediaId}: Props) => {
 
   useEffect(() => {
     if (fetcher?.data) {
-      showNotification({
-        title: fetcher?.data?.message,
-        message: undefined,
-        color: fetcher?.data?.success ? "green" : "red",
-        autoClose: 2000,
-        icon: fetcher?.data?.success ? <IconCheck/> : <IconX/>
-      })
       formRef?.current?.reset()
+
     }
   }, [fetcher?.data])
 
   return (
     <>
-      <LoadingProgress state={fetcher.state}/>
       <Drawer
         opened={opened}
         onClose={() => setOpened(false)}

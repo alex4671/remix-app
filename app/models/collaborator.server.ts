@@ -28,6 +28,9 @@ export const deleteCollaborator = (collaboratorId: Collaborator["id"]) => {
   return prisma.collaborator.delete({
     where: {
       id: collaboratorId
+    },
+    select: {
+      user: true,
     }
   })
 }
@@ -38,6 +41,9 @@ export const updateCollaboratorRights = (collaboratorId: Collaborator["id"], rig
     },
     data: {
       rights: JSON.parse(rights),
+    },
+    select: {
+      user: true
     }
   })
 }

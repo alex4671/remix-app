@@ -1,6 +1,6 @@
 import {Badge, Group, Paper, ScrollArea, Table, Text, TextInput, Title} from "@mantine/core";
-import {IconCheck, IconChevronLeft, IconX} from "@tabler/icons";
-import {Form, useActionData, useFetcher, useLoaderData, useLocation, useNavigate} from "@remix-run/react";
+import {IconChevronLeft} from "@tabler/icons";
+import {Form, useFetcher, useLoaderData, useLocation, useNavigate} from "@remix-run/react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import {json, redirect} from "@remix-run/node";
@@ -25,8 +25,6 @@ import {getUserByEmail} from "~/models/user.server";
 import {WorkspaceRights} from "~/components/MediaManager/WorkspaceRights";
 import {deleteFileFromS3} from "~/models/storage.server";
 import {getFileKey} from "~/utils/utils";
-import {useEffect} from "react";
-import {showNotification} from "@mantine/notifications";
 import {emitter} from "~/server/emitter.server";
 import {EventType} from "~/hooks/useSubscription";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
@@ -100,8 +98,8 @@ export const action = async ({request, params}: ActionArgs) => {
     try {
       const deletedCollaborator = await deleteCollaborator(collaboratorId)
 
-      emitter.emit(EventType.REMOVE_ACCESS, [user.id, deletedCollaborator.userId], sessionId)
-      return json({success: true, intent, message: `Collaborator removed`})
+      emitter.emit(EventType.REMOVE_ACCESS, [user.id, deletedCollaborator.user.id], sessionId)
+      return json({success: true, intent, message: `${deletedCollaborator.user.email} removed`})
     } catch (e) {
       return json({success: false, intent, message: "Error removing collaborator"})
     }
@@ -135,7 +133,7 @@ export const action = async ({request, params}: ActionArgs) => {
     const sessionId = formData.get("sessionId")?.toString() ?? "";
 
     try {
-      await updateCollaboratorRights(collaboratorId, workspaceRights)
+      const updatedCollaborator = await updateCollaboratorRights(collaboratorId, workspaceRights)
       const workspace = await getWorkspacesById(workspaceId)
 
       const set = new Set()
@@ -144,7 +142,7 @@ export const action = async ({request, params}: ActionArgs) => {
       const usersToNotify = [workspace?.owner.id, ...Array.from(set)]
 
       emitter.emit(EventType.UPDATE_RIGHTS, usersToNotify, sessionId)
-      return json({success: true, intent, message: `Rights updated`})
+      return json({success: true, intent, message: `${updatedCollaborator.user.email} rights updated`})
     } catch (e) {
       return json({success: false, intent, message: "Error updating rights"})
     }
@@ -174,7 +172,6 @@ export const action = async ({request, params}: ActionArgs) => {
 
 export default function WorkspaceId() {
   const {user, workspace} = useLoaderData<typeof loader>()
-  const actionData = useActionData<typeof action>()
   const fetcher = useFetcher()
   const {state} = useLocation();
   const navigate = useNavigate()
@@ -188,20 +185,6 @@ export default function WorkspaceId() {
       EventType.UPDATE_NAME_WORKSPACE,
       EventType.UPDATE_RIGHTS
     ])
-
-
-  useEffect(() => {
-    if (actionData) {
-      showNotification({
-        title: actionData?.message,
-        message: undefined,
-        color: actionData?.success ? "green" : "red",
-        autoClose: 2000,
-        icon: actionData?.success ? <IconCheck/> : <IconX/>
-      })
-
-    }
-  }, [actionData])
 
 
   const handleGoBack = () => {
@@ -221,7 +204,7 @@ export default function WorkspaceId() {
       </td>
       {isUserOwner ? (
         <td>
-          <Form method={"post"}>
+          <fetcher.Form method={"post"}>
             <input type="hidden" name={"collaboratorId"} value={c.id}/>
             <input type="hidden" name={"sessionId"} value={sessionStorage.getItem("sessionId") ?? ""}/>
             <DangerButton
@@ -233,7 +216,7 @@ export default function WorkspaceId() {
             >
               Remove access
             </DangerButton>
-          </Form>
+          </fetcher.Form>
         </td>
       ) : null}
 
@@ -267,13 +250,18 @@ export default function WorkspaceId() {
       </Group>
       <Text mt={6}>Manage workspace settings and invite members</Text>
       {isUserOwner ? (
-        <Form method={"post"}>
-          <HiddenSessionId />
-          <Group position="apart">
+
+        <Group position="apart">
+          <HiddenSessionId/>
+          <fetcher.Form method={"post"}>
             <Group spacing={"xs"} mt={24}>
+              <HiddenSessionId/>
               <TextInput placeholder={"New member email"} name={"memberEmail"}/>
               <PrimaryButton type={"submit"} name={"intent"} value={"inviteMember"}>Invite member</PrimaryButton>
             </Group>
+          </fetcher.Form>
+          <Form method={"post"}>
+            <HiddenSessionId/>
             <DangerButton
               mt={24}
               type={"submit"}
@@ -282,8 +270,8 @@ export default function WorkspaceId() {
             >
               Delete workspace and all files
             </DangerButton>
-          </Group>
-        </Form>
+          </Form>
+        </Group>
       ) : null}
 
       {memberRows?.length ? (

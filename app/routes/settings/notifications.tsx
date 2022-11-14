@@ -1,16 +1,10 @@
-import type {MetaFunction} from "@remix-run/node";
+import type {MetaFunction,ActionArgs, LoaderArgs} from "@remix-run/node";
+import { json} from "@remix-run/node";
 import {Box, Checkbox, Paper, Stack, Text, Title} from "@mantine/core";
-import {useEffect, useState} from "react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
-import {ActionArgs, json, LoaderArgs} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
-import {getAllUserFiles} from "~/models/media.server";
 import {getUserNotifications, saveUserNotifications} from "~/models/notification.server";
-import {Form, useActionData, useLoaderData} from "@remix-run/react";
-import {saveFeedback} from "~/models/feedback.server";
-import {showNotification} from "@mantine/notifications";
-import {IconCheck, IconX} from "@tabler/icons";
-import {getDefaultValue} from "@mantine/core/lib/Box/style-system-props/value-getters/get-default-value";
+import {useFetcher, useLoaderData} from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return {
@@ -55,27 +49,14 @@ export const action = async ({request}: ActionArgs) => {
 
 export default function Notifications() {
   const {userNotifications} = useLoaderData<typeof loader>()
-  const actionData = useActionData<typeof action>()
-
-  useEffect(() => {
-    if (actionData) {
-      showNotification({
-        title: actionData?.message,
-        message: undefined,
-        color: actionData?.success ? "green" : "red",
-        autoClose: 2000,
-        icon: actionData?.success ? <IconCheck/> : <IconX/>
-      })
-
-    }
-  }, [actionData])
+  const fetcher = useFetcher()
 
   return (
     <Paper shadow="0" p="md" withBorder mb={24}>
       <Title order={2}>Notifications</Title>
       <Text mt={6} mb={12}>Manage you email notifications settings</Text>
       <Box>
-        <Form method={"post"}>
+        <fetcher.Form method={"post"}>
           <Stack align={"start"}>
             <Checkbox
               defaultChecked={userNotifications?.outOfSpace}
@@ -121,7 +102,7 @@ export default function Notifications() {
             />
             <PrimaryButton type={"submit"} mt={12}>Save</PrimaryButton>
           </Stack>
-        </Form>
+        </fetcher.Form>
       </Box>
     </Paper>
   )

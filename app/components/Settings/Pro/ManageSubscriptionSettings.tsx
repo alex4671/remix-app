@@ -4,7 +4,6 @@ import usePaddle from "~/hooks/usePaddle";
 import type {loader} from "~/routes/settings/pro";
 import dayjs from "dayjs";
 import {useEffect, useState} from "react";
-import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {formatMoney} from "~/utils/utils";
 import {IconChevronDown, IconInfoCircle} from "@tabler/icons";
 import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
@@ -72,7 +71,6 @@ export const ManageSubscriptionSettings = () => {
 
   return (
     <>
-      <LoadingProgress state={fetcher.state}/>
       <Paper shadow="0" withBorder mb={12}>
         <Box p={"lg"}>
           <Group spacing={6}>

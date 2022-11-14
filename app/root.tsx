@@ -11,20 +11,20 @@ import {
   ScrollRestoration,
   useCatch,
   useLoaderData,
-  useParams,
-  useTransition
+  useParams
 } from "@remix-run/react";
 import {getUser} from "~/server/session.server";
 import {colors} from "~/utils/colors";
 import {getTheme} from "~/utils/theme";
 import {Navbar} from "~/components/Navbar/Navbar";
-import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {NavigationProgress} from "@mantine/nprogress";
 import {NotificationsProvider} from "@mantine/notifications";
 import favicon from "./assets/favicon.svg";
 import {useHydrated} from "remix-utils";
 import type {ReactNode} from "react";
 import {ErrorPage} from "~/components/ErrorPage";
+import {useLoadingProgress} from "~/hooks/useLoadingProgress";
+import {useNotification} from "~/hooks/useNotification";
 
 export const links: LinksFunction = () => {
   return [
@@ -101,7 +101,9 @@ const mantineTheme = {
 export default function App() {
   const {theme, user} = useLoaderData<typeof loader>()
   const params = useParams()
-  const transition = useTransition()
+
+  useLoadingProgress()
+  useNotification()
 
   return (
     <Document>
@@ -114,7 +116,6 @@ export default function App() {
         withNormalizeCSS
       >
         <NavigationProgress color={theme === "dark" ? "white" : "dark"} autoReset/>
-        <LoadingProgress state={transition.state}/>
         <NotificationsProvider position={"top-center"}>
           <Container size={"xl"} px={{base: "12"}}>
             {user && !params.fileId && <Navbar/>}

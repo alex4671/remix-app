@@ -7,15 +7,13 @@ import invariant from "tiny-invariant";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
 import {getFileKey, useUser} from "~/utils/utils";
 import {useActionData, useLoaderData} from "@remix-run/react";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useInputState} from "@mantine/hooks";
 import {UploadFile} from "~/components/MediaManager/UploadFile";
 import {FilesFilters} from "~/components/MediaManager/FilesFilters";
 import {FilesGrid} from "~/components/MediaManager/FilesGrid";
 import {getWorkspaceFilesById, getWorkspacesById, isUserAllowedViewWorkspace} from "~/models/workspace.server";
 import {createComment, deleteComment} from "~/models/comments.server";
-import {showNotification} from "@mantine/notifications";
-import {IconCheck, IconX} from "@tabler/icons";
 import {EventType} from "~/hooks/useSubscription";
 import {emitter} from "~/server/emitter.server";
 import {useFilesSubscription} from "~/hooks/useFilesSubscription";
@@ -176,7 +174,7 @@ export const action = async ({request, params}: ActionArgs) => {
       await togglePublic(fileId, checked === "true")
 
       emitter.emit(EventType.UPDATE_FILE, usersToNotify, sessionId)
-      return json({success: true, intent, message: `File now ${checked ? "Public" : "Private"}`})
+      return json({success: true, intent, message: `File now ${checked === "true" ? "public" : "private"}`})
     } catch (e) {
       return json({success: false, intent, message: `Error making file ${checked ? "Public" : "Private"}`})
     }
@@ -238,19 +236,6 @@ export default function WorkspaceId() {
 			EventType.DELETE_COMMENT,
 			EventType.UPDATE_RIGHTS,
     ])
-
-  useEffect(() => {
-    if (actionData) {
-      showNotification({
-        title: actionData?.message,
-        message: undefined,
-        color: actionData?.success ? "green" : "red",
-        autoClose: 2000,
-        icon: actionData?.success ? <IconCheck/> : <IconX/>
-      })
-
-    }
-  }, [actionData])
 
   // todo make limit usage in backend
 

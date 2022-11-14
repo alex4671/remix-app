@@ -18,14 +18,6 @@ export const Feedback = () => {
 
   useEffect(() => {
     if (fetcher?.data?.success) {
-      showNotification({
-        title: fetcher?.data.message,
-        message: undefined,
-        color: "green",
-        autoClose: 2000,
-        icon: <IconCheck/>
-      })
-
       formRef?.current?.reset()
       setIsDisabled(true)
       setOpened(false)

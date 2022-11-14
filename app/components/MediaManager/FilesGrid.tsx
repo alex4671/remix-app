@@ -17,15 +17,12 @@ import {
   Title
 } from "@mantine/core";
 import {formatBytes} from "~/utils/utils";
-import {useFetcher, useLoaderData, useTransition} from "@remix-run/react";
-import {IconCheck, IconClipboard, IconDownload, IconMessage2, IconShare, IconTrash, IconX} from "@tabler/icons";
+import {useFetcher, useLoaderData} from "@remix-run/react";
+import {IconClipboard, IconDownload, IconMessage2, IconShare, IconTrash} from "@tabler/icons";
 import type {Dispatch, SetStateAction} from "react";
 import {upperFirst} from "@mantine/hooks";
 import {FileComments} from "./FileComments";
-import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import type {loader} from "~/routes/media/$workspaceId";
-import {useEffect} from "react";
-import {showNotification} from "@mantine/notifications";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
 
 interface Props {
@@ -46,21 +43,7 @@ export const FilesGrid = ({
   const {rights, origin} = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
 
-  useEffect(() => {
-    if (fetcher?.data) {
-      showNotification({
-        title: fetcher?.data?.message,
-        message: undefined,
-        color: fetcher?.data?.success ? "green" : "red",
-        autoClose: 2000,
-        icon: fetcher?.data?.success ? <IconCheck/> : <IconX/>
-      })
-
-    }
-  }, [fetcher?.data])
-
-  const transition = useTransition();
-  const isSubmitting = transition.submission
+  const isSubmitting = fetcher.submission
 
   const handlePickFile = (id: string, url: string) => {
     setSelectedFiles(prevState => prevState.includes(id) ? prevState.filter(el => el !== id) : [...prevState, id])
@@ -83,8 +66,7 @@ export const FilesGrid = ({
   // todo add type
   return (
     <>
-      <LoadingProgress state={fetcher.state}/>
-      <Group grow mt={24}>
+      <Group grow my={24}>
         {filteredUserFiles?.length ? (
           <SimpleGrid
             cols={4}
@@ -197,7 +179,7 @@ export const FilesGrid = ({
               </Card>
             ))}
             {isSubmitting && filterTypeValue.length === 0 ? (
-              (transition?.submission?.formData.getAll("file") as File[]).map((file) => (
+              (fetcher?.submission?.formData.getAll("file") as File[]).map((file) => (
                 <Card p="lg" withBorder key={file.name} style={{opacity: "0.5"}}>
                   <Card.Section>
                     <AspectRatio ratio={16 / 9}>

@@ -1,5 +1,5 @@
 import {Avatar, Box, FileButton, Group, Paper, Text, Title} from "@mantine/core";
-import {Form, useActionData} from "@remix-run/react";
+import {useActionData, useFetcher} from "@remix-run/react";
 import {IconExclamationMark, IconUpload} from "@tabler/icons";
 import {useUser} from "~/utils/utils";
 import {useEffect, useRef, useState} from "react";
@@ -14,7 +14,7 @@ const UPLOAD_SIZE_LIMIT = 3145728
 
 export const AvatarUpload = () => {
   const actionData = useActionData<typeof action>()
-
+  const fetcher = useFetcher()
   const user = useUser()
   const [file, setFile] = useState<File | null>(null);
   const [selectedAvatar, setSelectedAvatar] = useState(user.avatarUrl)
@@ -52,7 +52,7 @@ export const AvatarUpload = () => {
 
   return (
     <Paper shadow="0" withBorder mb={12}>
-      <Form method={"post"} encType={"multipart/form-data"}>
+      <fetcher.Form method={"post"} encType={"multipart/form-data"}>
         <Box p={"lg"}>
           <Title order={2}>Avatar</Title>
           <Group spacing={6}>
@@ -95,7 +95,7 @@ export const AvatarUpload = () => {
             </Group>
           </Box>
         </Box>
-      </Form>
+      </fetcher.Form>
     </Paper>
   )
 }

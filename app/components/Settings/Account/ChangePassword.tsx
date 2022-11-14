@@ -1,12 +1,13 @@
 import {Box, Grid, Group, Paper, PasswordInput, Stack, Text, Title} from "@mantine/core";
-import {Form} from "@remix-run/react";
+import {useFetcher} from "@remix-run/react";
 import {InfoTooltip} from "~/components/Utils/InfoTooltip";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 
 export const ChangePassword = () => {
+  const fetcher = useFetcher()
   return (
     <Paper shadow="0" withBorder mb={12}>
-      <Form method={"post"}>
+      <fetcher.Form method={"post"}>
         <Box p={"lg"}>
           <Title order={2}>Password</Title>
           <Group spacing={6}>
@@ -33,7 +34,7 @@ export const ChangePassword = () => {
             <PrimaryButton type={"submit"} name="intent" value="changePassword">Update password</PrimaryButton>
           </Box>
         </Box>
-      </Form>
+      </fetcher.Form>
     </Paper>
   )
 }

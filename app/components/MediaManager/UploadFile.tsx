@@ -2,13 +2,12 @@ import {FileButton, Group, Text, Tooltip} from "@mantine/core";
 import {DangerButton} from "~/components/Buttons/DangerButtom";
 import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
-import {IconCheck, IconExclamationMark, IconUpload, IconX} from "@tabler/icons";
+import {IconUpload} from "@tabler/icons";
 import {formatBytes} from "~/utils/utils";
-import {Form, useActionData, useLoaderData} from "@remix-run/react";
-import {showNotification} from "@mantine/notifications";
-import type {action, loader} from "~/routes/media/$workspaceId";
+import {useFetcher, useLoaderData} from "@remix-run/react";
+import type {loader} from "~/routes/media/$workspaceId";
 import type {Dispatch, SetStateAction} from "react";
-import { useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
 
 interface Props {
@@ -21,36 +20,28 @@ interface Props {
 
 export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, setSelectedFilesUrls, filteredUserFilesCount}: Props) => {
   const {userFiles, filesSize, maxSizeLimit, rights} = useLoaderData<typeof loader>()
-  const actionData = useActionData<typeof action>()
+  const fetcher = useFetcher()
+
   const [files, setFiles] = useState<File[] | null>(null);
   const resetRef = useRef<() => void>(null);
 
   useEffect(() => {
-    if (actionData) {
-      if (actionData.intent === "uploadFiles") {
+    if (fetcher.data) {
+      if (fetcher.submission?.formData.get("intent") === "uploadFiles") {
         setFiles(null)
         resetRef.current?.();
 
         return
       }
 
-      if (actionData.intent === "deleteFiles") {
+      if (fetcher.submission?.formData.get("intent") === "deleteFiles") {
         setSelectedFiles([])
         setSelectedFilesUrls([])
 
         return
       }
-
-      showNotification({
-        title: actionData?.message,
-        message: undefined,
-        color: actionData?.success ? "green" : "red",
-        autoClose: 2000,
-        icon: actionData?.success ? <IconCheck/> : <IconX/>
-      })
-
     }
-  }, [actionData])
+  }, [fetcher.data])
 
 
   const handleSelectFile = (files: File[]) => {
@@ -59,13 +50,6 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
     if (newFilesSize + (filesSize ?? 0) <= maxSizeLimit) {
       setFiles(files)
     } else {
-      showNotification({
-        title: "You reached max storage size",
-        message: "Select other files or delete existing",
-        color: "yellow",
-        autoClose: 3000,
-        icon: <IconExclamationMark/>
-      })
       setFiles(null)
       resetRef.current?.();
     }
@@ -91,7 +75,7 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
   // todo make new upload ui with preview/
   // todo bug with usage count when filtering
   return (
-    <Form method={"post"} encType={"multipart/form-data"}>
+    <fetcher.Form method={"post"} encType={"multipart/form-data"}>
       <HiddenSessionId/>
       <Group position={"apart"}>
         <Group>
@@ -150,6 +134,6 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
 
 
       </Group>
-    </Form>
+    </fetcher.Form>
   )
 }

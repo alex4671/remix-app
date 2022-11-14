@@ -1,9 +1,7 @@
 import {ActionIcon, Badge, Button, Group, Popover, Stack, Switch, Text} from "@mantine/core";
-import {IconCheck, IconEdit, IconX} from "@tabler/icons";
-import {useEffect, useState} from "react";
+import {IconEdit} from "@tabler/icons";
+import {useState} from "react";
 import {useFetcher} from "@remix-run/react";
-import {LoadingProgress} from "~/components/Utils/LoadingProgress";
-import {showNotification} from "@mantine/notifications";
 import type {action} from "~/routes/media/$workspaceId";
 
 
@@ -28,18 +26,6 @@ export const WorkspaceRights = ({rights, collaboratorId, isOwner}: Props) => {
   })
   const [opened, setOpened] = useState(false);
 
-  useEffect(() => {
-    if (fetcher.data) {
-      showNotification({
-        title: fetcher.data?.message,
-        message: undefined,
-        color: fetcher.data?.success ? "green" : "red",
-        autoClose: 2000,
-        icon: fetcher.data?.success ? <IconCheck/> : <IconX/>
-      })
-
-    }
-  }, [fetcher.data])
 
   const handleUpdateRights = () => {
     fetcher.submit({
@@ -55,7 +41,6 @@ export const WorkspaceRights = ({rights, collaboratorId, isOwner}: Props) => {
 
   return (
     <>
-      <LoadingProgress state={fetcher.state}/>
       <Group spacing={8}>
         <Group spacing={0}>
           <Text>Upload: </Text>

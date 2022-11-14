@@ -70,9 +70,9 @@ export const action = async ({request}: ActionArgs) => {
 
       emitter.emit(EventType.REORDER_WORKSPACE, [workspaceToUpdate.ownerId], sessionId)
 
-      return json({success: true, intent, message: `REMOVE Sort index updated`})
+      return json({success: true, intent, message: `Sort order updated`})
     } catch (e) {
-      return json({success: false, intent, message: "Error creating workspace"})
+      return json({success: false, intent, message: "Error updating order"})
     }
   }
 
@@ -83,7 +83,6 @@ export const action = async ({request}: ActionArgs) => {
 
 export default function Workspaces() {
   const user = useUser()
-  const data = useActionData<typeof action>()
   const location = useLocation()
 
   useWorkspaceSubscription(
@@ -97,19 +96,6 @@ export default function Workspaces() {
       EventType.UPDATE_NAME_WORKSPACE,
       EventType.UPDATE_RIGHTS
     ])
-
-
-  useEffect(() => {
-    if (data) {
-      showNotification({
-        title: data?.message,
-        message: undefined,
-        color: data?.success ? "green" : "red",
-        autoClose: 2000,
-        icon: data?.success ? <IconCheck/> : <IconX/>
-      })
-    }
-  }, [data])
 
   return (
     <>

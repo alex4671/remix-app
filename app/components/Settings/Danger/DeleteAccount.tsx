@@ -1,4 +1,4 @@
-import {Form} from "@remix-run/react";
+import {useFetcher} from "@remix-run/react";
 import {Box, Group, Paper, Text, TextInput, Title} from "@mantine/core";
 import {useUser} from "~/utils/utils";
 import {useInputState} from "@mantine/hooks";
@@ -7,14 +7,14 @@ import {DangerButton} from "~/components/Buttons/DangerButtom";
 
 export const DeleteAccount = () => {
   const user = useUser();
-
+  const fetcher = useFetcher()
   const [value, setValue] = useInputState(user.email);
 
   const isBtnDisabled = value !== user.email;
 
   return (
     <Paper shadow="0" withBorder mb={12}>
-      <Form method={"post"}>
+      <fetcher.Form method={"post"}>
         <Box p={"lg"}>
           <Title order={2}>Delete account</Title>
           <Text color={"dimmed"}>Type you email to delete you account. All data will be deleted</Text>
@@ -28,7 +28,7 @@ export const DeleteAccount = () => {
             </Group>
           </Box>
         </Box>
-      </Form>
+      </fetcher.Form>
     </Paper>
   )
 }

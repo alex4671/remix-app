@@ -1,5 +1,5 @@
 import type {ActionArgs, MetaFunction} from "@remix-run/node";
-import {DeleteAccount} from "~/components/Settings/Danger/DeletaAccount";
+import {DeleteAccount} from "~/components/Settings/Danger/DeleteAccount";
 import {logout, requireUserId} from "~/server/session.server";
 import {deleteUserById} from "~/models/user.server";
 

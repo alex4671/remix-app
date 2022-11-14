@@ -1,4 +1,4 @@
-import type {ActionArgs, MetaFunction, LoaderArgs} from "@remix-run/node";
+import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
 import {requireUser} from "~/server/session.server";
@@ -8,10 +8,7 @@ import {AvatarUpload} from "~/components/Settings/Account/AvatarUpload";
 import {ChangePassword} from "~/components/Settings/Account/ChangePassword";
 import {UserInfo} from "~/components/Settings/Account/UserInfo";
 import invariant from "tiny-invariant";
-import {useActionData, useLoaderData} from "@remix-run/react";
-import {useEffect} from "react";
-import {showNotification} from "@mantine/notifications";
-import {IconCheck, IconX} from "@tabler/icons";
+import {useLoaderData} from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return {
@@ -129,20 +126,6 @@ export const action = async ({request}: ActionArgs) => {
 
 export default function Account() {
   const {user} = useLoaderData<typeof loader>()
-  const data = useActionData<typeof action>()
-
-  useEffect(() => {
-    if (data) {
-      showNotification({
-        title: data?.message,
-        message: undefined,
-        color: data?.success ? "green" : "red",
-        autoClose: 2000,
-        icon: data?.success ? <IconCheck /> : <IconX />
-      })
-    }
-  }, [data])
-
 
   return (
     <>

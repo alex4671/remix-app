@@ -2,7 +2,6 @@ import {ActionIcon} from "@mantine/core";
 import {useFetcher} from "@remix-run/react";
 import {IconMoon, IconSun} from "@tabler/icons";
 import {useAppTheme} from "~/utils/utils";
-import {LoadingProgress} from "~/components/Utils/LoadingProgress";
 import {useHotkeys} from "@mantine/hooks";
 
 export const ColorSwitch = () => {
@@ -17,7 +16,6 @@ export const ColorSwitch = () => {
 
   return (
     <>
-      <LoadingProgress state={fetcher.state}/>
       <fetcher.Form
         method="post"
         action="/api/set-theme"

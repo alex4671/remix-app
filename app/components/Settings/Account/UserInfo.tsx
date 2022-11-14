@@ -1,5 +1,5 @@
 import {Badge, Box, Grid, Group, Paper, Text, TextInput, Title} from "@mantine/core";
-import {Form} from "@remix-run/react";
+import {useFetcher} from "@remix-run/react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
 
@@ -9,6 +9,7 @@ interface Props {
 }
 
 export const UserInfo = ({email, isConfirmed}: Props) => {
+  const fetcher = useFetcher()
   return (
     <Paper shadow="0" withBorder mb={12}>
       <Box p={"lg"}>
@@ -29,9 +30,9 @@ export const UserInfo = ({email, isConfirmed}: Props) => {
             {!isConfirmed ? (
               <Grid.Col xs={12} sm={6}>
                 <Group position={"right"}>
-                  <Form method={"post"}>
+                  <fetcher.Form method={"post"}>
                     <SecondaryButton name={"intent"} value={"sendInvite"} compact>Resend confirmation</SecondaryButton>
-                  </Form>
+                  </fetcher.Form>
                 </Group>
               </Grid.Col>
             ) : null}
