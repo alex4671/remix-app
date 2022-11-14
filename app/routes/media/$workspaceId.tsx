@@ -216,7 +216,6 @@ export const action = async ({request, params}: ActionArgs) => {
 export default function WorkspaceId() {
   const user = useUser()
   const {userFiles} = useLoaderData<typeof loader>()
-  const actionData = useActionData<typeof action>()
 
   const [selectedFiles, setSelectedFiles] = useState<string[]>([])
   const [selectedFilesUrls, setSelectedFilesUrls] = useState<string[]>([])
