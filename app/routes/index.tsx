@@ -34,7 +34,10 @@ export const loader = async ({request}: LoaderArgs) => {
 
   const workspaces = await getAllowedWorkspaces(user.id)
 
-  return json({user, workspaces})
+  return json({
+    user,
+    workspaces: workspaces?.sort((a, b) => a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0)
+  })
 }
 
 
@@ -69,7 +72,6 @@ export default function WorkspacesIndex() {
   }
 
   const filteredWorkspaces = workspaces
-    ?.sort((a, b) => a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0)
     ?.filter(workspace => workspace.name.toLowerCase().includes(searchValue.toLowerCase()))
     ?.filter(workspace => checked ? workspace.ownerId === user.id : true)
 
@@ -81,18 +83,6 @@ export default function WorkspacesIndex() {
         </Grid.Col>
         <Grid.Col xs={12} sm={6}>
           <CreateNewWorkspace/>
-          {/*<DesktopOnly>*/}
-          {/*  <Group position={"right"}>*/}
-          {/*    <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>*/}
-          {/*    <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>*/}
-          {/*  </Group>*/}
-          {/*</DesktopOnly>*/}
-          {/*<MobileOnly>*/}
-          {/*  <Group grow>*/}
-          {/*    <TextInput placeholder={"Workspace name"} value={value} onChange={setValue}/>*/}
-          {/*    <PrimaryButton onClick={handleCreateWorkspace}>Create new workspace</PrimaryButton>*/}
-          {/*  </Group>*/}
-          {/*</MobileOnly>*/}
         </Grid.Col>
       </Grid>
       <Group position={"right"} my={12}>
@@ -166,7 +156,6 @@ export default function WorkspacesIndex() {
         <Title order={3} align={"center"} mt={"50px"}>Nothing found, create you first workspace</Title>
       )}
     </Box>
-
   )
 }
 
