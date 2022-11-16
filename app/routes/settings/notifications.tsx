@@ -41,9 +41,9 @@ export const action = async ({request}: ActionArgs) => {
   try {
     await saveUserNotifications(user.id, notifications)
 
-    return json({success: true, message: "Notification settings updated"})
+    return json({success: true, intent: "updateNotification", message: "Notification settings updated"})
   } catch (e) {
-    return json({success: false, message: "Error updating notifications"})
+    return json({success: false, intent: "updateNotification", message: "Error updating notifications"})
   }
 };
 
