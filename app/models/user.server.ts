@@ -191,7 +191,6 @@ export const isUserCurrentlyPro = async (request: Request) => {
       payment: {
         select: {
           subscriptionEndDate: true,
-          // subscriptionStatus: true,
         }
       }
     }
@@ -212,10 +211,7 @@ export const getUserPaymentData = async (request: Request) => {
       payment: {
         select: {
           subscriptionId: true,
-          subscriptionStatus: true,
           subscriptionEndDate: true,
-          subscriptionCancelUrl: true,
-          subscriptionUpdateUrl: true,
         }
       }
     }

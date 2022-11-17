@@ -8,52 +8,30 @@ import type {
   SubscriptionUpdatedWebhook
 } from "@invertase/node-paddle-sdk";
 
-
 export const subscriptionCreated = async (paddle: SubscriptionCreatedWebhook) => {
   const {p_signature, alert_name, ...paddleData} = paddle;
-  const {next_bill_date, status, subscription_plan_id, update_url, subscription_id, cancel_url, email} = paddleData;
+  const {email} = paddleData;
 
   const user = await prisma.user.findUnique({where: {email}})
 
-  const userPayment = await prisma.userPayment.upsert({
-    where: {
-      userId: user?.id
-    },
-    create: {
-      subscriptionId: subscription_id,
-      subscriptionStatus: status,
-      subscriptionPlanId: subscription_plan_id,
-      subscriptionEndDate: new Date(next_bill_date),
-      subscriptionUpdateUrl: update_url,
-      subscriptionCancelUrl: cancel_url,
-      user: {
-        connect: {
-          email: email
-        }
+  if (user) {
+    await prisma.userPaymentHistory.create({
+      data: {
+        userId: user.id,
+        alert_name: alert_name,
+        historyData: paddleData
       }
-    },
-    update: {
-      subscriptionStatus: status,
-      subscriptionPlanId: subscription_plan_id,
-      subscriptionEndDate: new Date(next_bill_date),
-      subscriptionUpdateUrl: update_url,
-      subscriptionCancelUrl: cancel_url,
-    }
-  });
+    })
+  } else {
+    console.log("subscriptionCreated no user found")
+  }
 
 
-  await prisma.userPaymentHistory.create({
-    data: {
-      userId: userPayment?.userId,
-      alert_name: alert_name,
-      historyData: paddleData
-    }
-  })
 };
 
 export const subscriptionUpdated = async (paddle: SubscriptionUpdatedWebhook) => {
   const {p_signature, alert_name, ...paddleData} = paddle;
-  const {email, status, subscription_plan_id, update_url, next_bill_date, cancel_url} = paddleData;
+  const {email, subscription_plan_id, next_bill_date} = paddleData;
 
   const user = await prisma.user.findUnique({where: {email}})
 
@@ -62,11 +40,8 @@ export const subscriptionUpdated = async (paddle: SubscriptionUpdatedWebhook) =>
       userId: user?.id
     },
     data: {
-      subscriptionStatus: status,
       subscriptionPlanId: subscription_plan_id,
       subscriptionEndDate: new Date(next_bill_date),
-      subscriptionUpdateUrl: update_url,
-      subscriptionCancelUrl: cancel_url,
     },
   });
 
@@ -83,7 +58,7 @@ export const subscriptionUpdated = async (paddle: SubscriptionUpdatedWebhook) =>
 
 export const subscriptionCanceled = async (paddle: SubscriptionCancelledWebhook) => {
   const {p_signature, alert_name, ...paddleData} = paddle;
-  const {email, cancellation_effective_date, status} = paddleData;
+  const {email, cancellation_effective_date} = paddleData;
 
   const user = await prisma.user.findUnique({where: {email}})
 
@@ -92,7 +67,6 @@ export const subscriptionCanceled = async (paddle: SubscriptionCancelledWebhook)
       userId: user?.id
     },
     data: {
-      subscriptionStatus: status,
       subscriptionEndDate: new Date(cancellation_effective_date),
     },
   });
@@ -110,7 +84,7 @@ export const subscriptionCanceled = async (paddle: SubscriptionCancelledWebhook)
 
 export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSucceededWebhook) => {
   const {p_signature, alert_name, ...paddleData} = paddle;
-  const {status, subscription_plan_id, next_bill_date, email, subscription_id} = paddleData;
+  const {subscription_plan_id, next_bill_date, email, subscription_id} = paddleData;
 
   const user = await prisma.user.findUnique({where: {email}})
 
@@ -120,11 +94,8 @@ export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSu
     },
     create: {
       subscriptionId: subscription_id,
-      subscriptionStatus: status,
       subscriptionPlanId: subscription_plan_id,
       subscriptionEndDate: new Date(next_bill_date),
-      subscriptionUpdateUrl: "",
-      subscriptionCancelUrl: "",
       user: {
         connect: {
           email: email
@@ -132,7 +103,6 @@ export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSu
       }
     },
     update: {
-      subscriptionStatus: status,
       subscriptionPlanId: subscription_plan_id,
       subscriptionEndDate: new Date(next_bill_date),
     },

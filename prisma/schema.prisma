@@ -67,17 +67,14 @@ model Password {
 }
 
 model UserPayment {
-  id                    String   @id @default(uuid())
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                String   @unique
-  subscriptionId        String   @unique
-  subscriptionPlanId    String
-  subscriptionEndDate   DateTime
-  subscriptionStatus    String
-  subscriptionUpdateUrl String
-  subscriptionCancelUrl String
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  id                  String   @id @default(uuid())
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String   @unique
+  subscriptionId      String   @unique
+  subscriptionPlanId  String
+  subscriptionEndDate DateTime
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   @@index([userId])
 }

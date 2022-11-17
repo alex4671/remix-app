@@ -79,10 +79,10 @@ export const action = async ({request}: ActionArgs) => {
     try {
       const user = await getUser(request)
       const payLink = await paddle.generatePayLink({product_id: Number(planId), customer_email: user?.email})
-      return json({success: true, intent, payLink})
+      return json({success: true, intent: null, payLink})
 
     } catch (e) {
-      return json({success: false, intent})
+      return json({success: false, intent: null, message: "Error generating pay link"})
     }
   }
 
