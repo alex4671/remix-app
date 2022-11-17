@@ -33,7 +33,7 @@ export const subscriptionCreated = async (paddle: SubscriptionCreatedWebhook) =>
 
 export const subscriptionUpdated = async (paddle: SubscriptionUpdatedWebhook) => {
   const {p_signature, alert_name, ...paddleData} = paddle;
-  const {email, subscription_plan_id, next_bill_date} = paddleData;
+  const {email, subscription_plan_id, next_bill_date, status} = paddleData;
 
   const user = await prisma.user.findUnique({where: {email}})
 
@@ -42,8 +42,9 @@ export const subscriptionUpdated = async (paddle: SubscriptionUpdatedWebhook) =>
       userId: user?.id
     },
     data: {
+      subscriptionStatus: status,
       subscriptionPlanId: subscription_plan_id,
-      subscriptionEndDate: new Date(next_bill_date),
+      subscriptionEndDate: next_bill_date,
     },
   });
 
@@ -60,7 +61,7 @@ export const subscriptionUpdated = async (paddle: SubscriptionUpdatedWebhook) =>
 
 export const subscriptionCanceled = async (paddle: SubscriptionCancelledWebhook) => {
   const {p_signature, alert_name, ...paddleData} = paddle;
-  const {email, cancellation_effective_date} = paddleData;
+  const {email, cancellation_effective_date, status} = paddleData;
 
   const user = await prisma.user.findUnique({where: {email}})
 
@@ -69,7 +70,8 @@ export const subscriptionCanceled = async (paddle: SubscriptionCancelledWebhook)
       userId: user?.id
     },
     data: {
-      subscriptionEndDate: new Date(cancellation_effective_date),
+      subscriptionStatus: status,
+      subscriptionEndDate: cancellation_effective_date,
     },
   });
 
@@ -86,7 +88,7 @@ export const subscriptionCanceled = async (paddle: SubscriptionCancelledWebhook)
 
 export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSucceededWebhook) => {
   const {p_signature, alert_name, ...paddleData} = paddle;
-  const {subscription_plan_id, next_bill_date, email, subscription_id} = paddleData;
+  const {subscription_plan_id, next_bill_date, email, subscription_id, status} = paddleData;
 
   const user = await prisma.user.findUnique({where: {email}})
 
@@ -95,9 +97,10 @@ export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSu
       userId: user?.id
     },
     create: {
+      subscriptionStatus: status,
       subscriptionId: subscription_id,
       subscriptionPlanId: subscription_plan_id,
-      subscriptionEndDate: new Date(next_bill_date),
+      subscriptionEndDate: next_bill_date,
       user: {
         connect: {
           email: email
@@ -105,8 +108,9 @@ export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSu
       }
     },
     update: {
+      subscriptionStatus: status,
       subscriptionPlanId: subscription_plan_id,
-      subscriptionEndDate: new Date(next_bill_date),
+      subscriptionEndDate: next_bill_date,
     },
   });
 
@@ -122,7 +126,7 @@ export const subscriptionPaymentSucceeded = async (paddle: SubscriptionPaymentSu
 
 export const subscriptionPaymentFailed = async (paddle: SubscriptionPaymentFailedWebhook) => {
   const {p_signature, alert_name, ...paddleData} = paddle;
-  const {email, next_retry_date} = paddleData;
+  const {email, next_retry_date, status} = paddleData;
 
   const user = await prisma.user.findUnique({where: {email}})
 
@@ -131,7 +135,8 @@ export const subscriptionPaymentFailed = async (paddle: SubscriptionPaymentFaile
       userId: user?.id
     },
     data: {
-      subscriptionEndDate: new Date(next_retry_date),
+      subscriptionStatus: status,
+      subscriptionEndDate: next_retry_date,
     },
   });
   await prisma.userPaymentHistory.create({

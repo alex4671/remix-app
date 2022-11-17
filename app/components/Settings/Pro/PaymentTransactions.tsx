@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {Anchor, Badge, Box, Paper, ScrollArea, Table, Text, Title} from "@mantine/core";
+import {Anchor, Badge, Box, Paper, ScrollArea, Table, Tabs, Text, Title} from "@mantine/core";
 import {upperFirst} from "@mantine/hooks";
 import {useLoaderData} from "@remix-run/react";
 import type {loader} from "~/routes/settings/pro";
@@ -14,9 +14,23 @@ const plans: Record<string, string> = {
 
 
 export const PaymentTransactions = () => {
-  const {transactions} = useLoaderData<typeof loader>()
+  const {receipts, userPaymentHistory} = useLoaderData<typeof loader>()
 
-  const rows = transactions?.map((t) => (
+  console.log("userPaymentHistory", userPaymentHistory)
+
+  // todo generate what happened e.g. Monthly -> Daily, One off charge etc.
+  const paymentHistoryRows = userPaymentHistory?.map((t) => (
+    <tr key={t.id}>
+      <td>{dayjs(t.createdAt).format("MMMM D, YYYY")}</td>
+      <td>
+        <Badge color={"emerald"}>{t.alert_name}</Badge>
+      </td>
+      <td>{t.historyData.old_subscription_plan_id ? `${upperFirst(plans[t.historyData?.old_subscription_plan_id!])} -> ${upperFirst(plans[t.historyData?.subscription_plan_id!])}` : upperFirst(plans[t.historyData?.subscription_plan_id!])}</td>
+      <td>{formatMoney(t.historyData?.sale_gross!, t.historyData?.currency!)}</td>
+    </tr>
+  ));
+
+  const receiptsRows = receipts?.map((t) => (
     <tr key={t.order_id}>
       <td>{dayjs(t.created_at).format("MMMM D, YYYY")}</td>
       <td>
@@ -30,25 +44,49 @@ export const PaymentTransactions = () => {
     </tr>
   ));
 
-  return transactions.length > 0 ? (
+
+  return receipts.length > 0 ? (
     <Paper shadow="0" p="md" my={6} withBorder>
-      <Title order={2}>Transactions ({transactions.length})</Title>
+      <Title order={2}>Transactions ({receipts.length})</Title>
       <Text color={"dimmed"}>History of you transactions and receipts</Text>
       <Box my={12}>
-        <ScrollArea>
-          <Table sx={{minWidth: 576}}>
-            <thead>
-            <tr>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Plan</th>
-              <th>Currency/Amount</th>
-              <th>Receipt URL</th>
-            </tr>
-            </thead>
-            <tbody>{rows}</tbody>
-          </Table>
-        </ScrollArea>
+        <Tabs defaultValue="history" color={"dark"}>
+          <Tabs.List>
+            <Tabs.Tab value="history">History</Tabs.Tab>
+            <Tabs.Tab value="receipts">Receipts</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="history" pt="xs">
+            <ScrollArea>
+              <Table sx={{minWidth: 576}}>
+                <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Action</th>
+                  <th>Plan</th>
+                  <th>Currency/Amount</th>
+                </tr>
+                </thead>
+                <tbody>{paymentHistoryRows}</tbody>
+              </Table>
+            </ScrollArea>
+          </Tabs.Panel>
+          <Tabs.Panel value="receipts" pt="xs">
+            <ScrollArea>
+              <Table sx={{minWidth: 576}}>
+                <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Plan</th>
+                  <th>Currency/Amount</th>
+                  <th>Receipt URL</th>
+                </tr>
+                </thead>
+                <tbody>{receiptsRows}</tbody>
+              </Table>
+            </ScrollArea>
+          </Tabs.Panel>
+        </Tabs>
       </Box>
 
     </Paper>

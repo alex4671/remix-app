@@ -218,6 +218,20 @@ export const getUserPaymentData = async (request: Request) => {
   }))
 }
 
+export const getUserPaymentHistory = async (request: Request) => {
+  const userId = await getUserId(request)
+
+  return await prisma.userPaymentHistory.findMany({
+    where: {
+      userId
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  })
+}
+
+
 // export const getUserPaymentTransactionsData = async (request: Request) => {
 //   const userId = await getUserId(request)
 //

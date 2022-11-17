@@ -46,7 +46,7 @@ model Collaborator {
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId String
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -72,7 +72,8 @@ model UserPayment {
   userId              String   @unique
   subscriptionId      String   @unique
   subscriptionPlanId  String
-  subscriptionEndDate DateTime
+  subscriptionEndDate String
+  subscriptionStatus  String
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
@@ -127,7 +128,7 @@ model Comments {
 
 model NotificationSettings {
   id                       String   @id @default(uuid())
-  user                     User     @relation(fields: [userId], references: [id])
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                   String   @unique
   outOfSpace               Boolean  @default(false)
   deleteLargeNumberOfFiles Boolean  @default(false)

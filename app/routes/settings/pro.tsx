@@ -3,7 +3,7 @@ import {json} from "@remix-run/node";
 import {ManageSubscriptionSettings} from "~/components/Settings/Pro/ManageSubscriptionSettings";
 import {useLoaderData} from "@remix-run/react";
 import {SubscribeToPro} from "~/components/Settings/Pro/SubscribeToPro";
-import {getUserPaymentData} from "~/models/user.server";
+import {getUserPaymentData, getUserPaymentHistory} from "~/models/user.server";
 import {paddle} from "~/server/paddle.server";
 import type {User} from "@invertase/node-paddle-sdk/src/types";
 import dayjs from "dayjs";
@@ -21,23 +21,24 @@ type UserSubscriptionResponse = Partial<Pick<User, "cancel_url" | "update_url" |
 
 export const loader = async ({request}: LoaderArgs) => {
   const user = await getUserPaymentData(request)
+  const userPaymentHistory = await getUserPaymentHistory(request)
 
   if (user?.payment) {
     const isSubscriptionActive = dayjs().isBefore(dayjs(user.payment.subscriptionEndDate))
 
     const userSubscription = await paddle.listUsers({subscription_id: Number(user?.payment?.subscriptionId)})
-    console.log("userSubscription", userSubscription[0])
+
     const {cancel_url, update_url, state, next_payment, plan_id} = userSubscription[0]
 
     const userSubscriptionResponse: UserSubscriptionResponse = {cancel_url, update_url, state, next_payment, plan_id}
 
     const subscriptionId = user.payment.subscriptionId
 
-    const transactions = []
+    const receipts = []
     let page = 1
     while (true) {
       const items = await paddle.listTransactions({entity: "subscription", entity_id: subscriptionId, page})
-      transactions.push(...items)
+      receipts.push(...items)
 
       if (items.length === 15) {
         page++
@@ -46,14 +47,21 @@ export const loader = async ({request}: LoaderArgs) => {
       break;
     }
 
-    return json({payment: user?.payment, userSubscription: userSubscriptionResponse, isSubscriptionActive, transactions})
+    return json({
+      payment: user?.payment,
+      userSubscription: userSubscriptionResponse,
+      isSubscriptionActive,
+      receipts,
+      userPaymentHistory
+    })
   }
 
   return json({
     payment: user?.payment,
     userSubscription: {} as UserSubscriptionResponse,
     isSubscriptionActive: false,
-    transactions: []
+    receipts: [],
+    userPaymentHistory: []
   })
 
 }
