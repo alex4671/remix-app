@@ -33,7 +33,6 @@ export const subscriptionCreated = async (paddle: SubscriptionCreatedWebhook) =>
       }
     },
     update: {
-      subscriptionId: subscription_id,
       subscriptionStatus: status,
       subscriptionPlanId: subscription_plan_id,
       subscriptionEndDate: new Date(next_bill_date),
@@ -188,7 +187,7 @@ export const subscriptionPaymentRefunded = async (paddle: SubscriptionPaymentRef
 
   }
 
-  // figure out what to do when user refounded
+  // figure out what to do when user refunded
   // const user = await prisma.user.findUnique({where: {email}})
   //
   // return prisma.userPayment.delete({
