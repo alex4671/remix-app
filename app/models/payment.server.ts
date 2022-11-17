@@ -8,6 +8,8 @@ import type {
   SubscriptionUpdatedWebhook
 } from "@invertase/node-paddle-sdk";
 
+
+// todo remove new Date
 export const subscriptionCreated = async (paddle: SubscriptionCreatedWebhook) => {
   const {p_signature, alert_name, ...paddleData} = paddle;
   const {email} = paddleData;

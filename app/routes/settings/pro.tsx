@@ -67,10 +67,10 @@ export const action = async ({request}: ActionArgs) => {
     try {
       const user = await getUserPaymentData(request)
       await paddle.updateUser({subscription_id: Number(user?.payment?.subscriptionId), plan_id: Number(planId)})
-      return json({success: true, intent})
+      return json({success: true, intent, message: "Subscription plan updated"})
 
     } catch (e) {
-      return json({success: false, intent})
+      return json({success: false, intent, message: "Error updating plan"})
     }
   }
 
