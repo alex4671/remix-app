@@ -5,6 +5,7 @@ import {ActionIcon, Group, Paper, Text} from "@mantine/core";
 import {IconGripVertical} from "@tabler/icons";
 import dayjs from "dayjs";
 import {DangerButton} from "~/components/Buttons/DangerButtom";
+import {nanoid} from "nanoid";
 
 export const WorkspaceItem = ({workspace, isMyWorkspaces = true}: { workspace: any, isMyWorkspaces?: boolean }) => {
   const navigate = useNavigate()
@@ -33,7 +34,7 @@ export const WorkspaceItem = ({workspace, isMyWorkspaces = true}: { workspace: a
     e.stopPropagation()
     fetcher.submit({
       intent: "deleteWorkspace",
-      sessionId: sessionStorage.getItem("sessionId") ?? ""
+      sessionId: sessionStorage.getItem("sessionId") ?? nanoid()
     }, {
       method: "post",
       action: `/settings/workspaces/${workspaceId}`

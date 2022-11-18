@@ -1,5 +1,6 @@
 import {useEffect} from "react";
 import {useDataRefresh} from "remix-utils";
+import {nanoid} from "nanoid";
 
 export enum EventType {
   CREATE_WORKSPACE = "CREATE_WORKSPACE",
@@ -24,7 +25,7 @@ export function useSubscription(href: string, events: string[]) {
     let eventSource = new EventSource(href);
 
     const handler = (event: MessageEvent) => {
-      const sessionId = sessionStorage.getItem("sessionId") ?? ""
+      const sessionId = sessionStorage.getItem("sessionId") ?? nanoid()
 
       if (events.includes(event.type)) {
         if (event.data !== sessionId) {

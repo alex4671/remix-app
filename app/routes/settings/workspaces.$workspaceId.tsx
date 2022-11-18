@@ -28,6 +28,7 @@ import {getFileKey} from "~/utils/utils";
 import {emitter} from "~/server/emitter.server";
 import {EventType, useSubscription} from "~/hooks/useSubscription";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
+import {nanoid} from "nanoid";
 
 export const loader = async ({request, params}: LoaderArgs) => {
   const user = await requireUser(request)
@@ -205,7 +206,7 @@ export default function WorkspaceId() {
         <td>
           <fetcher.Form method={"post"}>
             <input type="hidden" name={"collaboratorId"} value={c.id}/>
-            <input type="hidden" name={"sessionId"} value={sessionStorage.getItem("sessionId") ?? ""}/>
+            <HiddenSessionId/>
             <DangerButton
               disabled={!isUserOwner}
               compact
@@ -227,7 +228,7 @@ export default function WorkspaceId() {
       fetcher.submit({
         newName: e.currentTarget.textContent,
         intent: "updateWorkspaceName",
-        sessionId: sessionStorage.getItem("sessionId") ?? ""
+        sessionId: sessionStorage.getItem("sessionId") ?? nanoid()
       }, {
         method: "post"
       })

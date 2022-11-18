@@ -10,7 +10,6 @@ import {
   Image,
   Paper,
   Popover,
-  SimpleGrid,
   Stack,
   Switch,
   Text,
@@ -24,6 +23,7 @@ import {upperFirst} from "@mantine/hooks";
 import {FileComments} from "./FileComments";
 import type {loader} from "~/routes/media/$workspaceId";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
+import {nanoid} from "nanoid";
 
 interface Props {
   setSelectedFiles: Dispatch<SetStateAction<string[]>>
@@ -58,7 +58,7 @@ export const FilesList = ({
       intent: "togglePublic",
       fileId,
       checked,
-      sessionId: sessionStorage.getItem("sessionId") ?? ""
+      sessionId: sessionStorage.getItem("sessionId") ?? nanoid()
     }, {method: "post", replace: true})
   }
 

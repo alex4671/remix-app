@@ -3,6 +3,7 @@ import {IconEdit} from "@tabler/icons";
 import {useState} from "react";
 import {useFetcher} from "@remix-run/react";
 import type {action} from "~/routes/media/$workspaceId";
+import {nanoid} from "nanoid";
 
 
 type Rights = {
@@ -32,7 +33,7 @@ export const WorkspaceRights = ({rights, collaboratorId, isOwner}: Props) => {
       workspaceRights: JSON.stringify(workspaceRights),
       collaboratorId,
       intent: "updateRights",
-      sessionId: sessionStorage.getItem("sessionId") ?? ""
+      sessionId: sessionStorage.getItem("sessionId") ?? nanoid()
     }, {
       method: "post"
     })

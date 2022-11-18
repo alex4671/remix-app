@@ -7,15 +7,16 @@ import {validateEmail} from "~/utils/utils";
 import {Anchor, Container, PasswordInput, Text, TextInput, Title} from "@mantine/core";
 import {useEffect, useRef} from "react";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
-import {randomId} from "@mantine/hooks";
+import {nanoid} from "nanoid";
 
-export const loader: LoaderFunction = async ({ request }) => {
+
+export const loader: LoaderFunction = async ({request}) => {
   const userId = await getUserId(request);
   if (userId) return redirect("/");
   return json({});
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({request}) => {
   const formData = await request.formData();
   const email = formData.get("email");
   const password = formData.get("password");
@@ -23,30 +24,30 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (!validateEmail(email)) {
     return json(
-      { errors: { email: "Email is invalid" } },
-      { status: 400 }
+      {errors: {email: "Email is invalid"}},
+      {status: 400}
     );
   }
 
   if (typeof password !== "string") {
     return json(
-      { errors: { password: "Password is required" } },
-      { status: 400 }
+      {errors: {password: "Password is required"}},
+      {status: 400}
     );
   }
 
   if (password.length < 8) {
     return json(
-      { errors: { password: "Password is too short" } },
-      { status: 400 }
+      {errors: {password: "Password is too short"}},
+      {status: 400}
     );
   }
 
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
     return json(
-      { errors: { email: "A user already exists with this email" } },
-      { status: 400 }
+      {errors: {email: "A user already exists with this email"}},
+      {status: 400}
     );
   }
 
@@ -100,7 +101,7 @@ export default function Join() {
   }, [actionData]);
 
   const handleCreateSessionId = () => {
-    sessionStorage.setItem("sessionId", randomId())
+    sessionStorage.setItem("sessionId", nanoid())
   }
 
   return (
@@ -154,13 +155,13 @@ export default function Join() {
         <PrimaryButton fullWidth mt="xl" type={"submit"} loading={isLoading} onClick={handleCreateSessionId}>
           Sign up
         </PrimaryButton>
-        <input type="hidden" name="redirectTo" value={redirectTo} />
+        <input type="hidden" name="redirectTo" value={redirectTo}/>
       </Form>
     </Container>
   );
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
+export function ErrorBoundary({error}: { error: Error }) {
   console.error(error);
 
   return <div>An unexpected error occurred: {error.message}</div>;

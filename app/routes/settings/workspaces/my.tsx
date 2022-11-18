@@ -10,6 +10,7 @@ import {restrictToVerticalAxis} from "@dnd-kit/modifiers";
 import {generateKeyBetween} from "~/utils/generateIndex";
 import {WorkspaceItem} from "~/components/Settings/Workspaces/WorkspaceItem";
 import {useEffect, useState} from "react";
+import {nanoid} from "nanoid";
 
 export const loader = async ({request}: LoaderArgs) => {
   const user = await requireUser(request)
@@ -94,7 +95,7 @@ export default function MyWorkspaces() {
           intent: "changeSortOrder",
           workspaceId: active.id,
           newSortIndex,
-          sessionId: sessionStorage.getItem("sessionId") ?? ""
+          sessionId: sessionStorage.getItem("sessionId") ?? nanoid()
         }, {
           method: "post",
           action: "/settings/workspaces"
