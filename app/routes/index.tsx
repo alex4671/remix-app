@@ -23,8 +23,7 @@ import {IconFiles, IconSettings} from "@tabler/icons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"
 import {CreateNewWorkspace} from "~/components/Settings/Workspaces/CreateNewWorkspace";
-import {useWorkspaceSubscription} from "~/hooks/useWorkspaceSubscription";
-import {EventType} from "~/hooks/useSubscription";
+import {EventType, useSubscription} from "~/hooks/useSubscription";
 import {useState} from "react";
 
 dayjs.extend(relativeTime)
@@ -51,7 +50,7 @@ export default function WorkspacesIndex() {
 
   const [searchValue, setSearchValue] = useInputState('');
 
-  useWorkspaceSubscription(
+  useSubscription(
     `/api/subscriptions/workspaces/${user.id}`,
     [
       EventType.CREATE_WORKSPACE,

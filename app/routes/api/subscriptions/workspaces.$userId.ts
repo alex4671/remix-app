@@ -73,3 +73,47 @@ export const loader = ({request, params}: LoaderArgs) => {
 
   })
 }
+
+//
+// import type {LoaderArgs} from "@remix-run/node";
+// import {EventType} from "~/hooks/useSubscription";
+// import {emitter} from "~/server/emitter.server";
+// import {eventStream} from "~/utils/eventStream";
+// import invariant from "tiny-invariant";
+//
+//
+// export const loader = ({request, params}: LoaderArgs) => {
+//   return eventStream(request, send => {
+//
+//     invariant(typeof params.userId === "string", "User id must be provided")
+//
+//
+//     const events = [
+//       EventType.CREATE_WORKSPACE,
+//       EventType.INVITE_MEMBER,
+//       EventType.REMOVE_ACCESS,
+//       EventType.DELETE_WORKSPACE,
+//       EventType.REORDER_WORKSPACE,
+//       EventType.UPDATE_NAME_WORKSPACE,
+//       EventType.UPDATE_RIGHTS,
+//     ]
+//
+//
+//     const handler = (userId: string[], sessionId: string, event: string) => {
+//       if (userId.includes(params.userId ?? "")) {
+//         send(event, sessionId)
+//       }
+//     }
+//
+//     events.forEach((event) => {
+//       emitter.addListener(event, (userId, sessionId) => handler(userId, sessionId, event))
+//     })
+//
+//     return () => {
+//       events.forEach((event) => {
+//         emitter.removeListener(event, (userId, sessionId) => handler(userId, sessionId, event))
+//       })
+//     }
+//
+//   })
+// }

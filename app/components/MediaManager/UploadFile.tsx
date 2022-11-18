@@ -121,16 +121,16 @@ export const UploadFile = ({selectedFiles, selectedFilesUrls, setSelectedFiles, 
             </>
           ) : null}
         </Group>
-        {filesSize !== 0 ? (
-          <Tooltip
-            label={`${formatBytes(filesSize)} of ${formatBytes(maxSizeLimit)}`}
-            withArrow
-          >
-            <Text component={"span"}>
-              {filteredUserFilesCount} files, Used: {Math.round((100 / maxSizeLimit) * (filesSize ?? 0))}%
-            </Text>
-          </Tooltip>
-        ) : null}
+        {/*{filesSize !== 0 ? (*/}
+        {/*  <Tooltip*/}
+        {/*    label={`${formatBytes(filesSize)} of ${formatBytes(maxSizeLimit)}`}*/}
+        {/*    withArrow*/}
+        {/*  >*/}
+        {/*    <Text component={"span"}>*/}
+        {/*      {filteredUserFilesCount} files, Used: {Math.round((100 / maxSizeLimit) * (filesSize ?? 0))}%*/}
+        {/*    </Text>*/}
+        {/*  </Tooltip>*/}
+        {/*) : null}*/}
 
 
       </Group>

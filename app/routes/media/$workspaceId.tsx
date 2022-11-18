@@ -6,7 +6,7 @@ import {deleteFile, deleteFiles, getUserFilesSize, saveFiles, togglePublic} from
 import invariant from "tiny-invariant";
 import {deleteFileFromS3, generateSignedUrl} from "~/models/storage.server";
 import {getFileKey, useUser} from "~/utils/utils";
-import {useActionData, useLoaderData} from "@remix-run/react";
+import {useLoaderData} from "@remix-run/react";
 import {useState} from "react";
 import {useInputState} from "@mantine/hooks";
 import {UploadFile} from "~/components/MediaManager/UploadFile";
@@ -14,9 +14,8 @@ import {FilesFilters} from "~/components/MediaManager/FilesFilters";
 import {FilesGrid} from "~/components/MediaManager/FilesGrid";
 import {getWorkspaceFilesById, getWorkspacesById, isUserAllowedViewWorkspace} from "~/models/workspace.server";
 import {createComment, deleteComment} from "~/models/comments.server";
-import {EventType} from "~/hooks/useSubscription";
+import {EventType, useSubscription} from "~/hooks/useSubscription";
 import {emitter} from "~/server/emitter.server";
-import {useFilesSubscription} from "~/hooks/useFilesSubscription";
 import {FilesList} from "~/components/MediaManager/FilesList";
 
 type Rights = {
@@ -223,7 +222,7 @@ export default function WorkspaceId() {
   const [filterTypeValue, setFilterTypeValue] = useState<string[]>([]);
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
 
-  useFilesSubscription(
+  useSubscription(
     `/api/subscriptions/files/${user.id}`,
     [
       EventType.DELETE_WORKSPACE,

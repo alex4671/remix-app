@@ -26,9 +26,8 @@ import {WorkspaceRights} from "~/components/MediaManager/WorkspaceRights";
 import {deleteFileFromS3} from "~/models/storage.server";
 import {getFileKey} from "~/utils/utils";
 import {emitter} from "~/server/emitter.server";
-import {EventType} from "~/hooks/useSubscription";
+import {EventType, useSubscription} from "~/hooks/useSubscription";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
-import {useWorkspaceSubscription} from "~/hooks/useWorkspaceSubscription";
 
 export const loader = async ({request, params}: LoaderArgs) => {
   const user = await requireUser(request)
@@ -176,7 +175,7 @@ export default function WorkspaceId() {
   const {state} = useLocation();
   const navigate = useNavigate()
 
-  useWorkspaceSubscription(
+  useSubscription(
     `/api/subscriptions/workspaces/${user.id}`,
     [
       EventType.DELETE_WORKSPACE,

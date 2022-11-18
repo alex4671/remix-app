@@ -1,17 +1,13 @@
 import {Box, Group, Paper, Text, Title} from "@mantine/core";
-import {showNotification} from "@mantine/notifications";
-import {IconCheck, IconX} from "@tabler/icons";
-import {useEffect} from "react";
 import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
-import {Link, Outlet, useActionData, useLocation} from "@remix-run/react";
+import {Link, Outlet, useLocation} from "@remix-run/react";
 import {createWorkspace, getAllowedWorkspaces, updateWorkspaceSortOrder} from "~/models/workspace.server";
 import {emitter} from "~/server/emitter.server";
 import {generateKeyBetween} from "~/utils/generateIndex";
 import {CreateNewWorkspace} from "~/components/Settings/Workspaces/CreateNewWorkspace";
-import {EventType} from "~/hooks/useSubscription";
-import {useWorkspaceSubscription} from "~/hooks/useWorkspaceSubscription";
+import {EventType, useSubscription} from "~/hooks/useSubscription";
 import {useUser} from "~/utils/utils";
 
 export const meta: MetaFunction = () => {
@@ -85,7 +81,7 @@ export default function Workspaces() {
   const user = useUser()
   const location = useLocation()
 
-  useWorkspaceSubscription(
+  useSubscription(
     `/api/subscriptions/workspaces/${user.id}`,
     [
       EventType.CREATE_WORKSPACE,

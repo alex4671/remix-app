@@ -1,8 +1,6 @@
 import {useEffect} from "react";
 import {useDataRefresh} from "remix-utils";
 
-const FILES_SUBSCRIPTION_PATH = "/api/subscriptions/workspaces"
-
 export enum EventType {
   CREATE_WORKSPACE = "CREATE_WORKSPACE",
   DELETE_WORKSPACE = "DELETE_WORKSPACE",
@@ -19,28 +17,30 @@ export enum EventType {
 }
 
 
-export function useSubscription(events: EventType[] = []) {
+export function useSubscription(href: string, events: string[]) {
   let {refresh} = useDataRefresh();
 
-  console.log("Object.keys(EventType)", Object.keys(EventType))
-
   useEffect(() => {
-    let eventSource = new EventSource(FILES_SUBSCRIPTION_PATH);
+    let eventSource = new EventSource(href);
 
-    events.forEach((event) => {
+    const handler = (event: MessageEvent) => {
+      const sessionId = sessionStorage.getItem("sessionId") ?? ""
+
+      if (events.includes(event.type)) {
+        if (event.data !== sessionId) {
+          refresh()
+        }
+      }
+    }
+    events.forEach(event => {
       eventSource.addEventListener(event, handler)
     })
-
-    function handler(event: MessageEvent) {
-      refresh()
-    }
-
 
     return () => {
       eventSource.close()
     }
 
-  }, [])
+  }, [href])
 
-  return null
-}
+
+  return null}
