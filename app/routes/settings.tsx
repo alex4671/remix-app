@@ -24,10 +24,14 @@ export const action = async ({request}: ActionArgs) => {
   const feedback = formData.get("feedback")?.toString() ?? "";
 
   if (feedback.length) {
-    await saveFeedback(user.id, user.email, feedback)
-    return json({success: true, message: "Feedback send"})
+    try {
+      await saveFeedback(user.id, user.email, feedback)
+      return json({success: true, intent: "sendFeedback", message: "Feedback send"})
+    } catch (e) {
+      return json({success: false, intent: "sendFeedback", message: "Error sending feedback"})
+    }
   } else {
-    return json({success: false, message: "Feedback can't be empty"})
+    return json({success: false, intent: "sendFeedback", message: "Feedback can't be empty"})
   }
 };
 
