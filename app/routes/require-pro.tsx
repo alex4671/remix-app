@@ -1,4 +1,4 @@
-import type {LoaderFunction, MetaFunction} from "@remix-run/node";
+import type {LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {Button, Center, Stack, Title} from "@mantine/core";
@@ -10,7 +10,7 @@ export const meta: MetaFunction = () => {
   };
 };
 
-export const loader: LoaderFunction = async ({request}) => {
+export const loader = async ({request}: LoaderArgs) => {
   await requireUser(request)
 
   return json({})
