@@ -3,7 +3,7 @@ import {Group, Paper, TypographyStylesProvider} from "@mantine/core";
 import type {LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
-import {getAllUserNotes, getNoteById} from "~/models/notes.server";
+import {getNoteById} from "~/models/notes.server";
 import invariant from "tiny-invariant";
 import {DangerButton} from "~/components/Buttons/DangerButtom";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
@@ -28,7 +28,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({request, params}: LoaderArgs) => {
-  const user = await requireUser(request)
+  await requireUser(request)
   const noteId = params.noteId
   invariant(typeof noteId === "string", "Note Id must be provided")
 

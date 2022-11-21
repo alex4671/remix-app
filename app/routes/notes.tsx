@@ -1,14 +1,10 @@
 import {Link, useFetcher, useLoaderData} from "@remix-run/react";
-import {ActionIcon, AspectRatio, Card, Group, Image, SimpleGrid, TypographyStylesProvider} from "@mantine/core";
+import {ActionIcon, AspectRatio, Card, Group, Image, SimpleGrid} from "@mantine/core";
 import type {LoaderArgs, MetaFunction} from "@remix-run/node";
 import {ActionArgs, json, redirect} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {createNote, deleteNote, getAllUserNotes, updateNote} from "~/models/notes.server";
-import {saveFeedback} from "~/models/feedback.server";
-import {toPng, toJpeg, toBlob, toPixelData, toSvg} from 'html-to-image';
-import {DangerButton} from "~/components/Buttons/DangerButtom";
 import {IconTrash} from "@tabler/icons";
-import {Link as RemixLink} from "@remix-run/react/dist/components";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 
 

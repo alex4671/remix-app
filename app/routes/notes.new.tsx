@@ -1,6 +1,5 @@
-
-import { RichTextEditor, Link } from '@mantine/tiptap';
-import { useEditor } from '@tiptap/react';
+import {Link, RichTextEditor} from '@mantine/tiptap';
+import {useEditor} from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -8,17 +7,16 @@ import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import {Group, Paper, Tabs, TypographyStylesProvider} from "@mantine/core";
-import {Link as RemixLink, useFetcher, useSubmit} from "@remix-run/react";
+import {Link as RemixLink, useFetcher} from "@remix-run/react";
 import {IconChevronLeft, IconColorPicker} from "@tabler/icons";
 import Color from '@tiptap/extension-color';
 import {TextStyle} from "@tiptap/extension-text-style";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
-import {toJpeg, toPng} from "html-to-image";
-import {useCallback, useRef} from "react";
+import {toPng} from "html-to-image";
+import {useRef} from "react";
 import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
 
-const content =
-  '<h2 style="text-align: center;">Welcome to Mantine rich text editor</h2><p><code>RichTextEditor</code> component focuses on usability and is designed to be as simple as possible to bring a familiar editing experience to regular users. <code>RichTextEditor</code> is based on <a href="https://tiptap.dev/" rel="noopener noreferrer" target="_blank">Tiptap.dev</a> and supports all of its features:</p><ul><li>General text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strike-through</s> </li><li>Headings (h1-h6)</li><li>Sub and super scripts (<sup>&lt;sup /&gt;</sup> and <sub>&lt;sub /&gt;</sub> tags)</li><li>Ordered and bullet lists</li><li>Text align&nbsp;</li><li>And all <a href="https://tiptap.dev/extensions" target="_blank" rel="noopener noreferrer">other extensions</a></li></ul>';
+const content = '';
 
 
 
@@ -47,8 +45,6 @@ export default function NewNote() {
       return
     }
     const image = await toPng(ref.current, {backgroundColor: "white", style: {width: "300px", padding: "10px 20px"}})
-
-    console.log("image", image)
 
     fetcher.submit({note: editor?.getHTML() ?? "", intent: "createNote", image}, {method: "post", action: "/notes"})
   }
