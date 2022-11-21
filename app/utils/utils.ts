@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import type { User } from "~/models/user.server";
 import type {Theme} from "~/utils/theme";
+import dayjs from "dayjs";
 
 const DEFAULT_REDIRECT = "/";
 
@@ -110,4 +111,9 @@ export const formatBytes = (bytes: number | undefined, decimals = 2) => {
   const i = Math.floor(Math.log(bytes) / Math.log(k))
 
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+}
+
+export const isNowBeforeDate = (date: string | undefined) => {
+  if (!date) return false
+  return dayjs().isBefore(dayjs(date).endOf("day").toDate())
 }

@@ -45,6 +45,8 @@ export const PaymentTransactions = () => {
   ));
 
 
+
+  // todo make timeline
   return receipts.length > 0 ? (
     <Paper shadow="0" p="md" my={6} withBorder>
       <Title order={2}>Transactions ({receipts.length})</Title>

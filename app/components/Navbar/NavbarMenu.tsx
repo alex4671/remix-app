@@ -11,7 +11,7 @@ import {
   IconTrash
 } from "@tabler/icons";
 import {useState} from "react";
-import {useUser} from "~/utils/utils";
+import {isNowBeforeDate, useUser} from "~/utils/utils";
 import {Link, useSubmit} from "@remix-run/react";
 import dayjs from "dayjs";
 
@@ -48,7 +48,7 @@ export const NavbarMenu = () => {
   };
 
   // @ts-ignore
-  const isPro = dayjs().isBefore(dayjs(user?.payment?.subscriptionEndDate))
+  const isPro = isNowBeforeDate(user?.payment?.subscriptionEndDate)
 
   return (
     <Menu

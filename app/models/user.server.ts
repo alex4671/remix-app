@@ -5,6 +5,7 @@ import {getUserId, requireUserId} from "~/server/session.server";
 import dayjs from "dayjs";
 import {sign, verify} from "jsonwebtoken";
 import invariant from "tiny-invariant";
+import {isNowBeforeDate} from "~/utils/utils";
 
 interface InviteToken {
   userId: string
@@ -196,8 +197,7 @@ export const isUserCurrentlyPro = async (request: Request) => {
     }
   }))
 
-  return dayjs().isBefore(dayjs(dueDate?.payment?.subscriptionEndDate))
-
+  return isNowBeforeDate(dueDate?.payment?.subscriptionEndDate)
 }
 
 export const getUserPaymentData = async (request: Request) => {

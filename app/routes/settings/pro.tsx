@@ -6,9 +6,9 @@ import {SubscribeToPro} from "~/components/Settings/Pro/SubscribeToPro";
 import {getUserPaymentData, getUserPaymentHistory} from "~/models/user.server";
 import {paddle} from "~/server/paddle.server";
 import type {User} from "@invertase/node-paddle-sdk/src/types";
-import dayjs from "dayjs";
 import {PaymentTransactions} from "~/components/Settings/Pro/PaymentTransactions";
 import {getUser} from "~/server/session.server";
+import {isNowBeforeDate} from "~/utils/utils";
 
 
 export const meta: MetaFunction = () => {
@@ -24,7 +24,7 @@ export const loader = async ({request}: LoaderArgs) => {
   const userPaymentHistory = await getUserPaymentHistory(request)
 
   if (user?.payment) {
-    const isSubscriptionActive = dayjs().isBefore(dayjs(user.payment.subscriptionEndDate))
+    const isSubscriptionActive = isNowBeforeDate(user.payment.subscriptionEndDate)
 
     const userSubscription = await paddle.listUsers({subscription_id: Number(user?.payment?.subscriptionId)})
 
@@ -101,7 +101,7 @@ export const action = async ({request}: ActionArgs) => {
 
 export default function Pro() {
   const {isSubscriptionActive, userSubscription} = useLoaderData<typeof loader>()
-
+  console.log("isSubscriptionActive", isSubscriptionActive)
   return (
     <>
       {isSubscriptionActive ? <ManageSubscriptionSettings/> : <SubscribeToPro/>}
