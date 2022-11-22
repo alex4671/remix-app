@@ -1,7 +1,7 @@
 import {Link, useFetcher, useLoaderData} from "@remix-run/react";
 import {ActionIcon, AspectRatio, Card, Group, Image, SimpleGrid} from "@mantine/core";
-import type {LoaderArgs, MetaFunction} from "@remix-run/node";
-import {ActionArgs, json, redirect} from "@remix-run/node";
+import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
+import {json, redirect} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {createNote, deleteNote, getAllUserNotes, updateNote} from "~/models/notes.server";
 import {IconTrash} from "@tabler/icons";

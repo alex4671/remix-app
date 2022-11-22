@@ -80,7 +80,7 @@ export const NavbarMenu = () => {
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Label>{user.email}</Menu.Label>
+        <Menu.Label><Text size={"lg"}>{user.email}</Text></Menu.Label>
 
         <Menu.Label>Settings</Menu.Label>
         <Menu.Item component={Link} to={"/settings/account"} icon={<IconSettings size={14} stroke={1.5}/>}>Account
