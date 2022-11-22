@@ -73,7 +73,7 @@ export default function Note() {
   return (
     <>
       <Group position={"right"} my={24}>
-        <PrimaryButton component={RemixLink} to={"/notes/new"}>New</PrimaryButton>
+        <PrimaryButton component={RemixLink} to={"/notes/new"}>New note</PrimaryButton>
       </Group>
       {isEdit ? (
         <>

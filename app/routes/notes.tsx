@@ -1,11 +1,8 @@
-import {Link, useFetcher, useLoaderData} from "@remix-run/react";
-import {ActionIcon, AspectRatio, Card, Group, Image, SimpleGrid} from "@mantine/core";
+import {Outlet} from "@remix-run/react";
 import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json, redirect} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
-import {createNote, deleteNote, getAllUserNotes, updateNote} from "~/models/notes.server";
-import {IconTrash} from "@tabler/icons";
-import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
+import {createNote, deleteNote, updateNote} from "~/models/notes.server";
 
 
 export const meta: MetaFunction = () => {
@@ -15,14 +12,12 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({request}: LoaderArgs) => {
-  const user = await requireUser(request)
-  const notes = await getAllUserNotes(user.id)
+  await requireUser(request)
 
-
-  return json({
-    notes
-  });
+  return json({});
 };
+
+
 export const action = async ({request}: ActionArgs) => {
   const user = await requireUser(request)
   const formData = await request.formData();
@@ -71,45 +66,7 @@ export const action = async ({request}: ActionArgs) => {
 };
 
 export default function Notes() {
-  const {notes} = useLoaderData<typeof loader>()
-  const fetcher = useFetcher()
-
   return (
-    <>
-      <Group position={"right"} my={24}>
-        <PrimaryButton component={Link} to={"/notes/new"}>New note</PrimaryButton>
-      </Group>
-      <SimpleGrid
-        cols={4}
-        breakpoints={[
-          {maxWidth: 'md', cols: 3},
-          {maxWidth: 'sm', cols: 2},
-          {maxWidth: 'xs', cols: 1},
-        ]}
-      >
-        {notes?.map(note => {
-          return (
-            <Card
-              p="lg"
-              withBorder
-              key={note.id}
-            >
-              <Card.Section>
-                <AspectRatio ratio={16 / 9}>
-                  <Image src={note.preview}/>
-                </AspectRatio>
-              </Card.Section>
-              <Link to={`./${note.id}`} key={note.id}>Note</Link>
-              <fetcher.Form method={"post"}>
-                <input type="hidden" name={"noteId"} value={note.id}/>
-                <ActionIcon type={"submit"} name={"intent"} value={"deleteNote"}>
-                  <IconTrash size={18}/>
-                </ActionIcon>
-              </fetcher.Form>
-            </Card>
-          )
-        })}
-      </SimpleGrid>
-    </>
+    <Outlet/>
   )
 }

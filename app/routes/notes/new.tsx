@@ -1,5 +1,5 @@
 import {Link, RichTextEditor} from '@mantine/tiptap';
-import {Editor, useEditor} from '@tiptap/react';
+import {useEditor} from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -7,21 +7,18 @@ import TextAlign from '@tiptap/extension-text-align';
 import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import {Group, Paper, Tabs, TypographyStylesProvider} from "@mantine/core";
-import {Link as RemixLink, useFetcher} from "@remix-run/react";
-import {IconChevronLeft, IconColorPicker} from "@tabler/icons";
+import {useFetcher} from "@remix-run/react";
+import {IconColorPicker} from "@tabler/icons";
 import Color from '@tiptap/extension-color';
 import {TextStyle} from "@tiptap/extension-text-style";
 import {PrimaryButton} from "~/components/Buttons/PrimaryButton";
 import {toPng} from "html-to-image";
 import {useRef} from "react";
-import {SecondaryButton} from "~/components/Buttons/SecondaryButton";
-import {Collaboration, WebrtcProvider, ydoc} from "~/utils/webrtc.client";
-import type { LoaderArgs} from "@remix-run/node";
+import type {LoaderArgs} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
-import { ClientOnly } from 'remix-utils';
-import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
-import {useUser} from "~/utils/utils";
+import {ClientOnly} from 'remix-utils';
+
 const content = '';
 
 
@@ -37,7 +34,6 @@ export const loader = async ({request}: LoaderArgs) => {
 
 export default function NewNote() {
 
-  const user = useUser()
   const fetcher = useFetcher()
   // let provider = typeof document !== "undefined" ? new WebrtcProvider(user.email, ydoc) : null
   const ref = useRef<HTMLDivElement>(null)
@@ -84,9 +80,6 @@ export default function NewNote() {
 
   return (
     <>
-      <Group my={24}>
-        <SecondaryButton component={RemixLink} to={"/notes"} leftIcon={<IconChevronLeft size={14}/>} compact>Go back</SecondaryButton>
-      </Group>
       <Tabs defaultValue="editor" color="dark" variant="pills">
         <Tabs.List>
           <Tabs.Tab value="editor" >Editor</Tabs.Tab>
