@@ -241,6 +241,8 @@ export default function WorkspaceId() {
     ?.filter(file => file.name.toLowerCase().includes(searchValue.toLowerCase()))
     ?.filter(file => filterTypeValue.length ? filterTypeValue.includes(file.type.split("/")[1]) : true)
 
+
+  // todo map filteredUserFiles here
   return (
     <>
       <UploadFile

@@ -2,7 +2,6 @@ import type {Password, User} from "@prisma/client";
 import bcrypt from "bcryptjs";
 import {prisma} from "~/server/db.server";
 import {getUserId, requireUserId} from "~/server/session.server";
-import dayjs from "dayjs";
 import {sign, verify} from "jsonwebtoken";
 import invariant from "tiny-invariant";
 import {isNowBeforeDate} from "~/utils/utils";

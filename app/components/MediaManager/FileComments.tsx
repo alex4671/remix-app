@@ -7,10 +7,12 @@ import dayjs from "dayjs";
 import {useFetcher} from "@remix-run/react";
 import {DangerButton} from "~/components/Buttons/DangerButtom";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
+import type {SerializeFrom} from "@remix-run/node";
+import type {loader} from "~/routes/media/$workspaceId";
 
 interface Props {
   disabled: boolean;
-  comments: any;
+  comments: SerializeFrom<typeof loader>['userFiles'][0]['comments'];
   mediaId: string;
 }
 

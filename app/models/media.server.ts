@@ -1,6 +1,8 @@
 import type {Media} from "@prisma/client";
 import {prisma} from "~/server/db.server";
 
+export type { Media } from "@prisma/client";
+
 export const getAllUserFiles = (userId: Media["userId"]) => {
   return prisma.media.findMany({
     where: {

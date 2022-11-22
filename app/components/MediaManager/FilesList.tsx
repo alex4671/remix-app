@@ -24,11 +24,12 @@ import {FileComments} from "./FileComments";
 import type {loader} from "~/routes/media/$workspaceId";
 import {HiddenSessionId} from "~/components/Utils/HiddenSessionId";
 import {nanoid} from "nanoid";
+import type {SerializeFrom} from "@remix-run/node";
 
 interface Props {
   setSelectedFiles: Dispatch<SetStateAction<string[]>>
   setSelectedFilesUrls: Dispatch<SetStateAction<string[]>>
-  filteredUserFiles: any;
+  filteredUserFiles: SerializeFrom<typeof loader>['userFiles'];
   filterTypeValue: string[];
   selectedFiles: string[];
 }
