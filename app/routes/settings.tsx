@@ -6,6 +6,8 @@ import {requireUser} from "~/server/session.server";
 import {SettingsLinks} from "~/components/Settings/SettingsLinks";
 import {saveFeedback} from "~/models/feedback.server";
 import {Feedback} from "~/components/Settings/Feedback";
+import {GenericErrorBoundary} from "~/components/Errors/GenericErrorBoundary";
+import {GenericCatchBoundary} from "~/components/Errors/GenericCatchBoundary";
 
 export const meta: MetaFunction = () => {
   return {
@@ -52,3 +54,9 @@ export default function Settings() {
     </>
   )
 }
+
+
+export {
+  GenericCatchBoundary as CatchBoundary,
+  GenericErrorBoundary as ErrorBoundary,
+};

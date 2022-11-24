@@ -3,6 +3,8 @@ import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {Button, Center, Stack, Title} from "@mantine/core";
 import {useNavigate} from "@remix-run/react";
+import { GenericErrorBoundary } from "~/components/Errors/GenericErrorBoundary";
+import { GenericCatchBoundary } from "~/components/Errors/GenericCatchBoundary";
 
 export const meta: MetaFunction = () => {
   return {
@@ -32,3 +34,8 @@ export default function RequirePro() {
     </Center>
   )
 }
+
+export {
+  GenericCatchBoundary as CatchBoundary,
+  GenericErrorBoundary as ErrorBoundary,
+};

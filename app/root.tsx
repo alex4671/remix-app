@@ -2,17 +2,7 @@ import {Container, MantineProvider} from "@mantine/core";
 import type {LinksFunction, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import type {ShouldReloadFunction} from "@remix-run/react";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useCatch,
-  useLoaderData,
-  useParams
-} from "@remix-run/react";
+import {Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData, useParams} from "@remix-run/react";
 import {getUser} from "~/server/session.server";
 import {colors} from "~/utils/colors";
 import {getTheme} from "~/utils/theme";
@@ -22,7 +12,6 @@ import {NotificationsProvider} from "@mantine/notifications";
 import favicon from "./assets/favicon.svg";
 import {useHydrated} from "remix-utils";
 import type {ReactNode} from "react";
-import {ErrorPage} from "~/components/ErrorPage";
 import {useLoadingProgress} from "~/hooks/useLoadingProgress";
 import {useNotification} from "~/hooks/useNotification";
 
@@ -130,36 +119,5 @@ export default function App() {
   );
 }
 
-export function CatchBoundary() {
-  const caught = useCatch();
-  return (
-    <Document title={`${caught.status} ${caught.statusText}`}>
-      <MantineProvider
-        theme={{
-          ...mantineTheme
-        }}
-        withGlobalStyles
-        withNormalizeCSS
-      >
-        <ErrorPage status={caught.status}/>
-      </MantineProvider>
-    </Document>
-  );
-}
 
-export function ErrorBoundary({error}: { error: Error }) {
-  return (
-    <Document title="Error!">
-      <MantineProvider
-        theme={{
-          ...mantineTheme
-        }}
-        withGlobalStyles
-        withNormalizeCSS
-      >
-        <ErrorPage/>
-      </MantineProvider>
-    </Document>
-  );
-}
-
+// todo add general catch and error boundaries not using mantine

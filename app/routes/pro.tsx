@@ -2,6 +2,8 @@ import type {LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireProUser} from "~/server/session.server";
 import {Center, Title} from "@mantine/core";
+import { GenericErrorBoundary } from "~/components/Errors/GenericErrorBoundary";
+import { GenericCatchBoundary } from "~/components/Errors/GenericCatchBoundary";
 
 export const meta: MetaFunction = () => {
   return {
@@ -22,3 +24,8 @@ export default function Pro() {
     </Center>
   )
 }
+
+export {
+  GenericCatchBoundary as CatchBoundary,
+  GenericErrorBoundary as ErrorBoundary,
+};

@@ -3,6 +3,8 @@ import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
 import {json, redirect} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {createNote, deleteNote, updateNote} from "~/models/notes.server";
+import { GenericErrorBoundary } from "~/components/Errors/GenericErrorBoundary";
+import { GenericCatchBoundary } from "~/components/Errors/GenericCatchBoundary";
 
 
 export const meta: MetaFunction = () => {
@@ -70,3 +72,8 @@ export default function Notes() {
     <Outlet/>
   )
 }
+
+export {
+  GenericCatchBoundary as CatchBoundary,
+  GenericErrorBoundary as ErrorBoundary,
+};

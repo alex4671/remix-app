@@ -2,7 +2,6 @@ import type {LoaderArgs} from "@remix-run/node";
 import {json} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {useInputState} from "@mantine/hooks";
-import {useLoaderData, useLocation, useNavigate} from "@remix-run/react";
 import {getAllowedWorkspaces} from "~/models/workspace.server";
 import {
   ActionIcon,
@@ -25,6 +24,9 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import {CreateNewWorkspace} from "~/components/Settings/Workspaces/CreateNewWorkspace";
 import {EventType, useSubscription} from "~/hooks/useSubscription";
 import {useState} from "react";
+import {GenericErrorBoundary} from "~/components/Errors/GenericErrorBoundary";
+import {GenericCatchBoundary} from "~/components/Errors/GenericCatchBoundary";
+import {useLoaderData, useLocation, useNavigate} from "@remix-run/react";
 
 dayjs.extend(relativeTime)
 
@@ -158,3 +160,7 @@ export default function WorkspacesIndex() {
   )
 }
 
+export {
+  GenericCatchBoundary as CatchBoundary,
+  GenericErrorBoundary as ErrorBoundary,
+};

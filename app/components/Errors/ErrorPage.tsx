@@ -4,7 +4,7 @@ export const ErrorPage = ({status}: {status?: number}) => {
   return (
     <Box h={"100vh"} pt={80} pb={120}>
       <Container>
-        {status ? <Box fz={{base: "120px", sm: "220px"}} ta={"center"} fw={90} lh={1} mb={"xl"}>{status}</Box> : null}
+        {status ? <Box fz={{base: "120px", sm: "220px"}} ta={"center"} fw={900} lh={1} mb={"xl"}>{status}</Box> : null}
         <Title ta={"center"} fw={900} order={1}>Something bad just happened...</Title>
         <Text size="lg" align="center" maw={"540px"} m={"auto"} mt={"xl"} mb={"xl"}>
           Our servers could not handle your request. Don&apos;t worry, our development team was
