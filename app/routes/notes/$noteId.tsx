@@ -1,7 +1,7 @@
 import {Link as RemixLink, useFetcher, useLoaderData} from "@remix-run/react";
 import {Group, Paper, TypographyStylesProvider} from "@mantine/core";
 import type {LoaderArgs, MetaFunction} from "@remix-run/node";
-import {json} from "@remix-run/node";
+import {json, redirect} from "@remix-run/node";
 import {requireUser} from "~/server/session.server";
 import {getNoteById} from "~/models/notes.server";
 import invariant from "tiny-invariant";
@@ -33,6 +33,10 @@ export const loader = async ({request, params}: LoaderArgs) => {
   invariant(typeof noteId === "string", "Note Id must be provided")
 
   const note = await getNoteById(noteId)
+
+  if (!note) {
+    return redirect("/notes")
+  }
 
   return json({
     note
