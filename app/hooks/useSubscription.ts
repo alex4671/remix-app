@@ -38,6 +38,9 @@ export function useSubscription(href: string, events: string[]) {
     })
 
     return () => {
+      events.forEach(event => {
+        eventSource.removeEventListener(event, handler)
+      })
       eventSource.close()
     }
 
