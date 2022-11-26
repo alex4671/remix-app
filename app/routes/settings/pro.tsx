@@ -128,9 +128,10 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function Pro() {
-	const { isSubscriptionActive, userSubscription } =
-		useLoaderData<typeof loader>();
+	const { isSubscriptionActive } = useLoaderData<typeof loader>();
+
 	console.log('isSubscriptionActive', isSubscriptionActive);
+
 	return (
 		<>
 			{isSubscriptionActive ? (
