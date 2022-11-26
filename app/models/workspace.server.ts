@@ -70,6 +70,7 @@ export const getUserCollaboratorWorkspacesById = (userId: User['id']) => {
 				select: {
 					id: true,
 					userId: true,
+					rights: true,
 				},
 			},
 		},

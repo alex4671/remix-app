@@ -1,8 +1,13 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ActionIcon, Group, Paper, Text } from '@mantine/core';
+import { ActionIcon, Badge, Group, Paper, Text } from '@mantine/core';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
-import { IconGripVertical } from '@tabler/icons';
+import {
+	IconGripVertical,
+	IconMessage2,
+	IconTrash,
+	IconUpload,
+} from '@tabler/icons';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
@@ -15,6 +20,12 @@ export const WorkspaceItem = ({ workspace }: { workspace: any }) => {
 	const fetcher = useFetcher();
 
 	const isMyWorkspaces = workspace.ownerId === user.id;
+
+	const collaborator = isMyWorkspaces
+		? null
+		: workspace?.collaborator.find(
+				(c: { userId: string }) => c.userId === user.id,
+		  );
 
 	const handleNavigate = (workspaceId: string) => {
 		navigate(`/settings/workspaces/${workspaceId}`, {
@@ -70,6 +81,8 @@ export const WorkspaceItem = ({ workspace }: { workspace: any }) => {
 		);
 	};
 
+	console.log('workspace', workspace);
+
 	return (
 		<Paper
 			ref={setNodeRef}
@@ -115,12 +128,39 @@ export const WorkspaceItem = ({ workspace }: { workspace: any }) => {
 					</DangerButton>
 				)}
 			</Group>
-			<Text
-				size={'sm'}
-				color={'dimmed'}
-			>
-				{dayjs(workspace.createdAt).format('DD/MM/YYYY')}
-			</Text>
+			<Group>
+				<Text
+					size={'sm'}
+					color={'dimmed'}
+				>
+					{dayjs(workspace.createdAt).format('DD/MM/YYYY')}
+				</Text>
+				{collaborator?.rights ? (
+					<Group>
+						<Badge
+							pl={3}
+							color={collaborator?.rights?.upload ? 'emerald' : 'red'}
+							leftSection={<IconUpload size={10} />}
+						>
+							{collaborator?.rights?.upload ? 'Yes' : 'No'}
+						</Badge>
+						<Badge
+							pl={3}
+							color={collaborator?.rights?.comment ? 'emerald' : 'red'}
+							leftSection={<IconMessage2 size={10} />}
+						>
+							{collaborator?.rights?.comment ? 'Yes' : 'No'}
+						</Badge>
+						<Badge
+							pl={3}
+							color={collaborator?.rights?.delete ? 'emerald' : 'red'}
+							leftSection={<IconTrash size={10} />}
+						>
+							{collaborator?.rights?.delete ? 'Yes' : 'No'}
+						</Badge>
+					</Group>
+				) : null}
+			</Group>
 		</Paper>
 	);
 };
