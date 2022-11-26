@@ -31,11 +31,17 @@ export const deleteCollaborator = (collaboratorId: Collaborator['id']) => {
 		where: {
 			id: collaboratorId,
 		},
-		select: {
+		include: {
 			user: true,
+			workspace: {
+				select: {
+					ownerId: true,
+				},
+			},
 		},
 	});
 };
+
 export const updateCollaboratorRights = (
 	collaboratorId: Collaborator['id'],
 	rights: string,

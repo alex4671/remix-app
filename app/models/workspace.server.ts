@@ -65,6 +65,14 @@ export const getUserCollaboratorWorkspacesById = (userId: User['id']) => {
 				},
 			},
 		},
+		include: {
+			collaborator: {
+				select: {
+					id: true,
+					userId: true,
+				},
+			},
+		},
 		orderBy: {
 			createdAt: 'asc',
 		},

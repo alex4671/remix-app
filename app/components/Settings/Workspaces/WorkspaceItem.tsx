@@ -6,17 +6,15 @@ import { IconGripVertical } from '@tabler/icons';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
+import { useUser } from '~/utils/utils';
 
-export const WorkspaceItem = ({
-	workspace,
-	isMyWorkspaces = true,
-}: {
-	workspace: any;
-	isMyWorkspaces?: boolean;
-}) => {
+export const WorkspaceItem = ({ workspace }: { workspace: any }) => {
+	const user = useUser();
 	const navigate = useNavigate();
 	const location = useLocation();
 	const fetcher = useFetcher();
+
+	const isMyWorkspaces = workspace.ownerId === user.id;
 
 	const handleNavigate = (workspaceId: string) => {
 		navigate(`/settings/workspaces/${workspaceId}`, {
@@ -43,6 +41,26 @@ export const WorkspaceItem = ({
 		fetcher.submit(
 			{
 				intent: 'deleteWorkspace',
+				sessionId: sessionStorage.getItem('sessionId') ?? nanoid(),
+			},
+			{
+				method: 'post',
+				action: `/settings/workspaces/${workspaceId}`,
+			},
+		);
+	};
+
+	const handleLeave = (e: any, workspaceId: string) => {
+		e.stopPropagation();
+
+		const collaborator = workspace?.collaborator.find(
+			(c: { userId: string }) => c.userId === user.id,
+		);
+
+		fetcher.submit(
+			{
+				intent: 'leaveWorkspace',
+				collaboratorId: collaborator.id,
 				sessionId: sessionStorage.getItem('sessionId') ?? nanoid(),
 			},
 			{
@@ -88,7 +106,14 @@ export const WorkspaceItem = ({
 					>
 						Delete
 					</DangerButton>
-				) : null}
+				) : (
+					<DangerButton
+						compact
+						onClick={(e: any) => handleLeave(e, workspace.id)}
+					>
+						Leave
+					</DangerButton>
+				)}
 			</Group>
 			<Text
 				size={'sm'}

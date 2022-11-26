@@ -175,6 +175,30 @@ export const action = async ({ request, params }: ActionArgs) => {
 			});
 		}
 	}
+
+	if (intent === 'leaveWorkspace') {
+		const sessionId = formData.get('sessionId')?.toString() ?? '';
+		const collaboratorId = formData.get('collaboratorId')?.toString() ?? '';
+
+		try {
+			const deletedCollaborator = await deleteCollaborator(collaboratorId);
+
+			emitter.emit(
+				EventType.REMOVE_ACCESS,
+				[user.id, deletedCollaborator.workspace.ownerId],
+				sessionId,
+			);
+
+			return json({ success: true, intent, message: `You leave workspace` });
+		} catch (e) {
+			return json({
+				success: false,
+				intent,
+				message: 'Error leaving workspace',
+			});
+		}
+	}
+
 	if (intent === 'updateRights') {
 		const workspaceRights = formData.get('workspaceRights')?.toString() ?? '';
 		const collaboratorId = formData.get('collaboratorId')?.toString() ?? '';

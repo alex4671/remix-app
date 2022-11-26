@@ -23,7 +23,6 @@ export default function CollaboratedWorkspaces() {
 					<WorkspaceItem
 						key={c.id}
 						workspace={c}
-						isMyWorkspaces={false}
 					/>
 				))
 			) : (
