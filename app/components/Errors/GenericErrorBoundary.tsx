@@ -1,9 +1,7 @@
-import {ErrorPage} from "~/components/Errors/ErrorPage";
+import { ErrorPage } from '~/components/Errors/ErrorPage';
 
 export function GenericErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
+	console.error(error);
 
-  return (
-    <ErrorPage />
-  );
+	return <ErrorPage />;
 }

@@ -1,50 +1,48 @@
-import {useEffect} from "react";
-import {useDataRefresh} from "remix-utils";
-import {nanoid} from "nanoid";
+import { nanoid } from 'nanoid';
+import { useEffect } from 'react';
+import { useDataRefresh } from 'remix-utils';
 
 export enum EventType {
-  CREATE_WORKSPACE = "CREATE_WORKSPACE",
-  DELETE_WORKSPACE = "DELETE_WORKSPACE",
-  UPDATE_NAME_WORKSPACE = "UPDATE_NAME_WORKSPACE",
-  UPDATE_RIGHTS = "UPDATE_RIGHTS",
-  INVITE_MEMBER = "INVITE_MEMBER",
-  REMOVE_ACCESS = "REMOVE_ACCESS",
-  UPDATE_FILE = "UPDATE_FILE",
-  UPLOAD_FILE = "UPLOAD_FILE",
-  DELETE_FILE = "DELETE_FILE",
-  CREATE_COMMENT = "CREATE_COMMENT",
-  DELETE_COMMENT = "DELETE_COMMENT",
-  REORDER_WORKSPACE = "REORDER_WORKSPACE",
+	CREATE_WORKSPACE = 'CREATE_WORKSPACE',
+	DELETE_WORKSPACE = 'DELETE_WORKSPACE',
+	UPDATE_NAME_WORKSPACE = 'UPDATE_NAME_WORKSPACE',
+	UPDATE_RIGHTS = 'UPDATE_RIGHTS',
+	INVITE_MEMBER = 'INVITE_MEMBER',
+	REMOVE_ACCESS = 'REMOVE_ACCESS',
+	UPDATE_FILE = 'UPDATE_FILE',
+	UPLOAD_FILE = 'UPLOAD_FILE',
+	DELETE_FILE = 'DELETE_FILE',
+	CREATE_COMMENT = 'CREATE_COMMENT',
+	DELETE_COMMENT = 'DELETE_COMMENT',
+	REORDER_WORKSPACE = 'REORDER_WORKSPACE',
 }
 
-
 export function useSubscription(href: string, events: string[]) {
-  let {refresh} = useDataRefresh();
+	let { refresh } = useDataRefresh();
 
-  useEffect(() => {
-    let eventSource = new EventSource(href);
+	useEffect(() => {
+		let eventSource = new EventSource(href);
 
-    const handler = (event: MessageEvent) => {
-      const sessionId = sessionStorage.getItem("sessionId") ?? nanoid()
+		const handler = (event: MessageEvent) => {
+			const sessionId = sessionStorage.getItem('sessionId') ?? nanoid();
 
-      if (events.includes(event.type)) {
-        if (event.data !== sessionId) {
-          refresh()
-        }
-      }
-    }
-    events.forEach(event => {
-      eventSource.addEventListener(event, handler)
-    })
+			if (events.includes(event.type)) {
+				if (event.data !== sessionId) {
+					refresh();
+				}
+			}
+		};
+		events.forEach((event) => {
+			eventSource.addEventListener(event, handler);
+		});
 
-    return () => {
-      events.forEach(event => {
-        eventSource.removeEventListener(event, handler)
-      })
-      eventSource.close()
-    }
+		return () => {
+			events.forEach((event) => {
+				eventSource.removeEventListener(event, handler);
+			});
+			eventSource.close();
+		};
+	}, [href]);
 
-  }, [href])
-
-
-  return null}
+	return null;
+}

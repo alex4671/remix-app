@@ -1,53 +1,55 @@
-import {DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand} from "@aws-sdk/client-s3";
-import {client} from "~/server/s3.server";
-import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
-import invariant from "tiny-invariant";
+import {
+	DeleteObjectCommand,
+	ListObjectsV2Command,
+	PutObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import invariant from 'tiny-invariant';
+import { client } from '~/server/s3.server';
 
+const { BUCKET_NAME, CLOUDFLARE_PUBLIC_FILE_URL } = process.env;
 
-const {
-  BUCKET_NAME,
-  CLOUDFLARE_PUBLIC_FILE_URL,
-} = process.env;
-
-invariant(BUCKET_NAME, "BUCKET_NAME must be set")
-invariant(CLOUDFLARE_PUBLIC_FILE_URL, "CLOUDFLARE_PUBLIC_FILE_URL must be set")
-
+invariant(BUCKET_NAME, 'BUCKET_NAME must be set');
+invariant(CLOUDFLARE_PUBLIC_FILE_URL, 'CLOUDFLARE_PUBLIC_FILE_URL must be set');
 
 export const generateSignedUrl = async (contentType: string, key: string) => {
-  const command = new PutObjectCommand({
-    Bucket: BUCKET_NAME,
-    Key: key,
-    ContentType: contentType,
-    ACL: "public-read",
-  });
+	const command = new PutObjectCommand({
+		Bucket: BUCKET_NAME,
+		Key: key,
+		ContentType: contentType,
+		ACL: 'public-read',
+	});
 
-  return await getSignedUrl(client, command, {
-    expiresIn: 3600,
-  })
-}
-
+	return await getSignedUrl(client, command, {
+		expiresIn: 3600,
+	});
+};
 
 export const deleteFileFromS3 = async (key: string) => {
-  if (!key) {
-    return;
-  }
+	if (!key) {
+		return;
+	}
 
-  const params = {
-    Bucket: BUCKET_NAME,
-    Key: key
-  };
+	const params = {
+		Bucket: BUCKET_NAME,
+		Key: key,
+	};
 
-  try {
-    const data = await client.send(new DeleteObjectCommand(params));
-    console.log("Success. Object deleted.", data);
-    return data; // For unit tests.
-  } catch (err) {
-    console.log("Error", err);
-  }
-}
+	try {
+		const data = await client.send(new DeleteObjectCommand(params));
+		console.log('Success. Object deleted.', data);
+		return data; // For unit tests.
+	} catch (err) {
+		console.log('Error', err);
+	}
+};
 
 export const listS3Files = async () => {
-  const data = await client.send(new ListObjectsV2Command({Bucket: BUCKET_NAME}));
+	const data = await client.send(
+		new ListObjectsV2Command({ Bucket: BUCKET_NAME }),
+	);
 
-  return data?.Contents?.map(item => `${CLOUDFLARE_PUBLIC_FILE_URL}/${item.Key}`)
-}
+	return data?.Contents?.map(
+		(item) => `${CLOUDFLARE_PUBLIC_FILE_URL}/${item.Key}`,
+	);
+};

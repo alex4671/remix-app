@@ -1,19 +1,18 @@
-import {EventEmitter} from 'node:events'
+import { EventEmitter } from 'node:events';
 
-let emitter: EventEmitter
+let emitter: EventEmitter;
 
 declare global {
-  var __eventEmitter: EventEmitter;
+	var __eventEmitter: EventEmitter;
 }
 
-if (process.env.NODE_ENV === "production") {
-  emitter = new EventEmitter()
+if (process.env.NODE_ENV === 'production') {
+	emitter = new EventEmitter();
 } else {
-  if (!global.__eventEmitter) {
-    global.__eventEmitter = new EventEmitter()
-  }
-  emitter = global.__eventEmitter
+	if (!global.__eventEmitter) {
+		global.__eventEmitter = new EventEmitter();
+	}
+	emitter = global.__eventEmitter;
 }
 
-export {emitter}
-
+export { emitter };

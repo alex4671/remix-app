@@ -1,40 +1,37 @@
-import type {MetaFunction, LoaderArgs} from "@remix-run/node";
-import {json} from "@remix-run/node";
-import {FilesStorage} from "~/components/Settings/Files/FilesStorage";
-import {FilesUsage} from "~/components/Settings/Files/FilesUsage";
-import {FilesLatest} from "~/components/Settings/Files/FilesLatest";
-import {requireUser} from "~/server/session.server";
-import {getAllUserFiles} from "~/models/media.server";
+import type { LoaderArgs, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { FilesLatest } from '~/components/Settings/Files/FilesLatest';
+import { FilesStorage } from '~/components/Settings/Files/FilesStorage';
+import { FilesUsage } from '~/components/Settings/Files/FilesUsage';
+import { getAllUserFiles } from '~/models/media.server';
+import { requireUser } from '~/server/session.server';
 
 export const meta: MetaFunction = () => {
-  return {
-    title: "Settings | Files"
-  };
+	return {
+		title: 'Settings | Files',
+	};
 };
 
-export const loader = async ({request}: LoaderArgs) => {
-  const user = await requireUser(request)
-  const userFiles = await getAllUserFiles(user.id)
-  const userFilesSize = userFiles?.reduce((acc, item) => acc + item.size, 0)
+export const loader = async ({ request }: LoaderArgs) => {
+	const user = await requireUser(request);
+	const userFiles = await getAllUserFiles(user.id);
+	const userFilesSize = userFiles?.reduce((acc, item) => acc + item.size, 0);
 
-
-
-  return json({
-    userFiles,
-    userFilesSize,
-    maxSizeLimit: user.payment ? 3221225472 : 314572800 // 3gb vs 300mb
-  })
-}
-
+	return json({
+		userFiles,
+		userFilesSize,
+		maxSizeLimit: user.payment ? 3221225472 : 314572800, // 3gb vs 300mb
+	});
+};
 
 export default function Files() {
-  // const {userFiles, userFilesSize, maxSizeLimit} = useLoaderData<typeof loader>()
+	// const {userFiles, userFilesSize, maxSizeLimit} = useLoaderData<typeof loader>()
 
-  return (
-    <>
-      <FilesStorage/>
-      <FilesUsage/>
-      <FilesLatest/>
-    </>
-  )
+	return (
+		<>
+			<FilesStorage />
+			<FilesUsage />
+			<FilesLatest />
+		</>
+	);
 }

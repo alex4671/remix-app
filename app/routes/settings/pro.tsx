@@ -1,111 +1,144 @@
-import type {ActionArgs, LoaderArgs, MetaFunction} from "@remix-run/node";
-import {json} from "@remix-run/node";
-import {ManageSubscriptionSettings} from "~/components/Settings/Pro/ManageSubscriptionSettings";
-import {useLoaderData} from "@remix-run/react";
-import {SubscribeToPro} from "~/components/Settings/Pro/SubscribeToPro";
-import {getUserPaymentData, getUserPaymentHistory} from "~/models/user.server";
-import {paddle} from "~/server/paddle.server";
-import type {User} from "@invertase/node-paddle-sdk/src/types";
-import {PaymentTransactions} from "~/components/Settings/Pro/PaymentTransactions";
-import {getUser} from "~/server/session.server";
-import {isNowBeforeDate} from "~/utils/utils";
-
+import type { User } from '@invertase/node-paddle-sdk/src/types';
+import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import { ManageSubscriptionSettings } from '~/components/Settings/Pro/ManageSubscriptionSettings';
+import { PaymentTransactions } from '~/components/Settings/Pro/PaymentTransactions';
+import { SubscribeToPro } from '~/components/Settings/Pro/SubscribeToPro';
+import {
+	getUserPaymentData,
+	getUserPaymentHistory,
+} from '~/models/user.server';
+import { paddle } from '~/server/paddle.server';
+import { getUser } from '~/server/session.server';
+import { isNowBeforeDate } from '~/utils/utils';
 
 export const meta: MetaFunction = () => {
-  return {
-    title: "Settings | Pro"
-  };
+	return {
+		title: 'Settings | Pro',
+	};
 };
 
-type UserSubscriptionResponse = Partial<Pick<User, "cancel_url" | "update_url" | "state" | "next_payment" | "plan_id">>
+type UserSubscriptionResponse = Partial<
+	Pick<User, 'cancel_url' | 'update_url' | 'state' | 'next_payment' | 'plan_id'>
+>;
 
-export const loader = async ({request}: LoaderArgs) => {
-  const user = await getUserPaymentData(request)
-  const userPaymentHistory = await getUserPaymentHistory(request)
+export const loader = async ({ request }: LoaderArgs) => {
+	const user = await getUserPaymentData(request);
+	const userPaymentHistory = await getUserPaymentHistory(request);
 
-  if (user?.payment) {
-    const isSubscriptionActive = isNowBeforeDate(user.payment.subscriptionEndDate)
+	if (user?.payment) {
+		const isSubscriptionActive = isNowBeforeDate(
+			user.payment.subscriptionEndDate,
+		);
 
-    const userSubscription = await paddle.listUsers({subscription_id: Number(user?.payment?.subscriptionId)})
+		const userSubscription = await paddle.listUsers({
+			subscription_id: Number(user?.payment?.subscriptionId),
+		});
 
-    const {cancel_url, update_url, state, next_payment, plan_id} = userSubscription[0]
+		const { cancel_url, update_url, state, next_payment, plan_id } =
+			userSubscription[0];
 
-    const userSubscriptionResponse: UserSubscriptionResponse = {cancel_url, update_url, state, next_payment, plan_id}
+		const userSubscriptionResponse: UserSubscriptionResponse = {
+			cancel_url,
+			update_url,
+			state,
+			next_payment,
+			plan_id,
+		};
 
-    const subscriptionId = user.payment.subscriptionId
+		const subscriptionId = user.payment.subscriptionId;
 
-    const receipts = []
-    let page = 1
-    while (true) {
-      const items = await paddle.listTransactions({entity: "subscription", entity_id: subscriptionId, page})
-      receipts.push(...items)
+		const receipts = [];
+		let page = 1;
+		while (true) {
+			const items = await paddle.listTransactions({
+				entity: 'subscription',
+				entity_id: subscriptionId,
+				page,
+			});
+			receipts.push(...items);
 
-      if (items.length === 15) {
-        page++
-        continue
-      }
-      break;
-    }
+			if (items.length === 15) {
+				page++;
+				continue;
+			}
+			break;
+		}
 
-    return json({
-      payment: user?.payment,
-      userSubscription: userSubscriptionResponse,
-      isSubscriptionActive,
-      receipts,
-      userPaymentHistory
-    })
-  }
+		return json({
+			payment: user?.payment,
+			userSubscription: userSubscriptionResponse,
+			isSubscriptionActive,
+			receipts,
+			userPaymentHistory,
+		});
+	}
 
-  return json({
-    payment: user?.payment,
-    userSubscription: {} as UserSubscriptionResponse,
-    isSubscriptionActive: false,
-    receipts: [],
-    userPaymentHistory: []
-  })
-
-}
-
-export const action = async ({request}: ActionArgs) => {
-  const formData = await request.formData();
-  const intent = formData.get("intent");
-
-  if (intent === "updatePlan") {
-    const planId = formData.get("planId");
-    try {
-      const user = await getUserPaymentData(request)
-      await paddle.updateUser({subscription_id: Number(user?.payment?.subscriptionId), plan_id: Number(planId)})
-      return json({success: true, intent, message: "Subscription plan updated"})
-
-    } catch (e) {
-      return json({success: false, intent, message: "Error updating plan"})
-    }
-  }
-
-  if (intent === "generatePayLink") {
-    const planId = formData.get("planId");
-    try {
-      const user = await getUser(request)
-      const payLink = await paddle.generatePayLink({product_id: Number(planId), customer_email: user?.email})
-      return json({success: true, intent: null, payLink})
-
-    } catch (e) {
-      return json({success: false, intent: null, message: "Error generating pay link"})
-    }
-  }
-
-
-  return json({success: false, intent})
+	return json({
+		payment: user?.payment,
+		userSubscription: {} as UserSubscriptionResponse,
+		isSubscriptionActive: false,
+		receipts: [],
+		userPaymentHistory: [],
+	});
 };
 
+export const action = async ({ request }: ActionArgs) => {
+	const formData = await request.formData();
+	const intent = formData.get('intent');
+
+	if (intent === 'updatePlan') {
+		const planId = formData.get('planId');
+		try {
+			const user = await getUserPaymentData(request);
+			await paddle.updateUser({
+				subscription_id: Number(user?.payment?.subscriptionId),
+				plan_id: Number(planId),
+			});
+			return json({
+				success: true,
+				intent,
+				message: 'Subscription plan updated',
+			});
+		} catch (e) {
+			return json({ success: false, intent, message: 'Error updating plan' });
+		}
+	}
+
+	if (intent === 'generatePayLink') {
+		const planId = formData.get('planId');
+		try {
+			const user = await getUser(request);
+			const payLink = await paddle.generatePayLink({
+				product_id: Number(planId),
+				customer_email: user?.email,
+			});
+			return json({ success: true, intent: null, payLink });
+		} catch (e) {
+			return json({
+				success: false,
+				intent: null,
+				message: 'Error generating pay link',
+			});
+		}
+	}
+
+	return json({ success: false, intent });
+};
 
 export default function Pro() {
-  const {isSubscriptionActive, userSubscription} = useLoaderData<typeof loader>()
-  console.log("isSubscriptionActive", isSubscriptionActive)
-  return (
-    <>
-      {isSubscriptionActive ? <ManageSubscriptionSettings/> : <SubscribeToPro/>}
-      <PaymentTransactions/>
-    </>
-  )
+	const { isSubscriptionActive, userSubscription } =
+		useLoaderData<typeof loader>();
+	console.log('isSubscriptionActive', isSubscriptionActive);
+	return (
+		<>
+			{isSubscriptionActive ? (
+				<ManageSubscriptionSettings />
+			) : (
+				<SubscribeToPro />
+			)}
+			<PaymentTransactions />
+		</>
+	);
 }

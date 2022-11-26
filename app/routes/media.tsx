@@ -1,13 +1,11 @@
-import {Outlet} from "@remix-run/react";
-import { GenericErrorBoundary } from "~/components/Errors/GenericErrorBoundary";
-import { GenericCatchBoundary } from "~/components/Errors/GenericCatchBoundary";
+import { Outlet } from '@remix-run/react';
+import { GenericCatchBoundary } from '~/components/Errors/GenericCatchBoundary';
+import { GenericErrorBoundary } from '~/components/Errors/GenericErrorBoundary';
 
 export default function Media() {
-  return (
-    <Outlet/>
-  )
+	return <Outlet />;
 }
 export {
-  GenericCatchBoundary as CatchBoundary,
-  GenericErrorBoundary as ErrorBoundary,
+	GenericCatchBoundary as CatchBoundary,
+	GenericErrorBoundary as ErrorBoundary,
 };

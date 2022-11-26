@@ -1,15 +1,17 @@
-import {completeNavigationProgress, startNavigationProgress} from "@mantine/nprogress";
-import {useEffect} from "react";
-import {useGlobalPendingState} from "remix-utils";
-
+import {
+	completeNavigationProgress,
+	startNavigationProgress,
+} from '@mantine/nprogress';
+import { useEffect } from 'react';
+import { useGlobalPendingState } from 'remix-utils';
 
 export const useLoadingProgress = () => {
-  let state = useGlobalPendingState();
+	let state = useGlobalPendingState();
 
-  useEffect(() => {
-    if (state === "idle") completeNavigationProgress()
-    else startNavigationProgress()
-  }, [state]);
+	useEffect(() => {
+		if (state === 'idle') completeNavigationProgress();
+		else startNavigationProgress();
+	}, [state]);
 
-  return null
-}
+	return null;
+};

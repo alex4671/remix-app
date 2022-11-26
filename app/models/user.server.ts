@@ -1,165 +1,165 @@
-import type {Password, User} from "@prisma/client";
-import bcrypt from "bcryptjs";
-import {prisma} from "~/server/db.server";
-import {getUserId, requireUserId} from "~/server/session.server";
-import {sign, verify} from "jsonwebtoken";
-import invariant from "tiny-invariant";
-import {isNowBeforeDate} from "~/utils/utils";
+import type { Password, User } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import { sign, verify } from 'jsonwebtoken';
+import invariant from 'tiny-invariant';
+import { prisma } from '~/server/db.server';
+import { getUserId, requireUserId } from '~/server/session.server';
+import { isNowBeforeDate } from '~/utils/utils';
 
 interface InviteToken {
-  userId: string
+	userId: string;
 }
 
 interface ResetToken {
-  email: string
+	email: string;
 }
 
-const {
-  APP_SECRET,
-} = process.env;
+const { APP_SECRET } = process.env;
 
-invariant(APP_SECRET, "APP_SECRET must be set")
+invariant(APP_SECRET, 'APP_SECRET must be set');
 
-export type { User } from "@prisma/client";
+export type { User } from '@prisma/client';
 
-export async function getUserById(id: User["id"]) {
-  return prisma.user.findUnique({
-    where: { id },
-    include: {
-      payment: true
-    }
-  });
+export async function getUserById(id: User['id']) {
+	return prisma.user.findUnique({
+		where: { id },
+		include: {
+			payment: true,
+		},
+	});
 }
 
-export async function getUserByEmail(email: User["email"]) {
-  return prisma.user.findUnique({ where: { email } });
+export async function getUserByEmail(email: User['email']) {
+	return prisma.user.findUnique({ where: { email } });
 }
 
-export async function createUser(email: User["email"], password: string) {
-  const hashedPassword = await bcrypt.hash(password, 10);
+export async function createUser(email: User['email'], password: string) {
+	const hashedPassword = await bcrypt.hash(password, 10);
 
-  return prisma.user.create({
-    data: {
-      email,
-      password: {
-        create: {
-          hash: hashedPassword,
-        },
-      },
-    },
-  });
+	return prisma.user.create({
+		data: {
+			email,
+			password: {
+				create: {
+					hash: hashedPassword,
+				},
+			},
+		},
+	});
 }
 
-export async function resetPassword(email: User["email"], newPassword: string) {
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
+export async function resetPassword(email: User['email'], newPassword: string) {
+	const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-  return prisma.user.update({
-    where: {
-      email
-    },
-    data: {
-      password: {
-        update: {
-          hash: hashedPassword,
-        },
-      },
-    },
-  });
+	return prisma.user.update({
+		where: {
+			email,
+		},
+		data: {
+			password: {
+				update: {
+					hash: hashedPassword,
+				},
+			},
+		},
+	});
 }
 
-export async function deleteUserById(id: User["id"]) {
-  return prisma.user.delete({ where: { id } });
+export async function deleteUserById(id: User['id']) {
+	return prisma.user.delete({ where: { id } });
 }
 
 export async function verifyLogin(
-  email: User["email"],
-  password: Password["hash"]
+	email: User['email'],
+	password: Password['hash'],
 ) {
-  const userWithPassword = await prisma.user.findUnique({
-    where: { email },
-    include: {
-      password: true,
-    },
-  });
+	const userWithPassword = await prisma.user.findUnique({
+		where: { email },
+		include: {
+			password: true,
+		},
+	});
 
-  if (!userWithPassword || !userWithPassword.password) {
-    return null;
-  }
+	if (!userWithPassword || !userWithPassword.password) {
+		return null;
+	}
 
-  const isValid = await bcrypt.compare(
-    password,
-    userWithPassword.password.hash
-  );
+	const isValid = await bcrypt.compare(
+		password,
+		userWithPassword.password.hash,
+	);
 
-  if (!isValid) {
-    return null;
-  }
+	if (!isValid) {
+		return null;
+	}
 
-  const { password: _password, ...userWithoutPassword } = userWithPassword;
+	const { password: _password, ...userWithoutPassword } = userWithPassword;
 
-  return userWithoutPassword;
+	return userWithoutPassword;
 }
 
 // todo check whats needed
 export async function updatePassword(
-  email: User["email"],
-  password: string,
-  newPassword: string,
+	email: User['email'],
+	password: string,
+	newPassword: string,
 ) {
-  const userWithPassword = await prisma.user.findUnique({
-    where: { email },
-    include: {
-      password: true
-    }
-  });
+	const userWithPassword = await prisma.user.findUnique({
+		where: { email },
+		include: {
+			password: true,
+		},
+	});
 
-  if (!userWithPassword || !userWithPassword.password) {
-    return null;
-  }
+	if (!userWithPassword || !userWithPassword.password) {
+		return null;
+	}
 
-  const isValid = await bcrypt.compare(
-    password,
-    userWithPassword.password.hash
-  );
+	const isValid = await bcrypt.compare(
+		password,
+		userWithPassword.password.hash,
+	);
 
-  if (!isValid) {
-    return null;
-  }
+	if (!isValid) {
+		return null;
+	}
 
-  const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+	const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-  const updatedUser = await prisma.user.update({
-    where: {email},
-    data: {
-      password: {
-        update: {
-          hash: hashedNewPassword
-        }
-      }
-    }
-  })
+	const updatedUser = await prisma.user.update({
+		where: { email },
+		data: {
+			password: {
+				update: {
+					hash: hashedNewPassword,
+				},
+			},
+		},
+	});
 
-  console.log("updatedUser", updatedUser);
+	console.log('updatedUser', updatedUser);
 
-  return updatedUser;
+	return updatedUser;
 }
 
-export async function updateAvatar(id: User["id"], avatarUrl: User["avatarUrl"]) {
-  return prisma.user.update({
-    where: { id },
-    data: { avatarUrl }
-  });
+export async function updateAvatar(
+	id: User['id'],
+	avatarUrl: User['avatarUrl'],
+) {
+	return prisma.user.update({
+		where: { id },
+		data: { avatarUrl },
+	});
 }
 
-export async function deleteAvatar(id: User["id"]) {
-  return prisma.user.update({
-    where: {id},
-    data: {
-      avatarUrl: null
-    }
-  })
+export async function deleteAvatar(id: User['id']) {
+	return prisma.user.update({
+		where: { id },
+		data: {
+			avatarUrl: null,
+		},
+	});
 }
-
 
 // export const getUserPaymentStatus = async (request: Request) => {
 //   const userId = await getUserId(request)
@@ -181,55 +181,54 @@ export async function deleteAvatar(id: User["id"]) {
 // }
 
 export const isUserCurrentlyPro = async (request: Request) => {
-  const userId = await getUserId(request)
+	const userId = await getUserId(request);
 
-  const dueDate = await prisma.user.findUnique(({
-    where: {
-      id: userId
-    },
-    select: {
-      payment: {
-        select: {
-          subscriptionEndDate: true,
-        }
-      }
-    }
-  }))
+	const dueDate = await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+		select: {
+			payment: {
+				select: {
+					subscriptionEndDate: true,
+				},
+			},
+		},
+	});
 
-  return isNowBeforeDate(dueDate?.payment?.subscriptionEndDate)
-}
+	return isNowBeforeDate(dueDate?.payment?.subscriptionEndDate);
+};
 
 export const getUserPaymentData = async (request: Request) => {
-  const userId = await getUserId(request)
+	const userId = await getUserId(request);
 
-  return await prisma.user.findUnique(({
-    where: {
-      id: userId
-    },
-    select: {
-      payment: {
-        select: {
-          subscriptionId: true,
-          subscriptionEndDate: true,
-        }
-      }
-    }
-  }))
-}
+	return await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+		select: {
+			payment: {
+				select: {
+					subscriptionId: true,
+					subscriptionEndDate: true,
+				},
+			},
+		},
+	});
+};
 
 export const getUserPaymentHistory = async (request: Request) => {
-  const userId = await getUserId(request)
+	const userId = await getUserId(request);
 
-  return await prisma.userPaymentHistory.findMany({
-    where: {
-      userId
-    },
-    orderBy: {
-      createdAt: "desc"
-    }
-  })
-}
-
+	return await prisma.userPaymentHistory.findMany({
+		where: {
+			userId,
+		},
+		orderBy: {
+			createdAt: 'desc',
+		},
+	});
+};
 
 // export const getUserPaymentTransactionsData = async (request: Request) => {
 //   const userId = await getUserId(request)
@@ -251,68 +250,77 @@ export const getUserPaymentHistory = async (request: Request) => {
 //   )
 // }
 
-export const generateInviteLink = async (url: string, userId: string): Promise<string> => {
-  const token = sign({userId}, APP_SECRET)
+export const generateInviteLink = async (
+	url: string,
+	userId: string,
+): Promise<string> => {
+	const token = sign({ userId }, APP_SECRET);
 
-  const {origin} = new URL(url)
+	const { origin } = new URL(url);
 
-  return `${origin}/cb/invite/${token}`
-}
+	return `${origin}/cb/invite/${token}`;
+};
 
-export const validateInviteLink = async (request: Request, token: string): Promise<boolean> => {
-  const userId = await requireUserId(request)
+export const validateInviteLink = async (
+	request: Request,
+	token: string,
+): Promise<boolean> => {
+	const userId = await requireUserId(request);
 
-  const verifiedToken = verify(token, APP_SECRET) as InviteToken
+	const verifiedToken = verify(token, APP_SECRET) as InviteToken;
 
-  const isVerified = verifiedToken.userId === userId
+	const isVerified = verifiedToken.userId === userId;
 
-  if (isVerified) {
-    await confirmUserEmail(userId)
-  }
+	if (isVerified) {
+		await confirmUserEmail(userId);
+	}
 
-  return isVerified;
-}
+	return isVerified;
+};
 
-export const generateResetToken = async (url: string, email: string): Promise<string> => {
-  const token = sign({email}, APP_SECRET)
+export const generateResetToken = async (
+	url: string,
+	email: string,
+): Promise<string> => {
+	const token = sign({ email }, APP_SECRET);
 
-  const {origin} = new URL(url)
+	const { origin } = new URL(url);
 
-  return `${origin}/cb/reset/${token}`
-}
+	return `${origin}/cb/reset/${token}`;
+};
 
-export const validateResetToken = async (token: string): Promise<string | undefined> => {
-  const verifiedToken = verify(token, APP_SECRET) as ResetToken
+export const validateResetToken = async (
+	token: string,
+): Promise<string | undefined> => {
+	const verifiedToken = verify(token, APP_SECRET) as ResetToken;
 
-  const user = await getUserByEmail(verifiedToken.email)
+	const user = await getUserByEmail(verifiedToken.email);
 
-  return user?.email;
-
-
-}
+	return user?.email;
+};
 
 const confirmUserEmail = (userId: string) => {
-  return prisma.user.update({
-    where: {
-      id: userId
-    },
-    data: {
-      isConfirmed: true
-    }
-  })
-}
+	return prisma.user.update({
+		where: {
+			id: userId,
+		},
+		data: {
+			isConfirmed: true,
+		},
+	});
+};
 
 export const isUserConfirmed = async (request: Request) => {
-  const userId = await requireUserId(request)
+	const userId = await requireUserId(request);
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId
-    },
-    select: {
-      isConfirmed: true
-    }
-  })
+	const user = await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+		select: {
+			isConfirmed: true,
+		},
+	});
 
-  return user?.isConfirmed
-}
+	return user?.isConfirmed;
+};
