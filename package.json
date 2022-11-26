@@ -12,6 +12,7 @@
     "prisma:studio": "prisma studio",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:db:push": "prisma db push",
+    "format": "prettier --write .",
     "localtunnel": "lt --port 3000",
     "checkUpdates": "npx npm-check-updates"
   },
@@ -95,8 +96,15 @@
     "singleAttributePerLine": true,
     "arrowParens": "always",
     "trailingComma": "all",
-    "plugins": ["prettier-plugin-organize-imports"]
+    "plugins": [
+      "prettier-plugin-organize-imports"
+    ]
   },
+  "eslintIgnore": [
+    "/node_modules",
+    "/build",
+    "/public/build"
+  ],
   "engines": {
     "node": ">=16"
   }
