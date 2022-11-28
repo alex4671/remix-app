@@ -21,6 +21,8 @@ import {
 } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 import { useEffect, useRef } from 'react';
+import { z } from 'zod';
+import { parseFormSafe } from 'zodix';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import {
 	createUser,
@@ -28,7 +30,7 @@ import {
 	getUserByEmail,
 } from '~/models/user.server';
 import { createUserSession, getUserId } from '~/server/session.server';
-import { safeRedirect, validateEmail } from '~/utils/utils';
+import { errorAtPath } from '~/utils/utils';
 
 export const loader: LoaderFunction = async ({ request }) => {
 	const userId = await getUserId(request);
@@ -36,39 +38,36 @@ export const loader: LoaderFunction = async ({ request }) => {
 	return json({});
 };
 
+const schema = z.object({
+	email: z.string().email({ message: 'Invalid email' }),
+	password: z
+		.string()
+		.min(8, { message: 'Password must be at least 8 characters' }),
+	redirectTo: z.string(),
+});
+
 export const action: ActionFunction = async ({ request }) => {
-	const formData = await request.formData();
-	const email = formData.get('email');
-	const password = formData.get('password');
-	const redirectTo = safeRedirect(formData.get('redirectTo'), '/');
+	const result = await parseFormSafe(request, schema);
 
-	if (!validateEmail(email)) {
-		return json({ errors: { email: 'Email is invalid' } }, { status: 400 });
+	if (!result.success) {
+		return json({
+			success: false,
+			errors: {
+				emailError: errorAtPath(result.error, 'email'),
+				passwordError: errorAtPath(result.error, 'password'),
+			},
+		});
 	}
 
-	if (typeof password !== 'string') {
-		return json(
-			{ errors: { password: 'Password is required' } },
-			{ status: 400 },
-		);
-	}
-
-	if (password.length < 8) {
-		return json(
-			{ errors: { password: 'Password is too short' } },
-			{ status: 400 },
-		);
-	}
-
-	const existingUser = await getUserByEmail(email);
+	const existingUser = await getUserByEmail(result.data.email);
 	if (existingUser) {
-		return json(
-			{ errors: { email: 'A user already exists with this email' } },
-			{ status: 400 },
-		);
+		return json({
+			success: false,
+			errors: { emailError: 'A user already exists with this email' },
+		});
 	}
 
-	const user = await createUser(email, password);
+	const user = await createUser(result.data.email, result.data.password);
 
 	const inviteLink = await generateInviteLink(request.url, user.id);
 
@@ -87,7 +86,7 @@ export const action: ActionFunction = async ({ request }) => {
 		request,
 		userId: user.id,
 		remember: false,
-		redirectTo: typeof redirectTo === 'string' ? redirectTo : '/',
+		redirectTo: result.data.redirectTo ?? '/',
 	});
 };
 
@@ -144,8 +143,8 @@ export default function Join() {
 					label="Email"
 					required
 					defaultValue={'alex@alex.com'}
-					error={actionData?.errors?.email}
-					pb={actionData?.errors?.email ? 0 : 20}
+					error={actionData?.errors?.emailError}
+					pb={actionData?.errors?.emailError ? 0 : 20}
 					withAsterisk={false}
 				/>
 				<PasswordInput
@@ -155,11 +154,10 @@ export default function Join() {
 					ref={passwordRef}
 					name="password"
 					autoComplete="current-password"
-					aria-invalid={actionData?.errors?.password ? true : undefined}
 					aria-describedby="password-error"
 					defaultValue={'alexalex'}
-					error={actionData?.errors?.password}
-					pb={actionData?.errors?.password ? 0 : 20}
+					error={actionData?.errors?.passwordError}
+					pb={actionData?.errors?.passwordError ? 0 : 20}
 					withAsterisk={false}
 				/>
 				<Text mt={12}>

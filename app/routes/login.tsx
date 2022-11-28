@@ -23,10 +23,12 @@ import {
 } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 import { useEffect, useRef } from 'react';
+import { z } from 'zod';
+import { CheckboxAsString, parseFormSafe } from 'zodix';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { verifyLogin } from '~/models/user.server';
 import { createUserSession, getUserId } from '~/server/session.server';
-import { safeRedirect, validateEmail } from '~/utils/utils';
+import { errorAtPath } from '~/utils/utils';
 
 export const loader: LoaderFunction = async ({ request }) => {
 	const userId = await getUserId(request);
@@ -34,45 +36,41 @@ export const loader: LoaderFunction = async ({ request }) => {
 	return json({});
 };
 
+const schema = z.object({
+	email: z.string().email({ message: 'Invalid email' }),
+	password: z
+		.string()
+		.min(8, { message: 'Password must be at least 8 characters' }),
+	redirectTo: z.string(),
+	remember: CheckboxAsString,
+});
+
 export const action: ActionFunction = async ({ request }) => {
-	const formData = await request.formData();
-	const email = formData.get('email');
-	const password = formData.get('password');
-	const redirectTo = safeRedirect(formData.get('redirectTo'), '/');
-	const remember = formData.get('remember');
+	const result = await parseFormSafe(request, schema);
 
-	if (!validateEmail(email)) {
-		return json({ errors: { email: 'Email is invalid' } }, { status: 400 });
+	if (!result.success) {
+		return json({
+			success: false,
+			errors: {
+				emailError: errorAtPath(result.error, 'email'),
+				passwordError: errorAtPath(result.error, 'password'),
+			},
+		});
 	}
-
-	if (typeof password !== 'string') {
-		return json(
-			{ errors: { password: 'Password is required' } },
-			{ status: 400 },
-		);
-	}
-
-	if (password.length < 8) {
-		return json(
-			{ errors: { password: 'Password is too short' } },
-			{ status: 400 },
-		);
-	}
-
-	const user = await verifyLogin(email, password);
+	const user = await verifyLogin(result.data.email, result.data.password);
 
 	if (!user) {
-		return json(
-			{ errors: { email: 'Invalid email or password' } },
-			{ status: 400 },
-		);
+		return json({
+			success: false,
+			errors: { emailError: 'Invalid email or password' },
+		});
 	}
 
 	return createUserSession({
 		request,
 		userId: user.id,
-		remember: remember === 'on',
-		redirectTo: typeof redirectTo === 'string' ? redirectTo : '/',
+		remember: result.data.remember,
+		redirectTo: result.data.redirectTo ?? '/',
 	});
 };
 
@@ -128,8 +126,8 @@ export default function LoginPage() {
 					label="Email"
 					required
 					defaultValue={'alex@alex.com'}
-					error={actionData?.errors?.email}
-					pb={actionData?.errors?.email ? 0 : 20}
+					error={actionData?.errors?.emailError}
+					pb={actionData?.errors?.emailError ? 0 : 20}
 					withAsterisk={false}
 				/>
 				<PasswordInput
@@ -140,8 +138,8 @@ export default function LoginPage() {
 					name="password"
 					autoComplete="current-password"
 					defaultValue={'alexalex'}
-					error={actionData?.errors?.password}
-					pb={actionData?.errors?.password ? 0 : 20}
+					error={actionData?.errors?.passwordError}
+					pb={actionData?.errors?.passwordError ? 0 : 20}
 					withAsterisk={false}
 				/>
 				<Group

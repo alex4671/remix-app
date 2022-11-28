@@ -2,6 +2,7 @@ import { useMatches } from '@remix-run/react';
 import { useMemo } from 'react';
 
 import dayjs from 'dayjs';
+import type { ZodError } from 'zod';
 import type { User } from '~/models/user.server';
 import type { Theme } from '~/utils/theme';
 
@@ -85,6 +86,10 @@ export function useUser(): User {
 export function validateEmail(email: unknown): email is string {
 	return typeof email === 'string' && email.length > 3 && email.includes('@');
 }
+
+export const errorAtPath = (error: ZodError, path: string) => {
+	return error.issues.find((issue) => issue.path[0] === path)?.message;
+};
 
 export const getFileKey = (fileUrl: string) => {
 	const url = new URL(fileUrl);
