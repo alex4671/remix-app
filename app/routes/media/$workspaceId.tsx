@@ -1,5 +1,5 @@
 import { useInputState } from '@mantine/hooks';
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs, SerializeFrom } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import dayjs from 'dayjs';
@@ -33,6 +33,8 @@ type Rights = {
 	upload: boolean;
 	comment: boolean;
 };
+
+export type WorkspaceLoader = SerializeFrom<typeof loader>;
 
 export const loader = async ({ request, params }: LoaderArgs) => {
 	const user = await requireUser(request);
@@ -333,7 +335,6 @@ export default function WorkspaceId() {
 					setSelectedFiles={setSelectedFiles}
 					setSelectedFilesUrls={setSelectedFilesUrls}
 					filteredUserFiles={filteredUserFiles}
-					filterTypeValue={filterTypeValue}
 					selectedFiles={selectedFiles}
 				/>
 			)}

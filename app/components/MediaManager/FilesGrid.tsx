@@ -18,7 +18,6 @@ import {
 	Tooltip,
 } from '@mantine/core';
 import { upperFirst } from '@mantine/hooks';
-import type { SerializeFrom } from '@remix-run/node';
 import { useFetcher, useFetchers, useLoaderData } from '@remix-run/react';
 import {
 	IconClipboard,
@@ -30,14 +29,14 @@ import {
 import { nanoid } from 'nanoid';
 import type { Dispatch, SetStateAction } from 'react';
 import { HiddenSessionId } from '~/components/Utils/HiddenSessionId';
-import type { loader } from '~/routes/media/$workspaceId';
+import type { loader, WorkspaceLoader } from '~/routes/media/$workspaceId';
 import { formatBytes } from '~/utils/utils';
 import { FileComments } from './FileComments';
 
 interface Props {
 	setSelectedFiles: Dispatch<SetStateAction<string[]>>;
 	setSelectedFilesUrls: Dispatch<SetStateAction<string[]>>;
-	filteredUserFiles: SerializeFrom<typeof loader>['userFiles'];
+	filteredUserFiles: WorkspaceLoader['userFiles'];
 	filterTypeValue: string[];
 	selectedFiles: string[];
 }
