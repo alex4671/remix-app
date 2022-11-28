@@ -28,7 +28,7 @@ import {
 	getUserByEmail,
 } from '~/models/user.server';
 import { createUserSession, getUserId } from '~/server/session.server';
-import { validateEmail } from '~/utils/utils';
+import { safeRedirect, validateEmail } from '~/utils/utils';
 
 export const loader: LoaderFunction = async ({ request }) => {
 	const userId = await getUserId(request);
@@ -40,7 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
 	const formData = await request.formData();
 	const email = formData.get('email');
 	const password = formData.get('password');
-	const redirectTo = formData.get('redirectTo');
+	const redirectTo = safeRedirect(formData.get('redirectTo'), '/');
 
 	if (!validateEmail(email)) {
 		return json({ errors: { email: 'Email is invalid' } }, { status: 400 });
@@ -146,6 +146,7 @@ export default function Join() {
 					defaultValue={'alex@alex.com'}
 					error={actionData?.errors?.email}
 					pb={actionData?.errors?.email ? 0 : 20}
+					withAsterisk={false}
 				/>
 				<PasswordInput
 					label="Password"
@@ -159,6 +160,7 @@ export default function Join() {
 					defaultValue={'alexalex'}
 					error={actionData?.errors?.password}
 					pb={actionData?.errors?.password ? 0 : 20}
+					withAsterisk={false}
 				/>
 				<Text mt={12}>
 					Already have an account?{' '}

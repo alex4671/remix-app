@@ -26,7 +26,7 @@ import { useEffect, useRef } from 'react';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { verifyLogin } from '~/models/user.server';
 import { createUserSession, getUserId } from '~/server/session.server';
-import { validateEmail } from '~/utils/utils';
+import { safeRedirect, validateEmail } from '~/utils/utils';
 
 export const loader: LoaderFunction = async ({ request }) => {
 	const userId = await getUserId(request);
@@ -38,7 +38,7 @@ export const action: ActionFunction = async ({ request }) => {
 	const formData = await request.formData();
 	const email = formData.get('email');
 	const password = formData.get('password');
-	const redirectTo = formData.get('redirectTo');
+	const redirectTo = safeRedirect(formData.get('redirectTo'), '/');
 	const remember = formData.get('remember');
 
 	if (!validateEmail(email)) {
@@ -130,6 +130,7 @@ export default function LoginPage() {
 					defaultValue={'alex@alex.com'}
 					error={actionData?.errors?.email}
 					pb={actionData?.errors?.email ? 0 : 20}
+					withAsterisk={false}
 				/>
 				<PasswordInput
 					label="Password"
@@ -141,6 +142,7 @@ export default function LoginPage() {
 					defaultValue={'alexalex'}
 					error={actionData?.errors?.password}
 					pb={actionData?.errors?.password ? 0 : 20}
+					withAsterisk={false}
 				/>
 				<Group
 					position="apart"

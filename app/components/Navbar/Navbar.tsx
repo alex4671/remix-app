@@ -12,6 +12,7 @@ export const Navbar = () => {
 			<NavbarLinks />
 			<Group spacing={6}>
 				{/*<Notifications/>*/}
+				{/*<SpotlightWrapper />*/}
 				<ColorSwitch />
 				<NavbarMenu />
 			</Group>
