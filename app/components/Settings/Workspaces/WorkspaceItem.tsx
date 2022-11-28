@@ -1,5 +1,4 @@
 import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { ActionIcon, Badge, Group, Paper, Text } from '@mantine/core';
 import { useFetcher, useLocation, useNavigate } from '@remix-run/react';
 import {
@@ -11,8 +10,20 @@ import {
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { nanoid } from 'nanoid';
+import type { CSSProperties } from 'react';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { useUser } from '~/utils/utils';
+
+const baseStyles: CSSProperties = {
+	position: 'relative',
+};
+
+const initialStyles = {
+	x: 0,
+	y: 0,
+	scale: 1,
+	opacity: 1,
+};
 
 export const WorkspaceItem = ({ workspace }: { workspace: any }) => {
 	const user = useUser();
@@ -34,19 +45,13 @@ export const WorkspaceItem = ({ workspace }: { workspace: any }) => {
 		});
 	};
 
-	const {
-		attributes,
-		listeners,
-		setNodeRef,
-		transform,
-		transition,
-		isDragging,
-	} = useSortable({ id: workspace.id });
+	const { attributes, listeners, setNodeRef, transform, isDragging } =
+		useSortable({ id: workspace.id });
 
-	const style = {
-		transform: CSS.Translate.toString(transform),
-		transition,
-	};
+	// const style = {
+	// 	transform: CSS.Translate.toString(transform),
+	// 	transition,
+	// };
 
 	const handleDelete = (e: any, workspaceId: string) => {
 		e.stopPropagation();
@@ -85,17 +90,36 @@ export const WorkspaceItem = ({ workspace }: { workspace: any }) => {
 	return (
 		<Paper
 			component={motion.div}
+			layout
 			initial={{ opacity: 0 }}
-			animate={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
-			transition={{ opacity: { duration: 0.3 } }}
 			ref={setNodeRef}
-			style={style}
+			style={baseStyles}
+			animate={
+				transform
+					? {
+							x: transform.x,
+							y: transform.y,
+							zIndex: isDragging ? 1 : 0,
+							opacity: 1,
+					  }
+					: initialStyles
+			}
+			transition={{
+				duration: !isDragging ? 0.25 : 0,
+				easings: {
+					type: 'spring',
+				},
+				scale: {
+					duration: 0.25,
+				},
+				zIndex: {
+					delay: isDragging ? 0 : 0.25,
+				},
+			}}
 			onClick={() => handleNavigate(workspace.id)}
 			sx={{
 				cursor: 'pointer',
-				position: 'relative',
-				zIndex: isDragging ? 1 : 0,
 			}}
 			withBorder
 			my={12}
