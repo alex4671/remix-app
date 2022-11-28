@@ -48,6 +48,11 @@ export const FileComments = ({ disabled, comments, mediaId }: Props) => {
 				padding="xl"
 				size="xl"
 				position={'right'}
+				styles={{
+					body: {
+						height: '100%',
+					},
+				}}
 			>
 				<Stack
 					justify="space-between"
