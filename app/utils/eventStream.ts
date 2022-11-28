@@ -2,6 +2,7 @@ type InitFunction = (send: SendFunction) => CleanupFunction;
 type SendFunction = (event: string, data: string) => void;
 type CleanupFunction = () => void;
 
+// todo remove this
 export function eventStream(request: Request, init: InitFunction) {
 	let stream = new ReadableStream({
 		start(controller) {

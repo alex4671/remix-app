@@ -20,6 +20,7 @@ import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { IconFiles, IconSettings } from '@tabler/icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { GenericCatchBoundary } from '~/components/Errors/GenericCatchBoundary';
 import { GenericErrorBoundary } from '~/components/Errors/GenericErrorBoundary';
@@ -119,111 +120,122 @@ export default function WorkspacesIndex() {
 						{ maxWidth: 'xs', cols: 1 },
 					]}
 				>
-					{filteredWorkspaces?.map((w) => (
-						<Paper
-							p="md"
-							withBorder
-							key={w.id}
-							onClick={() => handleGoWorkspace(w.id)}
-							sx={{ cursor: 'pointer' }}
-						>
-							<Group position={'apart'}>
-								<Text size={'lg'}>{w.name}</Text>
-								<ActionIcon
-									onClick={(event: any) => handleGoSettings(event, w.id)}
-								>
-									<IconSettings size={16} />
-								</ActionIcon>
-							</Group>
-							<Group
-								mt={12}
-								position={'apart'}
+					<AnimatePresence
+						initial={false}
+						mode={'popLayout'}
+					>
+						{filteredWorkspaces?.map((w) => (
+							<Paper
+								component={motion.div}
+								layout
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ opacity: { duration: 0.3 } }}
+								p="md"
+								key={w.id}
+								withBorder
+								onClick={() => handleGoWorkspace(w.id)}
+								sx={{ cursor: 'pointer' }}
 							>
-								{user.email === w.owner.email ? (
-									<Badge color={'emerald'}>You</Badge>
-								) : (
-									<Badge color={'blue'}>{w.owner.email}</Badge>
-								)}
-								<Text
-									size={'sm'}
-									color={'dimmed'}
+								<Group position={'apart'}>
+									<Text size={'lg'}>{w.name}</Text>
+									<ActionIcon
+										onClick={(event: any) => handleGoSettings(event, w.id)}
+									>
+										<IconSettings size={16} />
+									</ActionIcon>
+								</Group>
+								<Group
+									mt={12}
+									position={'apart'}
 								>
-									{dayjs().to(dayjs(w.createdAt))}
-								</Text>
-							</Group>
-							<Group
-								mt={12}
-								position={'apart'}
-							>
-								<Group spacing={4}>
-									<IconFiles
-										size={16}
-										stroke={1}
-									/>
+									{user.email === w.owner.email ? (
+										<Badge color={'emerald'}>You</Badge>
+									) : (
+										<Badge color={'blue'}>{w.owner.email}</Badge>
+									)}
 									<Text
 										size={'sm'}
 										color={'dimmed'}
 									>
-										{w.media.length}
+										{dayjs().to(dayjs(w.createdAt))}
 									</Text>
 								</Group>
-								{w.collaborator.length ? (
-									<Tooltip.Group
-										openDelay={300}
-										closeDelay={100}
-									>
-										<Avatar.Group spacing="sm">
-											{w.collaborator
-												.filter((c) => c.user.email !== user.email)
-												.slice(0, 2)
-												.map((c) => (
+								<Group
+									mt={12}
+									position={'apart'}
+								>
+									<Group spacing={4}>
+										<IconFiles
+											size={16}
+											stroke={1}
+										/>
+										<Text
+											size={'sm'}
+											color={'dimmed'}
+										>
+											{w.media.length}
+										</Text>
+									</Group>
+									{w.collaborator.length ? (
+										<Tooltip.Group
+											openDelay={300}
+											closeDelay={100}
+										>
+											<Avatar.Group spacing="sm">
+												{w.collaborator
+													.filter((c) => c.user.email !== user.email)
+													.slice(0, 2)
+													.map((c) => (
+														<Tooltip
+															key={c.id}
+															label={c.user.email}
+															withArrow
+														>
+															<Avatar
+																src={c.user.avatarUrl}
+																radius="xl"
+																size={'sm'}
+															/>
+														</Tooltip>
+													))}
+												{w.collaborator
+													.filter((c) => c.user.email !== user.email)
+													.slice(2).length ? (
 													<Tooltip
-														key={c.id}
-														label={c.user.email}
 														withArrow
+														label={
+															<>
+																{w.collaborator
+																	.filter((c) => c.user.email !== user.email)
+																	.slice(2)
+																	.map((c) => (
+																		<div key={c.id}>{c.user.email}</div>
+																	))}
+															</>
+														}
 													>
 														<Avatar
-															src={c.user.avatarUrl}
 															radius="xl"
 															size={'sm'}
-														/>
+														>
+															+
+															{
+																w.collaborator
+																	.filter((c) => c.user.email !== user.email)
+																	.slice(2).length
+															}
+														</Avatar>
 													</Tooltip>
-												))}
-											{w.collaborator
-												.filter((c) => c.user.email !== user.email)
-												.slice(2).length ? (
-												<Tooltip
-													withArrow
-													label={
-														<>
-															{w.collaborator
-																.filter((c) => c.user.email !== user.email)
-																.slice(2)
-																.map((c) => (
-																	<div key={c.id}>{c.user.email}</div>
-																))}
-														</>
-													}
-												>
-													<Avatar
-														radius="xl"
-														size={'sm'}
-													>
-														+
-														{
-															w.collaborator
-																.filter((c) => c.user.email !== user.email)
-																.slice(2).length
-														}
-													</Avatar>
-												</Tooltip>
-											) : null}
-										</Avatar.Group>
-									</Tooltip.Group>
-								) : null}
-							</Group>
-						</Paper>
-					))}
+												) : null}
+											</Avatar.Group>
+										</Tooltip.Group>
+									) : null}
+								</Group>
+							</Paper>
+						))}
+					</AnimatePresence>
 				</SimpleGrid>
 			) : (
 				<Title

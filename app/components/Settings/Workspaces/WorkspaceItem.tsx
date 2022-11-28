@@ -9,6 +9,7 @@ import {
 	IconUpload,
 } from '@tabler/icons';
 import dayjs from 'dayjs';
+import { motion } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { useUser } from '~/utils/utils';
@@ -81,10 +82,13 @@ export const WorkspaceItem = ({ workspace }: { workspace: any }) => {
 		);
 	};
 
-	console.log('workspace', workspace);
-
 	return (
 		<Paper
+			component={motion.div}
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			exit={{ opacity: 0 }}
+			transition={{ opacity: { duration: 0.3 } }}
 			ref={setNodeRef}
 			style={style}
 			onClick={() => handleNavigate(workspace.id)}

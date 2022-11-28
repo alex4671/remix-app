@@ -2,6 +2,7 @@ import { Box, Title } from '@mantine/core';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import { AnimatePresence } from 'framer-motion';
 import { WorkspaceItem } from '~/components/Settings/Workspaces/WorkspaceItem';
 import { getUserCollaboratorWorkspacesById } from '~/models/workspace.server';
 import { requireUser } from '~/server/session.server';
@@ -19,12 +20,14 @@ export default function CollaboratedWorkspaces() {
 	return (
 		<Box>
 			{collaborators.length ? (
-				collaborators.map((c) => (
-					<WorkspaceItem
-						key={c.id}
-						workspace={c}
-					/>
-				))
+				<AnimatePresence>
+					{collaborators.map((c) => (
+						<WorkspaceItem
+							key={c.id}
+							workspace={c}
+						/>
+					))}
+				</AnimatePresence>
 			) : (
 				<Title
 					order={5}

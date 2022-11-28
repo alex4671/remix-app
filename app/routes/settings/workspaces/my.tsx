@@ -16,6 +16,7 @@ import { Box, Title } from '@mantine/core';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
+import { AnimatePresence } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 import { WorkspaceItem } from '~/components/Settings/Workspaces/WorkspaceItem';
@@ -64,12 +65,14 @@ export default function MyWorkspaces() {
 						items={sortedCopy}
 						strategy={verticalListSortingStrategy}
 					>
-						{sortedCopy.map((w) => (
-							<WorkspaceItem
-								key={w.id}
-								workspace={w}
-							/>
-						))}
+						<AnimatePresence>
+							{sortedCopy.map((w) => (
+								<WorkspaceItem
+									key={w.id}
+									workspace={w}
+								/>
+							))}
+						</AnimatePresence>
 					</SortableContext>
 				</DndContext>
 			) : (
