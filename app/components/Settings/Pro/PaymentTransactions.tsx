@@ -23,7 +23,6 @@ const plans: Record<string, string> = {
 
 export const PaymentTransactions = () => {
 	const { receipts, userPaymentHistory } = useLoaderData<typeof loader>();
-
 	console.log('userPaymentHistory', userPaymentHistory);
 
 	// todo generate what happened e.g. Monthly -> Daily, One off charge etc.

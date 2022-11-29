@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -37,6 +36,8 @@ model Notes {
   favorite  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
 }
 
 model Workspace {
@@ -49,6 +50,8 @@ model Workspace {
   media        Media[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+
+  @@index([ownerId])
 }
 
 model Collaborator {
@@ -63,6 +66,9 @@ model Collaborator {
   userId      String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([workspaceId])
+  @@index([userId])
 }
 
 enum Role {
@@ -101,6 +107,8 @@ model UserPaymentHistory {
   historyData Json
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Feedback {
@@ -126,6 +134,9 @@ model Media {
   public      Boolean    @default(false)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  @@index([userId])
+  @@index([workspaceId])
 }
 
 model Comments {
@@ -137,6 +148,9 @@ model Comments {
   mediaId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([mediaId])
 }
 
 model NotificationSettings {
