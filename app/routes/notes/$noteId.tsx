@@ -1,6 +1,6 @@
 import { Group, Paper, TypographyStylesProvider } from '@mantine/core';
 import { RichTextEditor } from '@mantine/tiptap';
-import type { LoaderArgs, MetaFunction } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Link as RemixLink, useFetcher, useLoaderData } from '@remix-run/react';
 import { IconColorPicker } from '@tabler/icons';
@@ -20,12 +20,6 @@ import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { getNoteById } from '~/models/notes.server';
 import { requireUser } from '~/server/session.server';
-
-export const meta: MetaFunction = () => {
-	return {
-		title: 'Notes',
-	};
-};
 
 export const loader = async ({ request, params }: LoaderArgs) => {
 	await requireUser(request);

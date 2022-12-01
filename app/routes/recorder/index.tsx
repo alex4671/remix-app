@@ -1,17 +1,17 @@
 import {
+	ActionIcon,
 	AspectRatio,
 	Badge,
 	Box,
 	Card,
 	Group,
-	Image,
 	SimpleGrid,
 	Text,
 } from '@mantine/core';
-import { upperFirst } from '@mantine/hooks';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
+import { Link, useFetcher, useLoaderData, useNavigate } from '@remix-run/react';
+import { IconPencil, IconTrash, IconVideo } from '@tabler/icons';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { getRecordings } from '~/models/media.server';
 import { requireUser } from '~/server/session.server';
@@ -28,8 +28,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function RecorderIndex() {
 	const { recordings } = useLoaderData<typeof loader>();
+	const navigate = useNavigate();
+	const fetcher = useFetcher();
 
-	console.log('recordings', recordings);
+	const handleNavigate = (id: string) => {
+		navigate(`./${id}`);
+	};
+
 	return (
 		<>
 			<Group
@@ -39,6 +44,7 @@ export default function RecorderIndex() {
 				<PrimaryButton
 					component={Link}
 					to={'/recorder/new'}
+					leftIcon={<IconVideo size={18} />}
 				>
 					New recording
 				</PrimaryButton>
@@ -59,12 +65,7 @@ export default function RecorderIndex() {
 					>
 						<Card.Section>
 							<AspectRatio ratio={16 / 9}>
-								{recording.type.includes('image') ? (
-									<Image
-										src={recording.fileUrl}
-										alt={recording.fileUrl}
-									/>
-								) : recording.type.includes('video') ? (
+								{recording.type.includes('video') ? (
 									<video
 										controls
 										preload="metadata"
@@ -74,7 +75,7 @@ export default function RecorderIndex() {
 											type={recording.type}
 										/>
 									</video>
-								) : recording.type.includes('audio') ? (
+								) : (
 									<Box
 										sx={(theme) => ({
 											background:
@@ -89,24 +90,6 @@ export default function RecorderIndex() {
 												type={recording.type}
 											/>
 										</audio>
-									</Box>
-								) : recording.type.includes('pdf') ? (
-									<embed
-										type={recording.type}
-										src={recording.fileUrl}
-									/>
-								) : (
-									<Box
-										sx={(theme) => ({
-											background:
-												theme.colorScheme === 'dark'
-													? theme.colors.dark[4]
-													: theme.colors.gray[2],
-										})}
-									>
-										<Text align={'center'}>
-											{upperFirst(recording.type.split('/')[1])}
-										</Text>
 									</Box>
 								)}
 							</AspectRatio>
@@ -133,6 +116,28 @@ export default function RecorderIndex() {
 									>
 										{recording.type.split('/')[1]}
 									</Badge>
+								</Group>
+								<Group spacing={4}>
+									<ActionIcon onClick={() => handleNavigate(recording.id)}>
+										<IconPencil size={18} />
+									</ActionIcon>
+									<fetcher.Form
+										method={'post'}
+										action={'/recorder'}
+									>
+										<input
+											type="hidden"
+											name={'recordId'}
+											value={recording.id}
+										/>
+										<ActionIcon
+											type={'submit'}
+											name={'intent'}
+											value={'deleteRecord'}
+										>
+											<IconTrash size={18} />
+										</ActionIcon>
+									</fetcher.Form>
 								</Group>
 								{/*<fetcher.Form method={'post'}>*/}
 								{/*	<input*/}

@@ -1,5 +1,6 @@
-import { Box, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { useFetcher } from '@remix-run/react';
+import { IconHeadset, IconScreenShare, IconVideo } from '@tabler/icons';
 import { useRef, useState } from 'react';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { SecondaryButton } from '~/components/Buttons/SecondaryButton';
@@ -9,14 +10,11 @@ const audioRecordConstraints = {
 };
 let shouldStop = false;
 let stopped = false;
-export default function Recorder() {
+
+export default function RecorderNew() {
 	const fetcher = useFetcher();
 
 	const [isRecording, setIsRecording] = useState(false);
-	const [record, setRecord] = useState({
-		type: null,
-		src: null,
-	});
 
 	const videoRef = useRef<HTMLVideoElement>();
 	const downloadRef = useRef<HTMLLinkElement>();
@@ -34,7 +32,7 @@ export default function Recorder() {
 		stopRecord();
 	};
 
-	const handleRecord = function ({ stream, mimeType, recordType }) {
+	const handleRecord = function ({ stream, mimeType }) {
 		startRecord();
 		let recordedChunks = [];
 		stopped = false;
@@ -73,7 +71,6 @@ export default function Recorder() {
 				action: '/recorder',
 				encType: 'multipart/form-data',
 			});
-			setRecord({ src: URL.createObjectURL(blob), type: recordType });
 			stopRecord();
 			if (videoRef?.current) {
 				videoRef.current.srcObject = null;
@@ -89,7 +86,7 @@ export default function Recorder() {
 		const stream = await navigator.mediaDevices.getUserMedia({
 			audio: audioRecordConstraints,
 		});
-		handleRecord({ stream, mimeType, recordType: 'audio' });
+		handleRecord({ stream, mimeType });
 	};
 	const recordVideo = async () => {
 		const mimeType = 'video/webm';
@@ -114,7 +111,7 @@ export default function Recorder() {
 			videoRef.current.srcObject = stream;
 		}
 
-		handleRecord({ stream, mimeType, recordType: 'video' });
+		handleRecord({ stream, mimeType });
 	};
 	const recordScreen = async () => {
 		const mimeType = 'video/webm';
@@ -156,7 +153,7 @@ export default function Recorder() {
 			...audioDestination.stream.getTracks(),
 		];
 		stream = new MediaStream(tracks);
-		handleRecord({ stream, mimeType, recordType: 'video' });
+		handleRecord({ stream, mimeType });
 
 		if (videoRef?.current) {
 			videoRef.current.srcObject = stream;
@@ -165,65 +162,62 @@ export default function Recorder() {
 
 	return (
 		<>
-			<Group my={'xl'}>
-				{/*<a*/}
-				{/*	href={'#'}*/}
-				{/*	download={`${Date.now()}.webm`}*/}
-				{/*	ref={downloadRef}*/}
-				{/*>*/}
-				{/*	Link*/}
-				{/*</a>*/}
-				<DangerButton
-					disabled={!isRecording}
-					color={'red'}
-					onClick={stopBtn}
-				>
-					Stop
-				</DangerButton>
-			</Group>
-			<Group>
-				<SecondaryButton
-					onClick={recordAudio}
-					disabled={isRecording}
-				>
-					Record Audio
-				</SecondaryButton>
-				<SecondaryButton
-					onClick={recordVideo}
-					disabled={isRecording}
-				>
-					Record Video
-				</SecondaryButton>
-				<SecondaryButton
-					onClick={recordScreen}
-					disabled={isRecording}
-				>
-					Record Screen
-				</SecondaryButton>
+			{/*<Group my={'xl'}>*/}
+			{/*	/!*<a*!/*/}
+			{/*	/!*	href={'#'}*!/*/}
+			{/*	/!*	download={`${Date.now()}.webm`}*!/*/}
+			{/*	/!*	ref={downloadRef}*!/*/}
+			{/*	/!*>*!/*/}
+			{/*	/!*	Link*!/*/}
+			{/*	/!*</a>*!/*/}
+			{/*	*/}
+			{/*</Group>*/}
+			<Group
+				my={'xl'}
+				position={'apart'}
+			>
+				<Group>
+					<SecondaryButton
+						onClick={recordAudio}
+						disabled={isRecording}
+						leftIcon={<IconHeadset size={18} />}
+					>
+						Record Audio
+					</SecondaryButton>
+					<SecondaryButton
+						onClick={recordVideo}
+						disabled={isRecording}
+						leftIcon={<IconVideo size={18} />}
+					>
+						Record Video
+					</SecondaryButton>
+					<SecondaryButton
+						onClick={recordScreen}
+						disabled={isRecording}
+						leftIcon={<IconScreenShare size={18} />}
+					>
+						Record Screen
+					</SecondaryButton>
+				</Group>
+				{isRecording ? (
+					<Group>
+						<DangerButton
+							color={'red'}
+							onClick={stopBtn}
+						>
+							Stop
+						</DangerButton>
+					</Group>
+				) : null}
 			</Group>
 
-			<Box my={24}>
-				{record.type === 'audio' ? (
-					<audio
-						controls
-						src={record.src}
-					/>
-				) : record.type === 'video' ? (
-					<video
-						controls
-						width="100%"
-						src={record.src}
-					/>
-				) : (
-					<video
-						autoPlay
-						// height="480"
-						width="100%"
-						muted
-						ref={videoRef}
-					/>
-				)}
-			</Box>
+			<video
+				autoPlay
+				// height="480"
+				width="100%"
+				muted
+				ref={videoRef}
+			/>
 		</>
 	);
 }

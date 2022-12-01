@@ -75,6 +75,14 @@ export const getRecordings = (userId: Media['userId']) => {
 	});
 };
 
+export const getRecordById = (recordId: Media['id']) => {
+	return prisma.media.findUnique({
+		where: {
+			id: recordId,
+		},
+	});
+};
+
 export const saveFile = (file: SaveFileType2) => {
 	console.log('file', file);
 	return prisma.media.create({
