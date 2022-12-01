@@ -124,8 +124,8 @@ model Media {
   id          String     @id @default(uuid())
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  workspace   Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId String
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String?
   fileUrl     String     @db.Text
   name        String
   type        String

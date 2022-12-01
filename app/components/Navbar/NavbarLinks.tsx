@@ -100,6 +100,12 @@ export const NavbarLinks = () => {
 			name: 'Notes',
 		},
 		{
+			to: 'recorder',
+			isActive: location.pathname.includes('/recorder'),
+			name: 'Recorder',
+			// new: true,
+		},
+		{
 			to: 'settings/workspaces/my',
 			isActive: location.pathname.includes('/settings/'),
 			name: 'Settings',
@@ -113,6 +119,13 @@ export const NavbarLinks = () => {
 	];
 
 	const items = links.map((link) => (
+		// <Indicator
+		// 	disabled={!link.new}
+		// 	inline
+		// 	label="New"
+		// 	size={16}
+		// 	color={'grape'}
+		// >
 		<Link
 			key={link.to}
 			to={link.to}
@@ -122,6 +135,7 @@ export const NavbarLinks = () => {
 		>
 			{link.name}
 		</Link>
+		// </Indicator>
 	));
 
 	return (

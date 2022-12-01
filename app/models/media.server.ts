@@ -60,6 +60,28 @@ type SaveFileType = Pick<
 	'userId' | 'workspaceId' | 'fileUrl' | 'name' | 'size' | 'type'
 >;
 
+// todo remove this
+type SaveFileType2 = Pick<
+	Media,
+	'userId' | 'fileUrl' | 'name' | 'size' | 'type'
+>;
+
+export const getRecordings = (userId: Media['userId']) => {
+	return prisma.media.findMany({
+		where: {
+			userId,
+			workspaceId: null,
+		},
+	});
+};
+
+export const saveFile = (file: SaveFileType2) => {
+	console.log('file', file);
+	return prisma.media.create({
+		data: file,
+	});
+};
+
 export const saveFiles = (files: SaveFileType[]) => {
 	return prisma.media.createMany({
 		data: files,
