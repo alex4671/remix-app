@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
 
+test.beforeEach(async ({ page }) => {
+	await page.goto('/auth');
+});
+
 test('homepage has title and links to intro page', async ({ page }) => {
 	await page.goto('http://localhost:3000/');
 
