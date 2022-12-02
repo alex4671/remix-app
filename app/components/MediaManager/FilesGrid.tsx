@@ -200,68 +200,68 @@ export const FilesGrid = ({
 											{file.type.split('/')[1]}
 										</Badge>
 									</Group>
-									<fetcher.Form method={'post'}>
-										<input
-											type="hidden"
-											name={'fileId'}
-											value={file.id}
-										/>
-										<HiddenSessionId />
-										<Group spacing={4}>
-											<Popover
-												width={250}
-												withArrow
-												position="bottom"
-												shadow={'sm'}
-											>
-												<Popover.Target>
-													<ActionIcon>
-														<IconShare size={18} />
-													</ActionIcon>
-												</Popover.Target>
-												<Popover.Dropdown>
-													<Stack
-														align={'start'}
-														spacing={0}
+									<Group spacing={4}>
+										<Popover
+											width={250}
+											withArrow
+											position="bottom"
+											shadow={'sm'}
+										>
+											<Popover.Target>
+												<ActionIcon>
+													<IconShare size={18} />
+												</ActionIcon>
+											</Popover.Target>
+											<Popover.Dropdown>
+												<Stack
+													align={'start'}
+													spacing={0}
+												>
+													<Text>Share this file</Text>
+													<Switch
+														label="Make this file public"
+														name={'isPublic'}
+														checked={file.public}
+														onChange={(event) =>
+															handleMakePublic(event, file.id)
+														}
+														mb={20}
+														color={'emerald'}
+													/>
+													<CopyButton
+														value={`${origin}/media/share/${file.id}`}
 													>
-														<Text>Share this file</Text>
-														<Switch
-															label="Make this file public"
-															name={'isPublic'}
-															checked={file.public}
-															onChange={(event) =>
-																handleMakePublic(event, file.id)
-															}
-															mb={20}
-															color={'emerald'}
-														/>
-														<CopyButton
-															value={`${origin}/media/share/${file.id}`}
-														>
-															{({ copied, copy }) => (
-																<Button
-																	color={copied ? 'lime' : 'emerald'}
-																	leftIcon={<IconClipboard size={18} />}
-																	onClick={copy}
-																	disabled={!file.public}
-																	variant={'light'}
-																>
-																	{copied ? 'Copied link' : 'Copy link'}
-																</Button>
-															)}
-														</CopyButton>
-													</Stack>
-												</Popover.Dropdown>
-											</Popover>
+														{({ copied, copy }) => (
+															<Button
+																color={copied ? 'lime' : 'emerald'}
+																leftIcon={<IconClipboard size={18} />}
+																onClick={copy}
+																disabled={!file.public}
+																variant={'light'}
+															>
+																{copied ? 'Copied link' : 'Copy link'}
+															</Button>
+														)}
+													</CopyButton>
+												</Stack>
+											</Popover.Dropdown>
+										</Popover>
 
-											<ActionIcon
-												component={'a'}
-												href={file.fileUrl}
-												download
-												target={'_blank'}
-											>
-												<IconDownload size={18} />
-											</ActionIcon>
+										<ActionIcon
+											component={'a'}
+											href={file.fileUrl}
+											download
+											target={'_blank'}
+										>
+											<IconDownload size={18} />
+										</ActionIcon>
+										<fetcher.Form method={'post'}>
+											<input
+												type="hidden"
+												name={'fileId'}
+												value={file.id}
+											/>
+											<HiddenSessionId />
 											<ActionIcon
 												type={'submit'}
 												name={'intent'}
@@ -270,13 +270,13 @@ export const FilesGrid = ({
 											>
 												<IconTrash size={18} />
 											</ActionIcon>
-											<FileComments
-												disabled={!rights?.comment}
-												comments={file.comments}
-												mediaId={file.id}
-											/>
-										</Group>
-									</fetcher.Form>
+										</fetcher.Form>
+										<FileComments
+											disabled={!rights?.comment}
+											comments={file.comments}
+											mediaId={file.id}
+										/>
+									</Group>
 								</Group>
 							</Card.Section>
 						</Card>

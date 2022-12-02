@@ -4,7 +4,7 @@ import { Outlet } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { GenericCatchBoundary } from '~/components/Errors/GenericCatchBoundary';
 import { GenericErrorBoundary } from '~/components/Errors/GenericErrorBoundary';
-import { deleteFile, saveFile } from '~/models/media.server';
+import { deleteFile, saveFile, togglePublic } from '~/models/media.server';
 import { deleteFileFromS3, generateSignedUrl } from '~/models/storage.server';
 import { requireUser } from '~/server/session.server';
 import { getFileKey } from '~/utils/utils';
@@ -72,6 +72,27 @@ export const action = async ({ request }: ActionArgs) => {
 				success: false,
 				intent,
 				message: 'Error uploading record',
+			});
+		}
+	}
+
+	if (intent === 'togglePublic') {
+		const checked = formData.get('checked')?.toString() ?? '';
+		const recordingId = formData.get('recordingId')?.toString() ?? '';
+
+		try {
+			await togglePublic(recordingId, checked === 'true');
+
+			return json({
+				success: true,
+				intent,
+				message: `Recording now ${checked === 'true' ? 'public' : 'private'}`,
+			});
+		} catch (e) {
+			return json({
+				success: false,
+				intent,
+				message: `Error making recording ${checked ? 'Public' : 'Private'}`,
 			});
 		}
 	}
