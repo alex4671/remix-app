@@ -23,6 +23,7 @@ import { getUser } from '~/server/session.server';
 import { colors } from '~/utils/colors';
 import { getTheme } from '~/utils/theme';
 import favicon from './assets/favicon.svg';
+import { useSetSessionId } from './hooks/useSetSessionId';
 
 export const links: LinksFunction = () => {
 	return [{ rel: 'icon', href: favicon }];
@@ -107,6 +108,7 @@ export default function App() {
 
 	useLoadingProgress();
 	useNotification();
+	useSetSessionId();
 
 	return (
 		<Document>
