@@ -33,18 +33,18 @@ export const action = async ({ request }: ActionArgs) => {
 	const intent = formData.get('intent');
 
 	if (intent === 'createWorkspace') {
-		const workspaceName = formData.get('workspaceName')?.toString() ?? '';
-		const sessionId = formData.get('sessionId')?.toString() ?? '';
-
-		const workspaces = await getAllowedWorkspaces(user.id);
-
-		const lastSortIndexValue = workspaces
-			?.sort((a, b) =>
-				a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0,
-			)
-			?.at(-1)?.sortIndex;
-
 		try {
+			const workspaceName = formData.get('workspaceName')?.toString() ?? '';
+			const sessionId = formData.get('sessionId')?.toString() ?? '';
+
+			const workspaces = await getAllowedWorkspaces(user.id);
+
+			const lastSortIndexValue = workspaces
+				?.sort((a, b) =>
+					a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0,
+				)
+				?.at(-1)?.sortIndex;
+
 			const nextSortIndex = !lastSortIndexValue
 				? generateKeyBetween(null, null)
 				: generateKeyBetween(lastSortIndexValue, null);
