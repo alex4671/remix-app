@@ -120,7 +120,7 @@ export const subscriptionPaymentSucceeded = async (
 			subscriptionEndDate: next_bill_date,
 		},
 	});
-
+	// todo check uniqueness of alert_id or make in unique in schema
 	await prisma.userPaymentHistory.create({
 		data: {
 			userId: userPayment?.userId,

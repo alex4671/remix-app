@@ -142,7 +142,7 @@ export default function Join() {
 					autoComplete="email"
 					label="Email"
 					required
-					defaultValue={'alex@alex.com'}
+					// defaultValue={'alex@alex.com'}
 					error={actionData?.errors?.emailError}
 					pb={actionData?.errors?.emailError ? 0 : 20}
 					withAsterisk={false}
@@ -155,7 +155,7 @@ export default function Join() {
 					name="password"
 					autoComplete="current-password"
 					aria-describedby="password-error"
-					defaultValue={'alexalex'}
+					// defaultValue={'alexalex'}
 					error={actionData?.errors?.passwordError}
 					pb={actionData?.errors?.passwordError ? 0 : 20}
 					withAsterisk={false}
