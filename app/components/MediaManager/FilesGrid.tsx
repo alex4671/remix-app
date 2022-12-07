@@ -117,6 +117,7 @@ export const FilesGrid = ({
 									position={'top'}
 									withinPortal={true}
 									multiline
+									disabled
 								>
 									<AspectRatio ratio={16 / 9}>
 										{file.type.includes('image') ? (

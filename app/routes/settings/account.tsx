@@ -1,3 +1,4 @@
+import { render } from '@react-email/render';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
@@ -5,6 +6,7 @@ import invariant from 'tiny-invariant';
 import { AvatarUpload } from '~/components/Settings/Account/AvatarUpload';
 import { ChangePassword } from '~/components/Settings/Account/ChangePassword';
 import { UserInfo } from '~/components/Settings/Account/UserInfo';
+import WelcomeEmail from '~/emails/WelcomeEmail';
 import { deleteFileFromS3, generateSignedUrl } from '~/models/storage.server';
 import {
 	deleteAvatar,
@@ -13,6 +15,7 @@ import {
 	updatePassword,
 	verifyLogin,
 } from '~/models/user.server';
+import { postmarkClient } from '~/server/postmark.server';
 import { requireUser } from '~/server/session.server';
 import { getFileKey } from '~/utils/utils';
 
@@ -136,8 +139,49 @@ export const action = async ({ request }: ActionArgs) => {
 
 			console.log('inviteLink', inviteLink);
 
+			const emailHtml = render(<WelcomeEmail url={inviteLink} />);
+
+			const options = {
+				From: 'hi@alexkulchenko.com',
+				To: 'hi@alexkulchenko.com',
+				Subject: 'Activate your account',
+				HtmlBody: emailHtml,
+				Headers: [
+					{
+						// Set this to prevent Gmail from threading emails.
+						// See https://stackoverflow.com/questions/23434110/force-emails-not-to-be-grouped-into-conversations/25435722.
+						Name: 'X-Entity-Ref-ID',
+						Value: new Date().getTime() + '',
+					},
+				],
+			};
+
+			await postmarkClient.sendEmail(options);
+
+			// await postmarkClient.sendEmailWithTemplate({
+			// 	From: 'hi@alexkulchenko.com',
+			// 	// To: user.email,
+			// 	To: 'hi@alexkulchenko.com',
+			// 	TemplateAlias: 'welcome',
+			// 	TemplateModel: {
+			// 		product_url: 'https://files.alexkulchenko.com/',
+			// 		product_name: 'Files App',
+			// 		name: user.email,
+			// 		action_url: inviteLink,
+			// 	},
+			// 	Headers: [
+			// 		{
+			// 			// Set this to prevent Gmail from threading emails.
+			// 			// See https://stackoverflow.com/questions/23434110/force-emails-not-to-be-grouped-into-conversations/25435722.
+			// 			Name: 'X-Entity-Ref-ID',
+			// 			Value: new Date().getTime() + '',
+			// 		},
+			// 	],
+			// });
+
 			return json({ success: true, intent, message: 'Invite sent' });
 		} catch (e) {
+			console.log('error', e);
 			return json({ success: false, intent, message: 'Error sending invite' });
 		}
 	}

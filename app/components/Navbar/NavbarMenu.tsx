@@ -143,7 +143,7 @@ export const NavbarMenu = () => {
 						/>
 					}
 				>
-					Pause subscription
+					Manage subscription
 				</Menu.Item>
 				<Menu.Item
 					component={Link}

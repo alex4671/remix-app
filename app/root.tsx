@@ -92,7 +92,7 @@ const mantineTheme = {
 	// primaryShade: {light: 5, dark: 9},
 	colors: { ...colors },
 	defaultRadius: '0',
-	// activeStyles: { transform: 'scale(0.95)', transition: "transform 0.03s ease-in-out" }
+	// activeStyles: { transform: 'scale(0.95)', transition: "transform 0.03s ease-in-out" },
 	components: {
 		Badge: {
 			defaultProps: {
@@ -115,6 +115,14 @@ export default function App() {
 			<MantineProvider
 				theme={{
 					colorScheme: theme,
+					focusRingStyles: {
+						styles: (theme) => ({
+							outline: `1px solid ${theme.colors.dark[1]}`,
+						}),
+						inputStyles: (theme) => ({
+							border: `1px solid ${theme.colors.dark[1]}`,
+						}),
+					},
 					...mantineTheme,
 				}}
 				withGlobalStyles

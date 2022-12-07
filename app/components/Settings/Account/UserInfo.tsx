@@ -53,6 +53,7 @@ export const UserInfo = ({ email, isConfirmed }: Props) => {
 								<Group position={'right'}>
 									<fetcher.Form method={'post'}>
 										<SecondaryButton
+											type={'submit'}
 											name={'intent'}
 											value={'sendInvite'}
 											compact
