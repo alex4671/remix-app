@@ -80,10 +80,6 @@ const Document = ({
 				{isHydrated ? children : null}
 				<ScrollRestoration />
 				<Scripts />
-				<script>
-					{typeof navigator.serviceWorker !== 'undefined' ??
-						navigator.serviceWorker.register('sw.js')}
-				</script>
 				<LiveReload />
 			</body>
 		</html>
