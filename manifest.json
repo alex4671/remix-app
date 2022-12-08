@@ -1,0 +1,26 @@
+{
+  "background_color": "#ffffff",
+  "description": "Files app",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "files.alexkulchenko",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "files.alexkulchenko",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "categories": [
+    "social"
+  ],
+  "screenshots": [],
+  "icons": [
+    {
+      "src": "/build/_assets/favicon-W7UM3CG7.svg"
+    },
+    {
+      "src": "/favicon.ico",
+      "type": "image/x-icon"
+    }
+  ],
+  "shortcuts": []
+}

@@ -113,12 +113,23 @@ export const action = async ({ request }: ActionArgs) => {
 			const payLink = await paddle.generatePayLink({
 				product_id: Number(planId),
 				customer_email: user?.email,
+				// prettier-ignore
+				// "prices": [
+				// 	"USD:19.99",
+				// 	"EUR:15.99"
+				// ],
+				// // prettier-ignore
+				// "recurring_prices": [
+				// 	'USD:19.99',
+				// 	'EUR:15.99'
+				// ],
 			});
 			return json({ success: true, intent: null, payLink });
 		} catch (e) {
+			console.log('e', e);
 			return json({
 				success: false,
-				intent: null,
+				intent,
 				message: 'Error generating pay link',
 			});
 		}
