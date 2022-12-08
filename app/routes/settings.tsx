@@ -24,10 +24,11 @@ export const action = async ({ request }: ActionArgs) => {
 	const user = await requireUser(request);
 	const formData = await request.formData();
 	const feedback = formData.get('feedback')?.toString() ?? '';
+	const type = formData.get('type')?.toString() ?? '';
 
 	if (feedback.length) {
 		try {
-			await saveFeedback(user.id, user.email, feedback);
+			await saveFeedback(user.id, user.email, feedback, type);
 			return json({
 				success: true,
 				intent: 'sendFeedback',

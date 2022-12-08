@@ -1,4 +1,4 @@
-import { Affix, Group, Popover, Text, Textarea } from '@mantine/core';
+import { Affix, Group, Popover, Select, Text, Textarea } from '@mantine/core';
 import { useFetcher } from '@remix-run/react';
 import { IconMessage } from '@tabler/icons';
 import type { ChangeEvent } from 'react';
@@ -48,8 +48,23 @@ export const Feedback = () => {
 					</Affix>
 				</Popover.Target>
 				<Popover.Dropdown>
-					<Text size={'lg'}>Send feedback</Text>
+					<Text
+						size={'lg'}
+						mb={'lg'}
+					>
+						Send feedback
+					</Text>
 					<fetcher.Form method={'post'}>
+						<Select
+							placeholder="Pick one"
+							defaultValue={'bug'}
+							name={'type'}
+							data={[
+								{ value: 'bug', label: 'Bug' },
+								{ value: 'feature', label: 'Feature request' },
+								{ value: 'other', label: 'Other' },
+							]}
+						/>
 						<Textarea
 							mt={12}
 							autosize
