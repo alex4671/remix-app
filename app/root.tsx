@@ -54,6 +54,7 @@ export async function loader({ request, params }: LoaderArgs) {
 		getTheme(request),
 		getUser(request),
 	]);
+
 	return json({
 		theme,
 		user,

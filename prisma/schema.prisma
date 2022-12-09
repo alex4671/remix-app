@@ -24,6 +24,7 @@ model User {
   comments             Comments[]
   notificationSettings NotificationSettings?
   notes                Notes[]
+  bookmarks            Bookmarks[]
 }
 
 model Notes {
@@ -36,6 +37,19 @@ model Notes {
   favorite  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+}
+
+model Bookmarks {
+  id          String   @id @default(cuid())
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String
+  bookmarkUrl String   @db.Text
+  public      Boolean  @default(false)
+  favorite    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([ownerId])
 }
