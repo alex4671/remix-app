@@ -5,6 +5,7 @@ import {
 	Group,
 	Image,
 	SimpleGrid,
+	Title,
 } from '@mantine/core';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -39,50 +40,62 @@ export default function NotesIndex() {
 					New note
 				</PrimaryButton>
 			</Group>
-			<SimpleGrid
-				cols={4}
-				breakpoints={[
-					{ maxWidth: 'md', cols: 3 },
-					{ maxWidth: 'sm', cols: 2 },
-					{ maxWidth: 'xs', cols: 1 },
-				]}
-			>
-				{notes?.map((note) => {
-					return (
-						<Card
-							p="lg"
-							withBorder
-							key={note.id}
-						>
-							<Card.Section>
-								<AspectRatio ratio={16 / 9}>
-									<Image src={note.preview} />
-								</AspectRatio>
-							</Card.Section>
-							<Link
-								to={`./${note.id}`}
+			{notes.length ? (
+				<SimpleGrid
+					cols={4}
+					breakpoints={[
+						{ maxWidth: 'md', cols: 3 },
+						{ maxWidth: 'sm', cols: 2 },
+						{ maxWidth: 'xs', cols: 1 },
+					]}
+				>
+					{notes?.map((note) => {
+						return (
+							<Card
+								p="lg"
+								withBorder
 								key={note.id}
 							>
-								Note
-							</Link>
-							<fetcher.Form method={'post'}>
-								<input
-									type="hidden"
-									name={'noteId'}
-									value={note.id}
-								/>
-								<ActionIcon
-									type={'submit'}
-									name={'intent'}
-									value={'deleteNote'}
+								<Card.Section>
+									<AspectRatio ratio={16 / 9}>
+										<Image src={note.preview} />
+									</AspectRatio>
+								</Card.Section>
+								<Link
+									to={`./${note.id}`}
+									key={note.id}
 								>
-									<IconTrash size={18} />
-								</ActionIcon>
-							</fetcher.Form>
-						</Card>
-					);
-				})}
-			</SimpleGrid>
+									Note
+								</Link>
+								<fetcher.Form
+									method={'post'}
+									action={'/notes'}
+								>
+									<input
+										type="hidden"
+										name={'noteId'}
+										value={note.id}
+									/>
+									<ActionIcon
+										type={'submit'}
+										name={'intent'}
+										value={'deleteNote'}
+									>
+										<IconTrash size={18} />
+									</ActionIcon>
+								</fetcher.Form>
+							</Card>
+						);
+					})}
+				</SimpleGrid>
+			) : (
+				<Title
+					order={3}
+					align={'center'}
+				>
+					Nothing found
+				</Title>
+			)}
 		</>
 	);
 }
