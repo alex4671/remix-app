@@ -21,7 +21,6 @@ import {
 	useSearchParams,
 	useTransition,
 } from '@remix-run/react';
-import { nanoid } from 'nanoid';
 import { useEffect, useRef } from 'react';
 import { z } from 'zod';
 import { CheckboxAsString, parseFormSafe } from 'zodix';
@@ -99,10 +98,6 @@ export default function LoginPage() {
 		}
 	}, [actionData]);
 
-	const handleCreateSessionId = () => {
-		sessionStorage.setItem('sessionId', nanoid());
-	};
-
 	return (
 		<Container
 			size={'xs'}
@@ -179,7 +174,6 @@ export default function LoginPage() {
 					mt="xl"
 					type={'submit'}
 					loading={isLoading}
-					onClick={handleCreateSessionId}
 				>
 					Sign in
 				</PrimaryButton>

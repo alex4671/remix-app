@@ -19,7 +19,6 @@ import {
 	useSearchParams,
 	useTransition,
 } from '@remix-run/react';
-import { nanoid } from 'nanoid';
 import { useEffect, useRef } from 'react';
 import { z } from 'zod';
 import { parseFormSafe } from 'zodix';
@@ -116,10 +115,6 @@ export default function Join() {
 		}
 	}, [actionData]);
 
-	const handleCreateSessionId = () => {
-		sessionStorage.setItem('sessionId', nanoid());
-	};
-
 	return (
 		<Container
 			size={'xs'}
@@ -178,7 +173,6 @@ export default function Join() {
 					mt="xl"
 					type={'submit'}
 					loading={isLoading}
-					onClick={handleCreateSessionId}
 				>
 					Sign up
 				</PrimaryButton>
