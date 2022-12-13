@@ -166,7 +166,7 @@ export default function RecorderIndex() {
 															onChange={(event) =>
 																handleMakePublic(event, recording.id)
 															}
-															mb={20}
+															my={'lg'}
 															color={'emerald'}
 														/>
 														<CopyButton

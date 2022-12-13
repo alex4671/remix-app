@@ -226,7 +226,7 @@ export const FilesGrid = ({
 														onChange={(event) =>
 															handleMakePublic(event, file.id)
 														}
-														mb={20}
+														my={'lg'}
 														color={'emerald'}
 													/>
 													<CopyButton
