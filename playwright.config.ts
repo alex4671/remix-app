@@ -14,7 +14,7 @@ import { devices } from '@playwright/test';
  */
 const config: PlaywrightTestConfig = {
 	// Inits global setup.
-	globalSetup: require.resolve('./tests/setup-playwright.ts'),
+	// globalSetup: require.resolve('./tests/setup-playwright.ts'),
 
 	// Directory that will be recursively scanned for test files.
 	testDir: './tests/e2e',
@@ -47,7 +47,7 @@ const config: PlaywrightTestConfig = {
 	// See https://playwright.dev/docs/api/class-testoptions.
 	use: {
 		// Tells all tests to load signed-in state from 'my-file.json'.
-		storageState: './tests/auth-storage.json',
+		// storageState: './tests/auth-storage.json',
 
 		// Maximum time each action such as `click()` can take. Defaults to 0 (no limit).
 		actionTimeout: 0,
