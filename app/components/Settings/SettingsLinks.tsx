@@ -128,6 +128,21 @@ export const SettingsLinks = () => {
 				variant="filled"
 				prefetch={'intent'}
 			/>
+			{/*<NavLink*/}
+			{/*	component={Link}*/}
+			{/*	to="./scheduler"*/}
+			{/*	label="Scheduler"*/}
+			{/*	icon={*/}
+			{/*		<IconCalendarEvent*/}
+			{/*			size={16}*/}
+			{/*			stroke={1.5}*/}
+			{/*		/>*/}
+			{/*	}*/}
+			{/*	className={cx(classes.link, {*/}
+			{/*		[classes.linkActive]: location.pathname.includes('scheduler'),*/}
+			{/*	})}*/}
+			{/*	variant="filled"*/}
+			{/*/>*/}
 			<NavLink
 				component={Link}
 				to="./danger"

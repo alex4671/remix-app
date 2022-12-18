@@ -93,6 +93,7 @@ const mantineTheme = {
 	// primaryShade: {light: 5, dark: 9},
 	colors: { ...colors },
 	defaultRadius: '0',
+	primaryColor: 'dark',
 	// activeStyles: { transform: 'scale(0.95)', transition: "transform 0.03s ease-in-out" },
 	components: {
 		Badge: {

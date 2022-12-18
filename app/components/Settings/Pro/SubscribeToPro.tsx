@@ -77,23 +77,23 @@ export const SubscribeToPro = () => {
 								{ label: 'Monthly', value: '26608' },
 								{ label: 'Yearly', value: '26609' },
 							]}
-							styles={(theme) => ({
-								item: {
-									borderRadius: 0,
-									'&[data-selected]': {
-										'&, &:hover': {
-											backgroundColor:
-												theme.colorScheme === 'dark'
-													? theme.colors.dark[5]
-													: theme.colors.gray[2],
-											color:
-												theme.colorScheme === 'dark'
-													? theme.white
-													: theme.colors.dark[5],
-										},
-									},
-								},
-							})}
+							// styles={(theme) => ({
+							// 	item: {
+							// 		borderRadius: 0,
+							// 		'&[data-selected]': {
+							// 			'&, &:hover': {
+							// 				backgroundColor:
+							// 					theme.colorScheme === 'dark'
+							// 						? theme.colors.dark[5]
+							// 						: theme.colors.gray[2],
+							// 				color:
+							// 					theme.colorScheme === 'dark'
+							// 						? theme.white
+							// 						: theme.colors.dark[5],
+							// 			},
+							// 		},
+							// 	},
+							// })}
 							rightSection={<IconChevronDown size={14} />}
 						/>
 					</Stack>
