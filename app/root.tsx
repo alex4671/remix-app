@@ -117,14 +117,14 @@ export default function App() {
 			<MantineProvider
 				theme={{
 					colorScheme: theme,
-					focusRingStyles: {
-						styles: (theme) => ({
-							outline: `1px solid ${theme.colors.dark[1]}`,
-						}),
-						inputStyles: (theme) => ({
-							border: `1px solid ${theme.colors.dark[1]}`,
-						}),
-					},
+					// focusRingStyles: {
+					// 	styles: (theme) => ({
+					// 		outline: `1px solid ${theme.colors.dark[1]}`,
+					// 	}),
+					// 	inputStyles: (theme) => ({
+					// 		border: `1px solid ${theme.colors.dark[1]}`,
+					// 	}),
+					// },
 					...mantineTheme,
 				}}
 				withGlobalStyles
