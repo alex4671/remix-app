@@ -143,7 +143,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 			const options = {
 				From: 'hi@alexkulchenko.com',
-				To: 'hi@alexkulchenko.com',
+				To: user.email,
 				Subject: 'Activate your account',
 				HtmlBody: emailHtml,
 				Headers: [

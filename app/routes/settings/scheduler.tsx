@@ -14,6 +14,7 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ request }: LoaderArgs) => {
 	const user = await requireUser(request);
 	const active = await notifierQueue.getJobs(['active']);
+	const getActive = await notifierQueue.getDelayed();
 	const delayed = await notifierQueue.getJobs(['delayed']);
 	const waiting = await notifierQueue.getJobs(['waiting']);
 	const wait = await notifierQueue.getJobs(['wait']);
@@ -28,7 +29,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 		'failed',
 		'paused',
 	);
-	return json({ active, delayed, waiting, wait, repeat, counts });
+	return json({ active, getActive, delayed, waiting, wait, repeat, counts });
 };
 
 export const action = async ({ request }: ActionArgs) => {
@@ -65,7 +66,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function Scheduler() {
-	const { active, delayed, waiting, wait, repeat, counts } =
+	const { active, delayed, waiting, wait, repeat, counts, getActive } =
 		useLoaderData<typeof loader>();
 	const fetcher = useFetcher();
 	console.log('active', active);
@@ -74,6 +75,7 @@ export default function Scheduler() {
 	console.log('wait', wait);
 	console.log('repeat', repeat);
 	console.log('counts', counts);
+	console.log('getActive', getActive);
 
 	return (
 		<>

@@ -25,6 +25,7 @@ export async function getUserById(id: User['id']) {
 		where: { id },
 		include: {
 			payment: true,
+			notificationSettings: true,
 		},
 	});
 }

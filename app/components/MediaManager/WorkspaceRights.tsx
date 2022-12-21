@@ -95,6 +95,7 @@ export const WorkspaceRights = ({ rights, collaboratorId, isOwner }: Props) => {
 								<Switch
 									label="Upload"
 									name={'rightsUpload'}
+									mt={'sm'}
 									checked={workspaceRights.upload}
 									onChange={(event) =>
 										setWorkspaceRights({
@@ -108,6 +109,7 @@ export const WorkspaceRights = ({ rights, collaboratorId, isOwner }: Props) => {
 								<Switch
 									label="Delete"
 									name={'rightsDelete'}
+									mt={'sm'}
 									checked={workspaceRights.delete}
 									onChange={(event) =>
 										setWorkspaceRights({
@@ -121,6 +123,7 @@ export const WorkspaceRights = ({ rights, collaboratorId, isOwner }: Props) => {
 								<Switch
 									label="Comment"
 									name={'rightsComment'}
+									mt={'sm'}
 									checked={workspaceRights.comment}
 									onChange={(event) =>
 										setWorkspaceRights({
