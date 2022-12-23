@@ -1,7 +1,16 @@
-import { Box, Button, Group, Paper, Text, Title } from '@mantine/core';
+import {
+	ActionIcon,
+	Box,
+	Button,
+	Group,
+	Paper,
+	Text,
+	Title,
+} from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
+import { IconX } from '@tabler/icons';
 import { notifierQueue } from '~/queues/notifier.server';
 import { requireUser } from '~/server/session.server';
 
@@ -45,11 +54,11 @@ export const action = async ({ request }: ActionArgs) => {
 					emailAddress: 'email',
 				},
 				{
-					delay: 60000,
-					// repeat: {
-					// 	every: 3000,
-					// 	limit: 10,
-					// },
+					// delay: 10000,
+					repeat: {
+						every: 5000,
+						limit: 10,
+					},
 				},
 			);
 			return json({
@@ -59,6 +68,26 @@ export const action = async ({ request }: ActionArgs) => {
 			});
 		} catch (e) {
 			return json({ success: false, intent, message: 'Error adding job' });
+		}
+	}
+
+	if (intent === 'removeJob') {
+		const jobId = formData.get('jobId')?.toString() ?? '';
+		const repeatJobKey = formData.get('repeatJobKey')?.toString() ?? '';
+		try {
+			if (jobId.includes('repeat')) {
+				await notifierQueue.removeRepeatableByKey(repeatJobKey);
+			} else {
+				await notifierQueue.remove(jobId);
+			}
+
+			return json({
+				success: true,
+				intent,
+				message: 'Job removed',
+			});
+		} catch (e) {
+			return json({ success: false, intent, message: 'Error removing job' });
 		}
 	}
 
@@ -100,7 +129,39 @@ export default function Scheduler() {
 							</Button>
 						</fetcher.Form>
 					</Box>
-					<Box py={12}>Box</Box>
+					<Box py={12}>
+						{getActive?.map((active) => (
+							<Group
+								key={active.id}
+								my={'sm'}
+							>
+								<Text>
+									{active.id} - {active.name}
+								</Text>
+								<fetcher.Form method={'post'}>
+									<input
+										type="hidden"
+										name={'jobId'}
+										value={active.id}
+									/>
+									<input
+										type="hidden"
+										name={'repeatJobKey'}
+										value={active.repeatJobKey}
+									/>
+									<ActionIcon
+										color="red"
+										variant="light"
+										type={'submit'}
+										name={'intent'}
+										value={'removeJob'}
+									>
+										<IconX size={14} />
+									</ActionIcon>
+								</fetcher.Form>
+							</Group>
+						))}
+					</Box>
 				</Box>
 			</Paper>
 		</>

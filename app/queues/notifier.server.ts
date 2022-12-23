@@ -6,6 +6,7 @@ type QueueData = {
 };
 
 export const notifierQueue = Queue<QueueData>('notifier', async (job) => {
+	console.log('job id', job.id);
 	console.log('job data', job.data);
 	// console.log(`Sending email to ${job.data.emailAddress}`);
 	const usersCount = await prisma.user.count();
