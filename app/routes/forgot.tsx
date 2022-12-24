@@ -13,7 +13,7 @@ import type {
 	MetaFunction,
 } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, Link, useActionData, useTransition } from '@remix-run/react';
+import { Form, Link, useActionData, useNavigation } from '@remix-run/react';
 import { IconArrowLeft } from '@tabler/icons';
 import { useEffect, useRef } from 'react';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
@@ -55,9 +55,9 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Forgot() {
-	const transition = useTransition();
+	const navigation = useNavigation();
 	const isLoading =
-		transition.state === 'submitting' || transition.state === 'loading';
+		navigation.state === 'submitting' || navigation.state === 'loading';
 
 	const actionData = useActionData<typeof action>();
 	const emailRef = useRef<HTMLInputElement>(null);

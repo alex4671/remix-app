@@ -16,8 +16,8 @@ import {
 	Form,
 	Link,
 	useActionData,
+	useNavigation,
 	useSearchParams,
-	useTransition,
 } from '@remix-run/react';
 import { useEffect, useRef } from 'react';
 import { z } from 'zod';
@@ -97,10 +97,9 @@ export const meta: MetaFunction = () => {
 
 export default function Join() {
 	const [searchParams] = useSearchParams();
-	const transition = useTransition();
-
+	const navigation = useNavigation();
 	const isLoading =
-		transition.state === 'submitting' || transition.state === 'loading';
+		navigation.state === 'submitting' || navigation.state === 'loading';
 
 	const redirectTo = searchParams.get('redirectTo') ?? undefined;
 	const actionData = useActionData<typeof action>();

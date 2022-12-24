@@ -54,13 +54,14 @@ export const action = async ({ request }: ActionArgs) => {
 					emailAddress: 'email',
 				},
 				{
-					// delay: 10000,
-					repeat: {
-						every: 5000,
-						limit: 10,
-					},
+					delay: 3000,
+					// repeat: {
+					// 	every: 5000,
+					// 	limit: 10,
+					// },
 				},
 			);
+
 			return json({
 				success: true,
 				intent,
@@ -97,7 +98,11 @@ export const action = async ({ request }: ActionArgs) => {
 export default function Scheduler() {
 	const { active, delayed, waiting, wait, repeat, counts, getActive } =
 		useLoaderData<typeof loader>();
+
 	const fetcher = useFetcher();
+
+	// useSubscription(`/api/subscriptions/notifier`, [EventType.NOTIFIER]);
+
 	console.log('active', active);
 	console.log('delayed', delayed);
 	console.log('waiting', waiting);

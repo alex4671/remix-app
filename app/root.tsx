@@ -3,7 +3,7 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { NavigationProgress } from '@mantine/nprogress';
 import type { LinksFunction, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import type { ShouldReloadFunction } from '@remix-run/react';
+import type { ShouldRevalidateFunction } from '@remix-run/react';
 import {
 	Links,
 	LiveReload,
@@ -35,15 +35,18 @@ export const meta: MetaFunction = () => ({
 	viewport: 'width=device-width,initial-scale=1',
 });
 
-export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
+export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
 	// only refetch if changing theme, logout and login
+
+	// console.log('args', args);
+
 	return (
-		submission?.action === '/api/set-theme' ||
-		submission?.action === '/logout' ||
-		Boolean(submission?.action.includes('/login')) ||
-		Boolean(submission?.action.includes('/join')) ||
-		submission?.action === '/settings/account' ||
-		submission?.action === '/settings/danger'
+		args?.formAction === '/api/set-theme' ||
+		args?.formAction === '/logout' ||
+		Boolean(args?.formAction?.includes('/login')) ||
+		Boolean(args?.formAction?.includes('/join')) ||
+		args?.formAction === '/settings/account' ||
+		args?.formAction === '/settings/danger'
 	);
 	// || submission?.action === undefined
 	// || Boolean(submission?.action.includes("/media"))

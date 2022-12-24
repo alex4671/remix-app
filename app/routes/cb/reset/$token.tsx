@@ -15,7 +15,7 @@ import {
 	Link,
 	useActionData,
 	useLoaderData,
-	useTransition,
+	useNavigation,
 } from '@remix-run/react';
 import { IconArrowLeft } from '@tabler/icons';
 import { useEffect, useRef } from 'react';
@@ -75,7 +75,9 @@ export default function Invite() {
 	const data = useLoaderData<typeof loader>();
 	const actionData = useActionData<typeof action>();
 
-	const transition = useTransition();
+	const navigation = useNavigation();
+	const isLoading =
+		navigation.state === 'submitting' || navigation.state === 'loading';
 	const passwordRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
@@ -83,9 +85,6 @@ export default function Invite() {
 			passwordRef.current?.focus();
 		}
 	}, [actionData]);
-
-	const isLoading =
-		transition.state === 'submitting' || transition.state === 'loading';
 
 	return (
 		<Container size={600}>

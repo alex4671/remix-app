@@ -1,6 +1,6 @@
+import { useRevalidator } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
-import { useDataRefresh } from 'remix-utils';
 
 export enum EventType {
 	CREATE_WORKSPACE = 'CREATE_WORKSPACE',
@@ -15,10 +15,11 @@ export enum EventType {
 	CREATE_COMMENT = 'CREATE_COMMENT',
 	DELETE_COMMENT = 'DELETE_COMMENT',
 	REORDER_WORKSPACE = 'REORDER_WORKSPACE',
+	NOTIFIER = 'NOTIFIER',
 }
 
 export function useSubscription(href: string, events: string[]) {
-	let { refresh } = useDataRefresh();
+	let revalidator = useRevalidator();
 
 	useEffect(() => {
 		let eventSource = new EventSource(href);
@@ -28,7 +29,7 @@ export function useSubscription(href: string, events: string[]) {
 
 			if (events.includes(event.type)) {
 				if (event.data !== sessionId) {
-					refresh();
+					revalidator.revalidate();
 				}
 			}
 		};
