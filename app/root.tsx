@@ -57,7 +57,11 @@ export async function loader({ request, params }: LoaderArgs) {
 		getTheme(request),
 		getUser(request),
 	]);
-
+	// const test = encrypt(JSON.stringify({ data: 'Test', success: true }));
+	//
+	// const decrypted = decrypt(test);
+	// console.log('encrypted text', test);
+	// console.log('decrypted text', JSON.parse(decrypted));
 	return json({
 		theme,
 		user,
