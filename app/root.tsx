@@ -147,6 +147,15 @@ export default function App() {
 						px={{ base: '12' }}
 					>
 						{user && !params.fileId && <Navbar />}
+						{/*<motion.main*/}
+						{/*	key={pathname}*/}
+						{/*	initial={{ opacity: 0, y: 15 }}*/}
+						{/*	animate={{ opacity: 1, y: 0 }}*/}
+						{/*	exit={{ opacity: 0, y: 15 }}*/}
+						{/*	transition={{ delay: 0.25 }}*/}
+						{/*>*/}
+						{/*	{outlet}*/}
+						{/*</motion.main>*/}
 						<Outlet />
 					</Container>
 				</NotificationsProvider>

@@ -21,7 +21,7 @@ export default function FeedbackEmail({
 			<Section style={main}>
 				<Container style={container}>
 					<Text style={h3}>From {userEmail}</Text>
-					<Text style={h3}>Feedback Type: {type}</Text>
+					<Text style={h3}>Type: {type}</Text>
 					<Text style={h3}>Feedback: {feedback}</Text>
 				</Container>
 			</Section>

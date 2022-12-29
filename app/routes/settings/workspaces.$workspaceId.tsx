@@ -159,6 +159,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 			const usersToNotify = [workspaceToDelete.ownerId, ...Array.from(set)];
 
+			// todo make this in separate job
 			if (workspaceToDelete?.media?.length) {
 				for (const { fileUrl } of workspaceToDelete?.media) {
 					await deleteFileFromS3(getFileKey(fileUrl));

@@ -43,7 +43,7 @@ export function useSubscription(href: string, events: string[]) {
 			});
 			eventSource.close();
 		};
-	}, [href]);
+	}, [href, revalidator, events]);
 
 	return null;
 }

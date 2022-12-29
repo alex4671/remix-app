@@ -134,22 +134,36 @@ export default function Join() {
 					name="email"
 					type="email"
 					autoComplete="email"
-					label="Email"
+					label={
+						<Text
+							size={'lg'}
+							fw={700}
+						>
+							Email
+						</Text>
+					}
 					required
-					// defaultValue={'alex@alex.com'}
+					defaultValue={'alex@alex.com'}
 					error={actionData?.errors?.emailError}
 					pb={actionData?.errors?.emailError ? 0 : 20}
 					withAsterisk={false}
 				/>
 				<PasswordInput
-					label="Password"
+					label={
+						<Text
+							size={'lg'}
+							fw={700}
+						>
+							Password
+						</Text>
+					}
 					required
 					id="password"
 					ref={passwordRef}
 					name="password"
 					autoComplete="current-password"
 					aria-describedby="password-error"
-					// defaultValue={'alexalex'}
+					defaultValue={'alexalex'}
 					error={actionData?.errors?.passwordError}
 					pb={actionData?.errors?.passwordError ? 0 : 20}
 					withAsterisk={false}

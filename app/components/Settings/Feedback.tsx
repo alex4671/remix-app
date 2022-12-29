@@ -57,11 +57,12 @@ export const Feedback = () => {
 					<fetcher.Form method={'post'}>
 						<Select
 							placeholder="Pick one"
-							defaultValue={'bug'}
+							defaultValue={'feature'}
 							name={'type'}
+							label={'Type'}
 							data={[
-								{ value: 'bug', label: 'Bug' },
 								{ value: 'feature', label: 'Feature request' },
+								{ value: 'bug', label: 'Bug' },
 								{ value: 'other', label: 'Other' },
 							]}
 						/>
@@ -70,7 +71,9 @@ export const Feedback = () => {
 							autosize
 							minRows={4}
 							name={'feedback'}
+							label={'Feedback'}
 							required
+							withAsterisk={false}
 							onChange={handleTextChange}
 							error={!fetcher.data?.success ? fetcher.data?.message : null}
 						/>
