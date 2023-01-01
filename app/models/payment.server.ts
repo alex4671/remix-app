@@ -160,10 +160,19 @@ export const subscriptionPaymentRefunded = async (
 	paddle: SubscriptionPaymentRefundedWebhook,
 ) => {
 	const { p_signature, alert_name, ...paddleData } = paddle;
-	const { email } = paddleData;
+	const { email, status } = paddleData;
 	const user = await prisma.user.findUnique({ where: { email } });
 
 	if (user) {
+		await prisma.userPayment.update({
+			where: {
+				userId: user.id,
+			},
+			data: {
+				subscriptionStatus: status,
+				subscriptionEndDate: Date.now().toString(), // todo check this
+			},
+		});
 		await prisma.userPaymentHistory.create({
 			data: {
 				userId: user?.id,
