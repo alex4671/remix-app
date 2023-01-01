@@ -6,9 +6,9 @@ import type {
 	SubscriptionPaymentSucceededWebhook,
 	SubscriptionUpdatedWebhook,
 } from '@invertase/node-paddle-sdk';
+import dayjs from 'dayjs';
 import { prisma } from '~/server/db.server';
 
-// todo remove new Date
 export const subscriptionCreated = async (
 	paddle: SubscriptionCreatedWebhook,
 ) => {
@@ -116,10 +116,12 @@ export const subscriptionPaymentSucceeded = async (
 		},
 		update: {
 			subscriptionStatus: status,
+			// subscriptionId: subscription_id, todo check if new subscription id needed
 			subscriptionPlanId: subscription_plan_id,
 			subscriptionEndDate: next_bill_date,
 		},
 	});
+
 	// todo check uniqueness of alert_id or make in unique in schema
 	await prisma.userPaymentHistory.create({
 		data: {
@@ -170,7 +172,7 @@ export const subscriptionPaymentRefunded = async (
 			},
 			data: {
 				subscriptionStatus: status,
-				subscriptionEndDate: Date.now().toString(), // todo check this
+				subscriptionEndDate: dayjs(new Date()).format('YYYY-MM-DD'), // todo check this
 			},
 		});
 		await prisma.userPaymentHistory.create({

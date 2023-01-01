@@ -112,7 +112,7 @@ export const formatMoney = (
 };
 
 export const formatBytes = (bytes: number | undefined, decimals = 2) => {
-	if (!bytes) return '0';
+	if (!bytes) return '0'; // todo ???
 	if (!+bytes) return '0 Bytes';
 
 	const k = 1024;
