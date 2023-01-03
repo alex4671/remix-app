@@ -1,35 +1,31 @@
 import {
-	ActionIcon,
-	Avatar,
-	Badge,
 	Box,
 	Grid,
 	Group,
-	Paper,
 	SimpleGrid,
 	Switch,
-	Text,
 	TextInput,
 	Title,
-	Tooltip,
 } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderArgs, SerializeFrom } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import { IconFiles, IconSettings } from '@tabler/icons';
+import { useLoaderData } from '@remix-run/react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { GenericCatchBoundary } from '~/components/Errors/GenericCatchBoundary';
 import { GenericErrorBoundary } from '~/components/Errors/GenericErrorBoundary';
 import { CreateNewWorkspace } from '~/components/Settings/Workspaces/CreateNewWorkspace';
+import { WorkspacesListItem } from '~/components/Workspaces/WorkspacesListItem';
 import { EventType, useSubscription } from '~/hooks/useSubscription';
 import { getAllowedWorkspaces } from '~/models/workspace.server';
 import { requireUser } from '~/server/session.server';
 
 dayjs.extend(relativeTime);
+
+export type WorkspacesLoader = SerializeFrom<typeof loader>;
 
 export const loader = async ({ request }: LoaderArgs) => {
 	const user = await requireUser(request);
@@ -49,8 +45,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function WorkspacesIndex() {
 	const { user, workspaces } = useLoaderData<typeof loader>();
 	const [checked, setChecked] = useState(false);
-	const navigate = useNavigate();
-	const location = useLocation();
 
 	const [searchValue, setSearchValue] = useInputState('');
 
@@ -62,17 +56,6 @@ export default function WorkspacesIndex() {
 		EventType.REORDER_WORKSPACE,
 		EventType.UPDATE_NAME_WORKSPACE,
 	]);
-
-	const handleGoWorkspace = (workspaceId: string) => {
-		navigate(`./media/${workspaceId}`);
-	};
-
-	const handleGoSettings = (event: any, workspaceId: string) => {
-		event.stopPropagation();
-		navigate(`/settings/workspaces/${workspaceId}`, {
-			state: location.pathname,
-		});
-	};
 
 	const filteredWorkspaces = workspaces
 		?.filter((workspace) =>
@@ -125,115 +108,10 @@ export default function WorkspacesIndex() {
 						mode={'popLayout'}
 					>
 						{filteredWorkspaces?.map((w) => (
-							<Paper
-								component={motion.div}
-								layout
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								exit={{ opacity: 0 }}
-								transition={{ opacity: { duration: 0.3 } }}
-								p="md"
+							<WorkspacesListItem
 								key={w.id}
-								withBorder
-								onClick={() => handleGoWorkspace(w.id)}
-								sx={{ cursor: 'pointer' }}
-							>
-								<Group position={'apart'}>
-									<Text size={'lg'}>{w.name}</Text>
-									<ActionIcon
-										onClick={(event: any) => handleGoSettings(event, w.id)}
-									>
-										<IconSettings size={16} />
-									</ActionIcon>
-								</Group>
-								<Group
-									mt={12}
-									position={'apart'}
-								>
-									{user.email === w.owner.email ? (
-										<Badge color={'emerald'}>You</Badge>
-									) : (
-										<Badge color={'blue'}>{w.owner.email}</Badge>
-									)}
-									<Text
-										size={'sm'}
-										color={'dimmed'}
-									>
-										{dayjs().to(dayjs(w.createdAt))}
-									</Text>
-								</Group>
-								<Group
-									mt={12}
-									position={'apart'}
-								>
-									<Group spacing={4}>
-										<IconFiles
-											size={16}
-											stroke={1}
-										/>
-										<Text
-											size={'sm'}
-											color={'dimmed'}
-										>
-											{w.media.length}
-										</Text>
-									</Group>
-									{w.collaborator.length ? (
-										<Tooltip.Group
-											openDelay={300}
-											closeDelay={100}
-										>
-											<Avatar.Group spacing="sm">
-												{w.collaborator
-													.filter((c) => c.user.email !== user.email)
-													.slice(0, 2)
-													.map((c) => (
-														<Tooltip
-															key={c.id}
-															label={c.user.email}
-															withArrow
-														>
-															<Avatar
-																src={c.user.avatarUrl}
-																radius="xl"
-																size={'sm'}
-															/>
-														</Tooltip>
-													))}
-												{w.collaborator
-													.filter((c) => c.user.email !== user.email)
-													.slice(2).length ? (
-													<Tooltip
-														withArrow
-														label={
-															<>
-																{w.collaborator
-																	.filter((c) => c.user.email !== user.email)
-																	.slice(2)
-																	.map((c) => (
-																		<div key={c.id}>{c.user.email}</div>
-																	))}
-															</>
-														}
-													>
-														<Avatar
-															radius="xl"
-															size={'sm'}
-														>
-															+
-															{
-																w.collaborator
-																	.filter((c) => c.user.email !== user.email)
-																	.slice(2).length
-															}
-														</Avatar>
-													</Tooltip>
-												) : null}
-											</Avatar.Group>
-										</Tooltip.Group>
-									) : null}
-								</Group>
-							</Paper>
+								workspace={w}
+							/>
 						))}
 					</AnimatePresence>
 				</SimpleGrid>
