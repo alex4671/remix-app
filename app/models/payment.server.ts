@@ -116,7 +116,7 @@ export const subscriptionPaymentSucceeded = async (
 		},
 		update: {
 			subscriptionStatus: status,
-			// subscriptionId: subscription_id, todo check if new subscription id needed
+			subscriptionId: subscription_id,
 			subscriptionPlanId: subscription_plan_id,
 			subscriptionEndDate: next_bill_date,
 		},
