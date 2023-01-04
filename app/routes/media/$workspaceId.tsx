@@ -303,7 +303,6 @@ export default function WorkspaceId() {
 				? filterTypeValue.includes(file.type.split('/')[1])
 				: true,
 		);
-
 	// todo map filteredUserFiles here
 	return (
 		<>
@@ -314,6 +313,7 @@ export default function WorkspaceId() {
 				setSelectedFilesUrls={setSelectedFilesUrls}
 				filteredUserFilesCount={filteredUserFiles.length}
 			/>
+			{/*<SyncFolder fileUrls={fileUrls} />*/}
 			<FilesFilters
 				filterTypeValue={filterTypeValue}
 				searchValue={searchValue}
