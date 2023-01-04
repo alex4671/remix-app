@@ -1,4 +1,12 @@
-import { Affix, Group, Popover, Select, Text, Textarea } from '@mantine/core';
+import {
+	Affix,
+	Group,
+	Popover,
+	Select,
+	Text,
+	Textarea,
+	useMantineTheme,
+} from '@mantine/core';
 import { useFetcher } from '@remix-run/react';
 import { IconMessage } from '@tabler/icons';
 import type { ChangeEvent } from 'react';
@@ -9,6 +17,7 @@ import { DesktopOnly } from '~/components/Utils/DesktopOnly';
 import type { action } from '~/routes/settings';
 
 export const Feedback = () => {
+	const theme = useMantineTheme();
 	const fetcher = useFetcher<typeof action>();
 	const formRef = useRef<HTMLFormElement>(null);
 
@@ -39,10 +48,19 @@ export const Feedback = () => {
 			>
 				<Popover.Target>
 					<Affix
+						zIndex={2}
 						position={{ bottom: 20, right: 20 }}
 						onClick={() => setOpened((o) => !o)}
 					>
-						<SecondaryButton leftIcon={<IconMessage size={16} />}>
+						<SecondaryButton
+							leftIcon={<IconMessage size={16} />}
+							styles={{
+								root: {
+									backgroundColor: '#fff',
+									...theme.fn.hover({ backgroundColor: theme.colors.gray[3] }),
+								},
+							}}
+						>
 							Feedback
 						</SecondaryButton>
 					</Affix>
