@@ -1,4 +1,4 @@
-import { createStyles, NavLink, Stack } from '@mantine/core';
+import { createStyles, Divider, NavLink, Stack } from '@mantine/core';
 import { Link, useLocation } from '@remix-run/react';
 import {
 	IconAlertCircle,
@@ -8,7 +8,9 @@ import {
 	IconFiles,
 	IconFolder,
 	IconUser,
+	IconUserExclamation,
 } from '@tabler/icons';
+import { useUser } from '~/utils/utils';
 
 const useStyles = createStyles((theme) => ({
 	link: {
@@ -32,6 +34,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export const SettingsLinks = () => {
+	const user = useUser();
 	const { classes, cx } = useStyles();
 	const location = useLocation();
 
@@ -104,15 +107,6 @@ export const SettingsLinks = () => {
 				variant="filled"
 				prefetch={'intent'}
 			/>
-			{/*<NavLink*/}
-			{/*  component={Link}*/}
-			{/*  to="./old"*/}
-			{/*  label="Pro Old"*/}
-			{/*  icon={<IconCreditCard size={16} stroke={1.5}/>}*/}
-			{/*  className={cx(classes.link, { [classes.linkActive]: location.pathname.includes("old") })}*/}
-			{/*  variant="filled"*/}
-			{/*  prefetch={"intent"}*/}
-			{/*/>*/}
 			<NavLink
 				component={Link}
 				to="./notifications"
@@ -131,21 +125,6 @@ export const SettingsLinks = () => {
 			/>
 			<NavLink
 				component={Link}
-				to="./scheduler"
-				label="Scheduler"
-				icon={
-					<IconCalendarEvent
-						size={16}
-						stroke={1.5}
-					/>
-				}
-				className={cx(classes.link, {
-					[classes.linkActive]: location.pathname.includes('scheduler'),
-				})}
-				variant="filled"
-			/>
-			<NavLink
-				component={Link}
 				to="./danger"
 				label="Danger zone"
 				icon={
@@ -159,6 +138,57 @@ export const SettingsLinks = () => {
 				})}
 				variant="filled"
 			/>
+			{user.email === 'alex@alex.com' ? (
+				<>
+					<Divider my="sm" />
+					<NavLink
+						component={Link}
+						to="./admin"
+						label="Admin"
+						icon={
+							<IconUserExclamation
+								size={16}
+								stroke={1.5}
+							/>
+						}
+						className={cx(classes.link, {
+							[classes.linkActive]: location.pathname.includes('admin'),
+						})}
+						variant="filled"
+					/>
+					<NavLink
+						component={Link}
+						to="./old"
+						label="Manage User Pro"
+						icon={
+							<IconCreditCard
+								size={16}
+								stroke={1.5}
+							/>
+						}
+						className={cx(classes.link, {
+							[classes.linkActive]: location.pathname.includes('old'),
+						})}
+						variant="filled"
+						prefetch={'intent'}
+					/>
+					<NavLink
+						component={Link}
+						to="./scheduler"
+						label="Scheduler"
+						icon={
+							<IconCalendarEvent
+								size={16}
+								stroke={1.5}
+							/>
+						}
+						className={cx(classes.link, {
+							[classes.linkActive]: location.pathname.includes('scheduler'),
+						})}
+						variant="filled"
+					/>
+				</>
+			) : null}
 		</Stack>
 	);
 };

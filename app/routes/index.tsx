@@ -1,9 +1,9 @@
 import {
 	Box,
+	Chip,
 	Grid,
 	Group,
 	SimpleGrid,
-	Switch,
 	TextInput,
 	Title,
 } from '@mantine/core';
@@ -87,11 +87,13 @@ export default function WorkspacesIndex() {
 				position={'right'}
 				my={12}
 			>
-				<Switch
-					label="Only my workspaces"
+				<Chip
+					color={'emerald'}
 					checked={checked}
-					onChange={(event) => setChecked(event.currentTarget.checked)}
-				/>
+					onChange={() => setChecked((v) => !v)}
+				>
+					Only my workspaces
+				</Chip>
 			</Group>
 			{filteredWorkspaces?.length ? (
 				<SimpleGrid

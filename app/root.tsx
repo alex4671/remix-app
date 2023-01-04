@@ -108,6 +108,11 @@ const mantineTheme = {
 				radius: 0,
 			},
 		},
+		Chip: {
+			defaultProps: {
+				radius: 0,
+			},
+		},
 	},
 };
 
