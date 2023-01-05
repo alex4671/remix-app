@@ -25,6 +25,7 @@ export const generateSignedUrl = async (contentType: string, key: string) => {
 	});
 };
 
+// todo delete many files at once
 export const deleteFileFromS3 = async (key: string) => {
 	if (!key) {
 		return;
