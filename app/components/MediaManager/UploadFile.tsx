@@ -1,4 +1,4 @@
-import { FileButton, Group, Text } from '@mantine/core';
+import { Affix, FileButton, Group, Paper, Text } from '@mantine/core';
 import { useFetcher, useLoaderData } from '@remix-run/react';
 import { IconUpload } from '@tabler/icons';
 import type { Dispatch, SetStateAction } from 'react';
@@ -88,43 +88,59 @@ export const UploadFile = ({
 	// todo make new upload ui with preview/
 	// todo bug with usage count when filtering
 	return (
-		<fetcher.Form
-			method={'post'}
-			encType={'multipart/form-data'}
-		>
-			<HiddenSessionId />
-			<Group position={'apart'}>
-				<Group>
-					{selectedFiles.length ? (
-						<Group>
-							<input
-								type="hidden"
-								name={'filesToDeleteIds'}
-								value={JSON.stringify(selectedFiles)}
-							/>
-							<input
-								type="hidden"
-								name={'filesToDeleteUrls'}
-								value={JSON.stringify(selectedFilesUrls)}
-							/>
-							<DangerButton
-								type={'submit'}
-								name={'intent'}
-								value={'deleteFiles'}
-								disabled={!rights?.delete}
-							>
-								Delete {selectedFiles.length} files
-							</DangerButton>
-							<SecondaryButton onClick={handleSelectAllFiles}>
-								{selectedFiles.length === userFiles?.length
-									? 'Deselect all'
-									: 'Select all'}
-							</SecondaryButton>
-							<SecondaryButton onClick={handleCancelPick}>
-								Cancel
-							</SecondaryButton>
-						</Group>
-					) : (
+		<Group position={'apart'}>
+			<Group>
+				{selectedFiles.length ? (
+					<Affix
+						position={{ bottom: 20, left: '50%' }}
+						style={{ transform: 'translateX(-50%)' }}
+					>
+						<Paper
+							withBorder
+							shadow="sm"
+							p="md"
+						>
+							<fetcher.Form method={'post'}>
+								<Group>
+									<HiddenSessionId />
+									<input
+										type="hidden"
+										name={'filesToDeleteIds'}
+										value={JSON.stringify(selectedFiles)}
+									/>
+									<input
+										type="hidden"
+										name={'filesToDeleteUrls'}
+										value={JSON.stringify(selectedFilesUrls)}
+									/>
+									<DangerButton
+										type={'submit'}
+										name={'intent'}
+										value={'deleteFiles'}
+										disabled={!rights?.delete}
+										onClick={() => console.log('test')}
+									>
+										Delete {selectedFiles.length} files
+									</DangerButton>
+									<SecondaryButton onClick={handleSelectAllFiles}>
+										{selectedFiles.length === userFiles?.length
+											? 'Deselect all'
+											: 'Select all'}
+									</SecondaryButton>
+									<SecondaryButton onClick={handleCancelPick}>
+										Cancel
+									</SecondaryButton>
+								</Group>
+							</fetcher.Form>
+						</Paper>
+					</Affix>
+				) : null}
+				<fetcher.Form
+					method={'post'}
+					encType={'multipart/form-data'}
+				>
+					<HiddenSessionId />
+					<Group>
 						<FileButton
 							resetRef={resetRef}
 							onChange={handleSelectFile}
@@ -143,32 +159,33 @@ export const UploadFile = ({
 								</PrimaryButton>
 							)}
 						</FileButton>
-					)}
-					{files ? (
-						<>
-							<Text>{files.length} file selected</Text>
-							<PrimaryButton
-								type={'submit'}
-								name={'intent'}
-								value={'uploadFiles'}
-							>
-								Upload
-							</PrimaryButton>
-							<DangerButton onClick={handleCancel}>Cancel</DangerButton>
-						</>
-					) : null}
-				</Group>
-				{/*{filesSize !== 0 ? (*/}
-				{/*  <Tooltip*/}
-				{/*    label={`${formatBytes(filesSize)} of ${formatBytes(maxSizeLimit)}`}*/}
-				{/*    withArrow*/}
-				{/*  >*/}
-				{/*    <Text component={"span"}>*/}
-				{/*      {filteredUserFilesCount} files, Used: {Math.round((100 / maxSizeLimit) * (filesSize ?? 0))}%*/}
-				{/*    </Text>*/}
-				{/*  </Tooltip>*/}
-				{/*) : null}*/}
+
+						{files ? (
+							<>
+								<Text>{files.length} file selected</Text>
+								<PrimaryButton
+									type={'submit'}
+									name={'intent'}
+									value={'uploadFiles'}
+								>
+									Upload
+								</PrimaryButton>
+								<DangerButton onClick={handleCancel}>Cancel</DangerButton>
+							</>
+						) : null}
+					</Group>
+				</fetcher.Form>
 			</Group>
-		</fetcher.Form>
+			{/*{filesSize !== 0 ? (*/}
+			{/*  <Tooltip*/}
+			{/*    label={`${formatBytes(filesSize)} of ${formatBytes(maxSizeLimit)}`}*/}
+			{/*    withArrow*/}
+			{/*  >*/}
+			{/*    <Text component={"span"}>*/}
+			{/*      {filteredUserFilesCount} files, Used: {Math.round((100 / maxSizeLimit) * (filesSize ?? 0))}%*/}
+			{/*    </Text>*/}
+			{/*  </Tooltip>*/}
+			{/*) : null}*/}
+		</Group>
 	);
 };
