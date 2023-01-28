@@ -1,6 +1,6 @@
 import { Affix, FileButton, Group, Paper, Text } from '@mantine/core';
 import { useFetcher, useLoaderData } from '@remix-run/react';
-import { IconUpload } from '@tabler/icons';
+import { IconUpload } from '@tabler/icons-react';
 import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { DangerButton } from '~/components/Buttons/DangerButtom';

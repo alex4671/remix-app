@@ -10,7 +10,7 @@ import {
 	Tooltip,
 } from '@mantine/core';
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react';
-import { IconChevronDown, IconInfoCircle } from '@tabler/icons';
+import { IconChevronDown, IconInfoCircle } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { DangerButton } from '~/components/Buttons/DangerButtom';

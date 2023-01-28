@@ -17,7 +17,7 @@ import {
 	useLocation,
 	useNavigate,
 } from '@remix-run/react';
-import { IconChevronLeft } from '@tabler/icons';
+import { IconChevronLeft } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import invariant from 'tiny-invariant';

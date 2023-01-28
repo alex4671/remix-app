@@ -3,7 +3,7 @@ import { showNotification } from '@mantine/notifications';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher, useNavigate } from '@remix-run/react';
-import { IconCheck } from '@tabler/icons';
+import { IconCheck } from '@tabler/icons-react';
 import { useEffect } from 'react';
 import { isUserCurrentlyPro } from '~/models/user.server';
 

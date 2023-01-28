@@ -1,6 +1,6 @@
 import { Group } from '@mantine/core';
 import { useFetcher } from '@remix-run/react';
-import { IconHeadset, IconScreenShare, IconVideo } from '@tabler/icons';
+import { IconHeadset, IconScreenShare, IconVideo } from '@tabler/icons-react';
 import { useRef, useState } from 'react';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { SecondaryButton } from '~/components/Buttons/SecondaryButton';

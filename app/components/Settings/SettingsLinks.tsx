@@ -9,7 +9,7 @@ import {
 	IconFolder,
 	IconUser,
 	IconUserExclamation,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { useUser } from '~/utils/utils';
 
 const useStyles = createStyles((theme) => ({
@@ -47,12 +47,7 @@ export const SettingsLinks = () => {
 				component={Link}
 				to="./workspaces/my"
 				label="Workspaces"
-				icon={
-					<IconFolder
-						size={16}
-						stroke={1.5}
-					/>
-				}
+				icon={<IconFolder size={16} />}
 				className={cx(classes.link, {
 					[classes.linkActive]: location.pathname.includes('workspaces'),
 				})}
@@ -63,12 +58,7 @@ export const SettingsLinks = () => {
 				component={Link}
 				to="./files"
 				label="Files"
-				icon={
-					<IconFiles
-						size={16}
-						stroke={1.5}
-					/>
-				}
+				icon={<IconFiles size={16} />}
 				className={cx(classes.link, {
 					[classes.linkActive]: location.pathname.includes('files'),
 				})}
@@ -79,12 +69,7 @@ export const SettingsLinks = () => {
 				component={Link}
 				to="./account"
 				label="Account"
-				icon={
-					<IconUser
-						size={16}
-						stroke={1.5}
-					/>
-				}
+				icon={<IconUser size={16} />}
 				className={cx(classes.link, {
 					[classes.linkActive]: location.pathname.includes('account'),
 				})}
@@ -95,12 +80,7 @@ export const SettingsLinks = () => {
 				component={Link}
 				to="./pro"
 				label="Pro"
-				icon={
-					<IconCreditCard
-						size={16}
-						stroke={1.5}
-					/>
-				}
+				icon={<IconCreditCard size={16} />}
 				className={cx(classes.link, {
 					[classes.linkActive]: location.pathname.includes('pro'),
 				})}
@@ -111,12 +91,7 @@ export const SettingsLinks = () => {
 				component={Link}
 				to="./notifications"
 				label="Notifications"
-				icon={
-					<IconBell
-						size={16}
-						stroke={1.5}
-					/>
-				}
+				icon={<IconBell size={16} />}
 				className={cx(classes.link, {
 					[classes.linkActive]: location.pathname.includes('notifications'),
 				})}
@@ -127,12 +102,7 @@ export const SettingsLinks = () => {
 				component={Link}
 				to="./danger"
 				label="Danger zone"
-				icon={
-					<IconAlertCircle
-						size={16}
-						stroke={1.5}
-					/>
-				}
+				icon={<IconAlertCircle size={16} />}
 				className={cx(classes.link, {
 					[classes.linkActive]: location.pathname.includes('danger'),
 				})}
@@ -145,12 +115,7 @@ export const SettingsLinks = () => {
 						component={Link}
 						to="./admin"
 						label="Admin"
-						icon={
-							<IconUserExclamation
-								size={16}
-								stroke={1.5}
-							/>
-						}
+						icon={<IconUserExclamation size={16} />}
 						className={cx(classes.link, {
 							[classes.linkActive]: location.pathname.includes('admin'),
 						})}
@@ -160,12 +125,7 @@ export const SettingsLinks = () => {
 						component={Link}
 						to="./old"
 						label="Manage User Pro"
-						icon={
-							<IconCreditCard
-								size={16}
-								stroke={1.5}
-							/>
-						}
+						icon={<IconCreditCard size={16} />}
 						className={cx(classes.link, {
 							[classes.linkActive]: location.pathname.includes('old'),
 						})}
@@ -176,12 +136,7 @@ export const SettingsLinks = () => {
 						component={Link}
 						to="./scheduler"
 						label="Scheduler"
-						icon={
-							<IconCalendarEvent
-								size={16}
-								stroke={1.5}
-							/>
-						}
+						icon={<IconCalendarEvent size={16} />}
 						className={cx(classes.link, {
 							[classes.linkActive]: location.pathname.includes('scheduler'),
 						})}

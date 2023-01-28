@@ -13,7 +13,11 @@ import {
 	UnstyledButton,
 } from '@mantine/core';
 import { useLoaderData } from '@remix-run/react';
-import { IconChevronDown, IconChevronUp, IconSelector } from '@tabler/icons';
+import {
+	IconChevronDown,
+	IconChevronUp,
+	IconSelector,
+} from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import type { loader } from '~/routes/settings/files';

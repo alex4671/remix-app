@@ -9,7 +9,7 @@ import {
 	ScrollArea,
 	Text,
 } from '@mantine/core';
-import { IconBell } from '@tabler/icons';
+import { IconBell } from '@tabler/icons-react';
 
 export const Notifications = () => {
 	return (

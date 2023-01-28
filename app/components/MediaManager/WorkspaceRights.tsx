@@ -9,7 +9,7 @@ import {
 	Text,
 } from '@mantine/core';
 import { useFetcher } from '@remix-run/react';
-import { IconEdit } from '@tabler/icons';
+import { IconEdit } from '@tabler/icons-react';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import type { action } from '~/routes/media/$workspaceId';

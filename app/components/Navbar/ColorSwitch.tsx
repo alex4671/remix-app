@@ -1,7 +1,7 @@
 import { ActionIcon } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
 import { useFetcher } from '@remix-run/react';
-import { IconMoon, IconSun } from '@tabler/icons';
+import { IconMoon, IconSun } from '@tabler/icons-react';
 import { useAppTheme } from '~/utils/utils';
 
 export const ColorSwitch = () => {

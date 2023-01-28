@@ -25,7 +25,7 @@ import {
 	IconMessage2,
 	IconShare,
 	IconTrash,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { nanoid } from 'nanoid';
 import type { Dispatch, SetStateAction } from 'react';
 import { HiddenSessionId } from '~/components/Utils/HiddenSessionId';

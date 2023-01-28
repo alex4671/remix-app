@@ -6,7 +6,7 @@ import {
 	IconMessage2,
 	IconTrash,
 	IconUpload,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { nanoid } from 'nanoid';

@@ -4,7 +4,7 @@ import type { SpotlightAction } from '@mantine/spotlight';
 import { registerSpotlightActions, useSpotlight } from '@mantine/spotlight';
 import type { NavigateFunction } from '@remix-run/react';
 import { useFetcher, useNavigate } from '@remix-run/react';
-import { IconCommand } from '@tabler/icons';
+import { IconCommand } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 
 export const spotlightActions = (

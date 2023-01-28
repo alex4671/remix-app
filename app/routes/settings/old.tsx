@@ -18,7 +18,7 @@ import { upperFirst } from '@mantine/hooks';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react';
-import { IconCurrencyDollar } from '@tabler/icons';
+import { IconCurrencyDollar } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import invariant from 'tiny-invariant';

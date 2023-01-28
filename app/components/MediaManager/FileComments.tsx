@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import type { SerializeFrom } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
-import { IconMessage2 } from '@tabler/icons';
+import { IconMessage2 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 import { DangerButton } from '~/components/Buttons/DangerButtom';

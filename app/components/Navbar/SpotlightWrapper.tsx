@@ -1,5 +1,5 @@
 import { SpotlightProvider } from '@mantine/spotlight';
-import { IconSearch } from '@tabler/icons';
+import { IconSearch } from '@tabler/icons-react';
 import { Spotlight } from '~/components/Navbar/Spotlight';
 
 export const SpotlightWrapper = () => {

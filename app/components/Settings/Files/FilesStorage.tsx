@@ -14,6 +14,8 @@ export const FilesStorage = () => {
 
 	const fileUsagePercent = Math.round((100 / maxSizeLimit) * userFilesSize);
 
+	const usage = `${formatBytes(userFilesSize)} of ${formatBytes(maxSizeLimit)}`;
+
 	return (
 		<Paper
 			shadow="0"
@@ -62,9 +64,9 @@ export const FilesStorage = () => {
 					<Text
 						size={'lg'}
 						align={'center'}
-					>{`${formatBytes(userFilesSize)} of ${formatBytes(
-						maxSizeLimit,
-					)}`}</Text>
+					>
+						{usage}
+					</Text>
 				</Box>
 			</Box>
 		</Paper>

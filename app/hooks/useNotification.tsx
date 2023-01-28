@@ -1,6 +1,6 @@
 import { showNotification } from '@mantine/notifications';
 import { useFetchers } from '@remix-run/react';
-import { IconCheck, IconX } from '@tabler/icons';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import { useEffect } from 'react';
 
 export const useNotification = () => {

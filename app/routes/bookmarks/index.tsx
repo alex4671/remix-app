@@ -9,7 +9,7 @@ import {
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Link, useFetcher, useLoaderData } from '@remix-run/react';
-import { IconTrash } from '@tabler/icons';
+import { IconTrash } from '@tabler/icons-react';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { getAllUserBookmarks } from '~/models/bookmarks.server';
 import { requireUser } from '~/server/session.server';

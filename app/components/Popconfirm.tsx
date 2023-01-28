@@ -1,5 +1,5 @@
 import { Button, Group, Popover, Text } from '@mantine/core';
-import { IconInfoCircle } from '@tabler/icons';
+import { IconInfoCircle } from '@tabler/icons-react';
 import { useState } from 'react';
 
 interface Props {

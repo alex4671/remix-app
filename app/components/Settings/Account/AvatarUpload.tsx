@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useActionData, useFetcher } from '@remix-run/react';
-import { IconExclamationMark, IconUpload } from '@tabler/icons';
+import { IconExclamationMark, IconUpload } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';

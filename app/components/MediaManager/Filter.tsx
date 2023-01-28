@@ -9,7 +9,11 @@ import {
 	TextInput,
 } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
-import { IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons';
+import {
+	IconChevronDown,
+	IconChevronUp,
+	IconSearch,
+} from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { SecondaryButton } from '~/components/Buttons/SecondaryButton';

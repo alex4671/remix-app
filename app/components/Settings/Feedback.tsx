@@ -8,7 +8,7 @@ import {
 	useMantineTheme,
 } from '@mantine/core';
 import { useFetcher } from '@remix-run/react';
-import { IconMessage } from '@tabler/icons';
+import { IconMessage } from '@tabler/icons-react';
 import type { ChangeEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
@@ -54,12 +54,12 @@ export const Feedback = () => {
 					>
 						<SecondaryButton
 							leftIcon={<IconMessage size={16} />}
-							styles={{
-								root: {
-									backgroundColor: '#fff',
-									...theme.fn.hover({ backgroundColor: theme.colors.gray[3] }),
-								},
-							}}
+							// styles={{
+							// 	root: {
+							// 		backgroundColor: '#fff',
+							// 		...theme.fn.hover({ backgroundColor: theme.colors.gray[3] }),
+							// 	},
+							// }}
 						>
 							Feedback
 						</SecondaryButton>

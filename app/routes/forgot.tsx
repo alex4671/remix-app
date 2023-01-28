@@ -14,7 +14,7 @@ import type {
 } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, Link, useActionData, useNavigation } from '@remix-run/react';
-import { IconArrowLeft } from '@tabler/icons';
+import { IconArrowLeft } from '@tabler/icons-react';
 import { useEffect, useRef } from 'react';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { generateResetToken, getUserByEmail } from '~/models/user.server';

@@ -3,7 +3,7 @@ import {
 	IconPlayerPlay,
 	IconVolume,
 	IconVolume3,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 
 const useVideoPlayer = (videoElement) => {

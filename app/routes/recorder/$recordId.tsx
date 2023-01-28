@@ -2,7 +2,7 @@ import { AspectRatio, Box, Group } from '@mantine/core';
 import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
-import { IconChevronLeft } from '@tabler/icons';
+import { IconChevronLeft } from '@tabler/icons-react';
 import invariant from 'tiny-invariant';
 import { SecondaryButton } from '~/components/Buttons/SecondaryButton';
 import { getRecordById } from '~/models/media.server';

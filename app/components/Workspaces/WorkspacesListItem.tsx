@@ -8,7 +8,7 @@ import {
 	Tooltip,
 } from '@mantine/core';
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
-import { IconFiles, IconSettings } from '@tabler/icons';
+import { IconFiles, IconSettings } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import type { loader, WorkspacesLoader } from '~/routes';

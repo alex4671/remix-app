@@ -3,7 +3,7 @@ import { RichTextEditor } from '@mantine/tiptap';
 import type { LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Link as RemixLink, useFetcher, useLoaderData } from '@remix-run/react';
-import { IconColorPicker } from '@tabler/icons';
+import { IconColorPicker } from '@tabler/icons-react';
 import Color from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import { Link } from '@tiptap/extension-link';

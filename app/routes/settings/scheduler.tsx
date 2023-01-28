@@ -10,7 +10,7 @@ import {
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
-import { IconX } from '@tabler/icons';
+import { IconX } from '@tabler/icons-react';
 import { notifierQueue } from '~/queues/notifier.server';
 import { requireUser } from '~/server/session.server';
 

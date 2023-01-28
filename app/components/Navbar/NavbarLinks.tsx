@@ -8,7 +8,7 @@ import {
 } from '@mantine/core';
 import { useClickOutside, useDisclosure } from '@mantine/hooks';
 import { Link, useLocation, useNavigate } from '@remix-run/react';
-import { IconBolt } from '@tabler/icons';
+import { IconBolt } from '@tabler/icons-react';
 
 const useStyles = createStyles((theme) => ({
 	link: {

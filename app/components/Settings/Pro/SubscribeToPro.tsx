@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { upperFirst } from '@mantine/hooks';
 import { useFetcher, useNavigate } from '@remix-run/react';
-import { IconChevronDown } from '@tabler/icons';
+import { IconChevronDown } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import usePaddle from '~/hooks/usePaddle';

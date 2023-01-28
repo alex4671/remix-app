@@ -1,6 +1,9 @@
 import { Box, Group, Paper, Text, Title } from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import dayjs from 'dayjs';
+import { prisma } from '~/server/db.server';
 import { requireUser } from '~/server/session.server';
 
 export const meta: MetaFunction = () => {
@@ -12,7 +15,9 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ request }: LoaderArgs) => {
 	const user = await requireUser(request);
 
-	return json({});
+	const users = await prisma.user.findMany({ include: { payment: true } });
+
+	return json({ users });
 };
 
 export const action = async ({ request }: ActionArgs) => {
@@ -23,6 +28,10 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function Admin() {
+	const { users } = useLoaderData<typeof loader>();
+
+	console.log('users', users);
+
 	return (
 		<>
 			<Paper
@@ -36,7 +45,14 @@ export default function Admin() {
 					</Group>
 					<Text color={'dimmed'}>Manage app settings</Text>
 					<Box my={12}>Box</Box>
-					<Box py={12}>Box</Box>
+					<Box py={12}>
+						{users?.map((user) => (
+							<Box key={user.id}>
+								{user.email} {user.payment ? 'Pro' : 'Free'}{' '}
+								{dayjs(user.createdAt).format('DD/MM/YYYY')}
+							</Box>
+						))}
+					</Box>
 				</Box>
 			</Paper>
 		</>

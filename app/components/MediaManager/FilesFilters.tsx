@@ -17,7 +17,7 @@ import {
 	IconLayoutGrid,
 	IconLayoutList,
 	IconX,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import type { Dispatch, SetStateAction } from 'react';
@@ -182,8 +182,8 @@ export const FilesFilters = ({
 									onChange={handleSortChange}
 									defaultValue={defaultOrder}
 									data={[
-										{ value: 'asc', label: 'New top' },
-										{ value: 'desc', label: 'Old top' },
+										{ value: 'asc', label: 'Old top' },
+										{ value: 'desc', label: 'New top' },
 									]}
 								/>
 								<Button

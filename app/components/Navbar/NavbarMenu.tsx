@@ -15,7 +15,7 @@ import {
 	IconSettings,
 	IconSwitchHorizontal,
 	IconTrash,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { useState } from 'react';
 import { isNowBeforeDate, useUser } from '~/utils/utils';
 

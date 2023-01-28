@@ -17,7 +17,7 @@ import {
 	useLoaderData,
 	useNavigation,
 } from '@remix-run/react';
-import { IconArrowLeft } from '@tabler/icons';
+import { IconArrowLeft } from '@tabler/icons-react';
 import { useEffect, useRef } from 'react';
 import invariant from 'tiny-invariant';
 import { resetPassword, validateResetToken } from '~/models/user.server';

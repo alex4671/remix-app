@@ -22,7 +22,7 @@ import {
 	IconShare,
 	IconTrash,
 	IconVideo,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { nanoid } from 'nanoid';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { getRecordings } from '~/models/media.server';

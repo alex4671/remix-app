@@ -1,7 +1,7 @@
 import { Box, Group, Paper, Text, TextInput, Title } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { useFetcher } from '@remix-run/react';
-import { IconAlertCircle } from '@tabler/icons';
+import { IconAlertCircle } from '@tabler/icons-react';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { useUser } from '~/utils/utils';
 
