@@ -1,13 +1,11 @@
-import { Group } from '@mantine/core';
-import { Readability } from '@mozilla/readability';
+import { Title, TypographyStylesProvider } from '@mantine/core';
 import type { LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Link as RemixLink, useFetcher, useLoaderData } from '@remix-run/react';
-import { JSDOM } from 'jsdom';
+import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { getBookmarkById } from '~/models/bookmarks.server';
 import { requireUser } from '~/server/session.server';
+import { getArticle } from '~/utils/parser.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
 	await requireUser(request);
@@ -20,41 +18,28 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 		return redirect('/bookmarks');
 	}
 
-	const html = await (await fetch(bookmark.bookmarkUrl)).text();
-
-	const doc = new JSDOM(html);
-	// console.log('html', html);
-	let reader = new Readability(doc.window.document);
-	let article = reader.parse();
-
-	console.log('article', article);
+	const article = await getArticle(bookmark.bookmarkUrl);
+	// console.log('article', article);
 
 	return json({
 		bookmark,
-		article: article?.title ?? '',
+		article,
 	});
 };
 
 export default function Bookmark() {
 	const { bookmark, article } = useLoaderData<typeof loader>();
-	const fetcher = useFetcher();
-	console.log('article', article);
+
+	if (!article?.title) {
+		return <Title order={2}>Unable to parse article</Title>;
+	}
+
 	return (
 		<>
-			<Group
-				position={'right'}
-				my={24}
-			>
-				<PrimaryButton
-					component={RemixLink}
-					to={'/notes/new'}
-				>
-					New note
-				</PrimaryButton>
-			</Group>
-
-			{bookmark.bookmarkUrl}
-			{/*{article?.title}*/}
+			<Title order={1}>{article.title}</Title>
+			<TypographyStylesProvider>
+				<div dangerouslySetInnerHTML={{ __html: article.content }} />
+			</TypographyStylesProvider>
 		</>
 	);
 }

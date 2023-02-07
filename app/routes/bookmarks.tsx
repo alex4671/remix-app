@@ -5,6 +5,7 @@ import { GenericCatchBoundary } from '~/components/Errors/GenericCatchBoundary';
 import { GenericErrorBoundary } from '~/components/Errors/GenericErrorBoundary';
 import { createBookmark, deleteBookmark } from '~/models/bookmarks.server';
 import { requireUser } from '~/server/session.server';
+import { getArticle, isValidHttpUrl } from '~/utils/parser.server';
 
 export const meta: MetaFunction = () => {
 	return {
@@ -27,8 +28,18 @@ export const action = async ({ request }: ActionArgs) => {
 	if (intent === 'createBookmark') {
 		const bookmarkUrl = formData.get('bookmarkUrl')?.toString() ?? '';
 
+		if (!isValidHttpUrl(bookmarkUrl)) {
+			return json({
+				success: false,
+				intent,
+				message: 'It is not correct URL',
+			});
+		}
+
 		try {
-			await createBookmark(user.id, bookmarkUrl);
+			const article = await getArticle(bookmarkUrl);
+
+			await createBookmark(user.id, bookmarkUrl, article?.title);
 			return json({ success: true, intent, message: 'Bookmark created' });
 		} catch (e) {
 			return json({

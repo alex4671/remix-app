@@ -1,5 +1,6 @@
 import {
 	ActionIcon,
+	Anchor,
 	AspectRatio,
 	Card,
 	Group,
@@ -61,12 +62,14 @@ export default function NotesIndex() {
 										<Image src={note.preview} />
 									</AspectRatio>
 								</Card.Section>
-								<Link
+								<Anchor
+									component={Link}
 									to={`./${note.id}`}
 									key={note.id}
+									fz={'md'}
 								>
 									Note
-								</Link>
+								</Anchor>
 								<fetcher.Form
 									method={'post'}
 									action={'/notes'}

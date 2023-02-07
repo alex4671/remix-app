@@ -1,5 +1,6 @@
 import {
 	ActionIcon,
+	Anchor,
 	Card,
 	Group,
 	SimpleGrid,
@@ -65,12 +66,14 @@ export default function BookmarksIndex() {
 								withBorder
 								key={bookmark.id}
 							>
-								<Link
+								<Anchor
+									component={Link}
 									to={`./${bookmark.id}`}
 									key={bookmark.id}
+									fz={'md'}
 								>
-									Bookmark
-								</Link>
+									{bookmark.title}
+								</Anchor>
 								<fetcher.Form
 									method={'post'}
 									action={'/bookmarks'}

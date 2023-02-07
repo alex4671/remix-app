@@ -20,11 +20,13 @@ export const getBookmarkById = (noteId: Bookmarks['id']) => {
 export const createBookmark = (
 	userId: Bookmarks['ownerId'],
 	bookmarkUrl: Bookmarks['bookmarkUrl'],
+	title: Bookmarks['title'],
 ) => {
 	return prisma.bookmarks.create({
 		data: {
 			ownerId: userId,
 			bookmarkUrl,
+			title,
 		},
 	});
 };

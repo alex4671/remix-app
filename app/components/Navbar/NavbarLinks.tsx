@@ -106,6 +106,12 @@ export const NavbarLinks = () => {
 			// new: true,
 		},
 		{
+			to: 'bookmarks',
+			isActive: location.pathname.includes('/bookmarks'),
+			name: 'Bookmarks',
+			// new: true,
+		},
+		{
 			to: 'settings/workspaces/my',
 			isActive: location.pathname.includes('/settings/'),
 			name: 'Settings',

@@ -45,6 +45,7 @@ model Bookmarks {
   id          String   @id @default(cuid())
   owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId     String
+  title       String   @default("Bookmark")
   bookmarkUrl String   @db.Text
   public      Boolean  @default(false)
   favorite    Boolean  @default(false)
