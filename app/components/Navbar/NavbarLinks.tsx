@@ -94,11 +94,11 @@ export const NavbarLinks = () => {
 				location.pathname === '/' || location.pathname.includes('/media/'),
 			name: 'Workspaces',
 		},
-		{
-			to: 'notes',
-			isActive: location.pathname.includes('/notes'),
-			name: 'Notes',
-		},
+		// {
+		// 	to: 'notes',
+		// 	isActive: location.pathname.includes('/notes'),
+		// 	name: 'Notes',
+		// },
 		{
 			to: 'recorder',
 			isActive: location.pathname.includes('/recorder'),
