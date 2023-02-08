@@ -126,3 +126,40 @@ export const PaymentTransactions = () => {
 		</Paper>
 	) : null;
 };
+
+// <Suspense fallback={<p>Loading package location...</p>}>
+// 	<Await
+// 		resolve={userPaymentHistory}
+// 		errorElement={<p>Error loading package location!</p>}
+// 	>
+// 		{(userPaymentHistory) =>
+// 			userPaymentHistory?.map((t) => (
+// 				<tr key={t.id}>
+// 					<td>{dayjs(t.createdAt).format('MMMM D, YYYY')}</td>
+// 					<td>
+// 						<Badge color={'emerald'}>{t.alert_name}</Badge>
+// 					</td>
+// 					<td>
+// 						{t.historyData.old_subscription_plan_id
+// 							? `${upperFirst(
+// 								plans[
+// 									t.historyData?.old_subscription_plan_id!
+// 									],
+// 							)} -> ${upperFirst(
+// 								plans[t.historyData?.subscription_plan_id!],
+// 							)}`
+// 							: upperFirst(
+// 								plans[t.historyData?.subscription_plan_id!],
+// 							)}
+// 					</td>
+// 					<td>
+// 						{formatMoney(
+// 							t.historyData?.sale_gross!,
+// 							t.historyData?.currency!,
+// 						)}
+// 					</td>
+// 				</tr>
+// 			))
+// 		}
+// 	</Await>
+// </Suspense>

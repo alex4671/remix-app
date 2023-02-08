@@ -1,4 +1,12 @@
-import { Affix, FileButton, Group, Paper, Text } from '@mantine/core';
+import {
+	Affix,
+	FileButton,
+	Group,
+	Modal,
+	Paper,
+	Select,
+	Text,
+} from '@mantine/core';
 import { useFetcher, useLoaderData } from '@remix-run/react';
 import { IconUpload } from '@tabler/icons-react';
 import type { Dispatch, SetStateAction } from 'react';
@@ -24,10 +32,12 @@ export const UploadFile = ({
 	setSelectedFilesUrls,
 	filteredUserFilesCount,
 }: Props) => {
-	const { userFiles, filesSize, maxSizeLimit, rights } =
+	const { userFiles, filesSize, maxSizeLimit, rights, allUserWorkspaces } =
 		useLoaderData<typeof loader>();
 	const fetcher = useFetcher();
 
+	console.log('allUserWorkspaces', allUserWorkspaces);
+	const [opened, setOpened] = useState(false);
 	const [files, setFiles] = useState<File[] | null>(null);
 	const resetRef = useRef<() => void>(null);
 
@@ -40,7 +50,10 @@ export const UploadFile = ({
 				return;
 			}
 
-			if (fetcher.submission?.formData.get('intent') === 'deleteFiles') {
+			if (
+				fetcher.submission?.formData.get('intent') === 'deleteFiles' ||
+				fetcher.submission?.formData.get('intent') === 'moveFiles'
+			) {
 				setSelectedFiles([]);
 				setSelectedFilesUrls([]);
 
@@ -85,107 +98,147 @@ export const UploadFile = ({
 		setSelectedFilesUrls([]);
 	};
 
+	const workspacesList = allUserWorkspaces.map((w) => ({
+		value: w.id,
+		label: w.name,
+	}));
+
 	// todo make new upload ui with preview/
 	// todo bug with usage count when filtering
 	return (
-		<Group position={'apart'}>
-			<Group>
-				{selectedFiles.length ? (
-					<Affix
-						position={{ bottom: 20, left: '50%' }}
-						style={{ transform: 'translateX(-50%)' }}
-					>
-						<Paper
-							withBorder
-							shadow="sm"
-							p="md"
+		<>
+			<Group position={'apart'}>
+				<Group>
+					{selectedFiles.length ? (
+						<Affix
+							position={{ bottom: 20, left: '50%' }}
+							style={{ transform: 'translateX(-50%)' }}
+							withinPortal={false}
 						>
-							<fetcher.Form method={'post'}>
+							<Paper
+								withBorder
+								shadow="sm"
+								p="md"
+							>
 								<Group>
-									<HiddenSessionId />
-									<input
-										type="hidden"
-										name={'filesToDeleteIds'}
-										value={JSON.stringify(selectedFiles)}
-									/>
-									<input
-										type="hidden"
-										name={'filesToDeleteUrls'}
-										value={JSON.stringify(selectedFilesUrls)}
-									/>
-									<DangerButton
-										type={'submit'}
-										name={'intent'}
-										value={'deleteFiles'}
-										disabled={!rights?.delete}
-										onClick={() => console.log('test')}
-									>
-										Delete {selectedFiles.length} files
-									</DangerButton>
+									<fetcher.Form method={'post'}>
+										<HiddenSessionId />
+										<input
+											type="hidden"
+											name={'filesToDeleteIds'}
+											value={JSON.stringify(selectedFiles)}
+										/>
+										<input
+											type="hidden"
+											name={'filesToDeleteUrls'}
+											value={JSON.stringify(selectedFilesUrls)}
+										/>
+										<DangerButton
+											type={'submit'}
+											name={'intent'}
+											value={'deleteFiles'}
+											disabled={!rights?.delete}
+										>
+											Delete {selectedFiles.length} files
+										</DangerButton>
+									</fetcher.Form>
 									<SecondaryButton onClick={handleSelectAllFiles}>
 										{selectedFiles.length === userFiles?.length
 											? 'Deselect all'
 											: 'Select all'}
 									</SecondaryButton>
+									<SecondaryButton onClick={() => setOpened(true)}>
+										Move to
+									</SecondaryButton>
 									<SecondaryButton onClick={handleCancelPick}>
 										Cancel
 									</SecondaryButton>
 								</Group>
-							</fetcher.Form>
-						</Paper>
-					</Affix>
-				) : null}
-				<fetcher.Form
-					method={'post'}
-					encType={'multipart/form-data'}
-				>
-					<HiddenSessionId />
-					<Group>
-						<FileButton
-							resetRef={resetRef}
-							onChange={handleSelectFile}
-							name={'file'}
-							multiple
-						>
-							{(props) => (
-								<PrimaryButton
-									leftIcon={<IconUpload size={'14'} />}
-									disabled={
-										Number(filesSize) >= maxSizeLimit || !rights?.upload
-									}
-									{...props}
-								>
-									Select Files
-								</PrimaryButton>
-							)}
-						</FileButton>
+							</Paper>
+						</Affix>
+					) : null}
+					<fetcher.Form
+						method={'post'}
+						encType={'multipart/form-data'}
+					>
+						<HiddenSessionId />
+						<Group>
+							<FileButton
+								resetRef={resetRef}
+								onChange={handleSelectFile}
+								name={'file'}
+								multiple
+							>
+								{(props) => (
+									<PrimaryButton
+										leftIcon={<IconUpload size={'14'} />}
+										disabled={
+											Number(filesSize) >= maxSizeLimit || !rights?.upload
+										}
+										{...props}
+									>
+										Select Files
+									</PrimaryButton>
+								)}
+							</FileButton>
 
-						{files ? (
-							<>
-								<Text>{files.length} file selected</Text>
-								<PrimaryButton
-									type={'submit'}
-									name={'intent'}
-									value={'uploadFiles'}
-								>
-									Upload
-								</PrimaryButton>
-								<DangerButton onClick={handleCancel}>Cancel</DangerButton>
-							</>
-						) : null}
-					</Group>
-				</fetcher.Form>
+							{files ? (
+								<>
+									<Text>{files.length} file selected</Text>
+									<PrimaryButton
+										type={'submit'}
+										name={'intent'}
+										value={'uploadFiles'}
+									>
+										Upload
+									</PrimaryButton>
+									<DangerButton onClick={handleCancel}>Cancel</DangerButton>
+								</>
+							) : null}
+						</Group>
+					</fetcher.Form>
+				</Group>
+				{/*{filesSize !== 0 ? (*/}
+				{/*  <Tooltip*/}
+				{/*    label={`${formatBytes(filesSize)} of ${formatBytes(maxSizeLimit)}`}*/}
+				{/*    withArrow*/}
+				{/*  >*/}
+				{/*    <Text component={"span"}>*/}
+				{/*      {filteredUserFilesCount} files, Used: {Math.round((100 / maxSizeLimit) * (filesSize ?? 0))}%*/}
+				{/*    </Text>*/}
+				{/*  </Tooltip>*/}
+				{/*) : null}*/}
 			</Group>
-			{/*{filesSize !== 0 ? (*/}
-			{/*  <Tooltip*/}
-			{/*    label={`${formatBytes(filesSize)} of ${formatBytes(maxSizeLimit)}`}*/}
-			{/*    withArrow*/}
-			{/*  >*/}
-			{/*    <Text component={"span"}>*/}
-			{/*      {filteredUserFilesCount} files, Used: {Math.round((100 / maxSizeLimit) * (filesSize ?? 0))}%*/}
-			{/*    </Text>*/}
-			{/*  </Tooltip>*/}
-			{/*) : null}*/}
-		</Group>
+			<Modal
+				opened={opened}
+				onClose={() => setOpened(false)}
+				title="Move file"
+				centered
+			>
+				<fetcher.Form method={'post'}>
+					<HiddenSessionId />
+					<input
+						type="hidden"
+						name={'filesToMoveIds'}
+						value={JSON.stringify(selectedFiles)}
+					/>
+					<Select
+						label={'Move selected files to other workspace'}
+						placeholder="Move To"
+						name={'newFilesWorkspaceId'}
+						data={workspacesList}
+					/>
+					<PrimaryButton
+						my={12}
+						type={'submit'}
+						name={'intent'}
+						value={'moveFiles'}
+						onClick={() => setOpened(false)}
+					>
+						Move
+					</PrimaryButton>
+				</fetcher.Form>
+			</Modal>
+		</>
 	);
 };

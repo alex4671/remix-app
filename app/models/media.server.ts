@@ -132,3 +132,13 @@ export const deleteFiles = (filesIds: string[]) => {
 		},
 	});
 };
+
+export const updateFileWorkspace = (
+	fileId: Media['id'],
+	newWorkspaceId: Media['workspaceId'],
+) => {
+	return prisma.media.update({
+		where: { id: fileId },
+		data: { workspaceId: newWorkspaceId },
+	});
+};

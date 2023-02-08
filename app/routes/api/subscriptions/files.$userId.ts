@@ -51,6 +51,13 @@ export const loader = ({ request, params }: LoaderArgs) => {
 			}
 		};
 
+		// todo handle this specific case (updating all workspaces)
+		const handler9 = (userId: string[], sessionId: string) => {
+			if (userId.includes(params.userId ?? '')) {
+				send(EventType.MOVE_FILES, sessionId);
+			}
+		};
+
 		// const handler6 = (userId: string[], sessionId: string) => {
 		//   if (userId.includes(params.userId ?? "")) {
 		//     send(EventType.UPDATE_NAME_WORKSPACE, sessionId)
@@ -65,6 +72,7 @@ export const loader = ({ request, params }: LoaderArgs) => {
 		emitter.addListener(EventType.CREATE_COMMENT, handler6);
 		emitter.addListener(EventType.DELETE_COMMENT, handler7);
 		emitter.addListener(EventType.UPDATE_RIGHTS, handler8);
+		emitter.addListener(EventType.MOVE_FILES, handler9);
 		// emitter.addListener(EventType.UPDATE_NAME_WORKSPACE, handler6)
 
 		return () => {
@@ -76,6 +84,7 @@ export const loader = ({ request, params }: LoaderArgs) => {
 			emitter.removeListener(EventType.CREATE_COMMENT, handler6);
 			emitter.removeListener(EventType.DELETE_COMMENT, handler7);
 			emitter.removeListener(EventType.UPDATE_RIGHTS, handler8);
+			emitter.removeListener(EventType.MOVE_FILES, handler9);
 			// emitter.removeListener(EventType.UPDATE_NAME_WORKSPACE, handler6)
 		};
 	});

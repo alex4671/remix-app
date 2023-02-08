@@ -1,7 +1,8 @@
-import { Box, Group, Paper, Text, Title } from '@mantine/core';
+import { Group, Paper, Text, Title } from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Link, Outlet, useLocation } from '@remix-run/react';
+import { Outlet } from '@remix-run/react';
+import { TabLink } from '~/components/Settings/TabLink';
 import { CreateNewWorkspace } from '~/components/Settings/Workspaces/CreateNewWorkspace';
 import { EventType, useSubscription } from '~/hooks/useSubscription';
 import {
@@ -95,7 +96,6 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function Workspaces() {
 	const user = useUser();
-	const location = useLocation();
 
 	useSubscription(`/api/subscriptions/workspaces/${user.id}`, [
 		EventType.CREATE_WORKSPACE,
@@ -130,73 +130,15 @@ export default function Workspaces() {
 				withBorder
 				mb={24}
 			>
-				<Group spacing={0}>
-					<Box
-						component={Link}
-						to="./my"
-						sx={(theme) => ({
-							display: 'block',
-							lineHeight: 1,
-							padding: '8px 16px',
-							textDecoration: 'none',
-							color:
-								theme.colorScheme === 'dark'
-									? theme.white
-									: theme.colors.dark[5],
-							backgroundColor: location.pathname.includes('/my')
-								? theme.colorScheme === 'dark'
-									? theme.colors.dark[4]
-									: theme.colors.gray[1]
-								: 'inherit',
-							fontSize: theme.fontSizes.lg,
-							fontWeight: 500,
-
-							'&:hover': {
-								backgroundColor: location.pathname.includes('/my')
-									? theme.colorScheme === 'dark'
-										? theme.colors.dark[4]
-										: theme.colors.gray[1]
-									: theme.colorScheme === 'dark'
-									? theme.colors.dark[6]
-									: theme.colors.gray[0],
-							},
-						})}
-					>
-						My Workspaces
-					</Box>
-					<Box
-						component={Link}
-						to="./collaborated"
-						sx={(theme) => ({
-							display: 'block',
-							lineHeight: 1,
-							padding: '8px 16px',
-							textDecoration: 'none',
-							color:
-								theme.colorScheme === 'dark'
-									? theme.white
-									: theme.colors.dark[5],
-							backgroundColor: location.pathname.includes('/collaborated')
-								? theme.colorScheme === 'dark'
-									? theme.colors.dark[4]
-									: theme.colors.gray[1]
-								: 'inherit',
-							fontSize: theme.fontSizes.lg,
-							fontWeight: 500,
-
-							'&:hover': {
-								backgroundColor: location.pathname.includes('/collaborated')
-									? theme.colorScheme === 'dark'
-										? theme.colors.dark[4]
-										: theme.colors.gray[1]
-									: theme.colorScheme === 'dark'
-									? theme.colors.dark[6]
-									: theme.colors.gray[0],
-							},
-						})}
-					>
-						Collaborated
-					</Box>
+				<Group>
+					<TabLink
+						to={'/my'}
+						title={'My Workspaces'}
+					/>
+					<TabLink
+						to={'/collaborated'}
+						title={'Collaborated'}
+					/>
 				</Group>
 				<Outlet />
 			</Paper>

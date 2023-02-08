@@ -1,7 +1,7 @@
-import { Box, Group, Paper, Text, Title } from '@mantine/core';
+import { Anchor, Box, Group, Paper, Table, Text, Title } from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import dayjs from 'dayjs';
 import { prisma } from '~/server/db.server';
 import { requireUser } from '~/server/session.server';
@@ -32,6 +32,21 @@ export default function Admin() {
 
 	console.log('users', users);
 
+	const rows = users.map((user) => (
+		<tr key={user.id}>
+			<td>
+				<Anchor
+					component={Link}
+					to={`./${user.id}`}
+				>
+					{user.email}
+				</Anchor>
+			</td>
+			<td>{dayjs(user.createdAt).format('DD/MM/YYYY')}</td>
+			<td>{user.payment ? 'Pro' : 'Free'}</td>
+		</tr>
+	));
+
 	return (
 		<>
 			<Paper
@@ -44,14 +59,30 @@ export default function Admin() {
 						<Title order={2}>Admin area</Title>
 					</Group>
 					<Text color={'dimmed'}>Manage app settings</Text>
-					<Box my={12}>Box</Box>
+				</Box>
+			</Paper>
+			<Paper
+				shadow="0"
+				withBorder
+				mb={12}
+			>
+				<Box p={'lg'}>
+					<Group spacing={6}>
+						<Title order={2}>Users</Title>
+					</Group>
+					<Text color={'dimmed'}>List of all users</Text>
+
 					<Box py={12}>
-						{users?.map((user) => (
-							<Box key={user.id}>
-								{user.email} {user.payment ? 'Pro' : 'Free'}{' '}
-								{dayjs(user.createdAt).format('DD/MM/YYYY')}
-							</Box>
-						))}
+						<Table>
+							<thead>
+								<tr>
+									<th>User</th>
+									<th>Created</th>
+									<th>Subscription</th>
+								</tr>
+							</thead>
+							<tbody>{rows}</tbody>
+						</Table>
 					</Box>
 				</Box>
 			</Paper>

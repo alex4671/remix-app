@@ -17,9 +17,11 @@ import {
 	getUserFilesSize,
 	saveFiles,
 	togglePublic,
+	updateFileWorkspace,
 } from '~/models/media.server';
 import { deleteFileFromS3, generateSignedUrl } from '~/models/storage.server';
 import {
+	getAllowedWorkspaces,
 	getWorkspaceFilesById,
 	getWorkspacesById,
 	isUserAllowedViewWorkspace,
@@ -79,12 +81,15 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 			: (userFiles?.collaborator?.find((c) => c.userId === user.id)
 					?.rights as Rights);
 
+	const allUserWorkspaces = await getAllowedWorkspaces(user.id);
+
 	return json({
 		origin: url.origin,
 		rights,
 		userFiles: userFiles?.media ?? [],
 		filesSize,
 		maxSizeLimit: user.payment ? 3221225472 : 314572800, // 3gb vs 300mb
+		allUserWorkspaces,
 	});
 };
 
@@ -266,6 +271,33 @@ export const action = async ({ request, params }: ActionArgs) => {
 		}
 	}
 
+	if (intent === 'moveFiles') {
+		const newFilesWorkspaceId =
+			formData.get('newFilesWorkspaceId')?.toString() ?? '';
+		const filesToMoveIds = formData.get('filesToMoveIds')?.toString() ?? '';
+
+		const parsedFilesIdsToMove = JSON.parse(filesToMoveIds);
+
+		try {
+			for (const id of parsedFilesIdsToMove) {
+				await updateFileWorkspace(id, newFilesWorkspaceId);
+			}
+
+			emitter.emit(EventType.MOVE_FILES, usersToNotify, sessionId);
+			return json({
+				success: true,
+				intent,
+				message: `${parsedFilesIdsToMove.length} files moved`,
+			});
+		} catch (e) {
+			return json({
+				success: false,
+				intent,
+				message: `Error moving file(s)`,
+			});
+		}
+	}
+
 	return json({ success: false, intent, message: 'Some error' });
 };
 
@@ -289,6 +321,7 @@ export default function WorkspaceId() {
 		EventType.UPDATE_FILE,
 		EventType.CREATE_COMMENT,
 		EventType.DELETE_COMMENT,
+		EventType.MOVE_FILES,
 		EventType.UPDATE_RIGHTS,
 	]);
 
