@@ -1,9 +1,9 @@
 import {
 	ActionIcon,
-	Anchor,
 	Card,
 	Group,
 	SimpleGrid,
+	Text,
 	TextInput,
 	Title,
 } from '@mantine/core';
@@ -66,14 +66,14 @@ export default function BookmarksIndex() {
 								withBorder
 								key={bookmark.id}
 							>
-								<Anchor
+								<Text
 									component={Link}
 									to={`./${bookmark.id}`}
 									key={bookmark.id}
 									fz={'md'}
 								>
 									{bookmark.title}
-								</Anchor>
+								</Text>
 								<fetcher.Form
 									method={'post'}
 									action={'/bookmarks'}

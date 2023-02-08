@@ -1,11 +1,11 @@
 import {
 	ActionIcon,
-	Anchor,
 	AspectRatio,
 	Card,
 	Group,
 	Image,
 	SimpleGrid,
+	Text,
 	Title,
 } from '@mantine/core';
 import type { LoaderArgs } from '@remix-run/node';
@@ -62,14 +62,14 @@ export default function NotesIndex() {
 										<Image src={note.preview} />
 									</AspectRatio>
 								</Card.Section>
-								<Anchor
+								<Text
 									component={Link}
 									to={`./${note.id}`}
 									key={note.id}
 									fz={'md'}
 								>
 									Note
-								</Anchor>
+								</Text>
 								<fetcher.Form
 									method={'post'}
 									action={'/notes'}
