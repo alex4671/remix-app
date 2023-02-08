@@ -89,7 +89,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 		userFiles: userFiles?.media ?? [],
 		filesSize,
 		maxSizeLimit: user.payment ? 3221225472 : 314572800, // 3gb vs 300mb
-		allUserWorkspaces,
+		allUserWorkspaces: allUserWorkspaces.filter((w) => w.id !== workspaceId),
 	});
 };
 

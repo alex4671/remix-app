@@ -36,7 +36,7 @@ export const UploadFile = ({
 		useLoaderData<typeof loader>();
 	const fetcher = useFetcher();
 
-	console.log('allUserWorkspaces', allUserWorkspaces);
+	const [value, setValue] = useState<string | null>(null);
 	const [opened, setOpened] = useState(false);
 	const [files, setFiles] = useState<File[] | null>(null);
 	const resetRef = useRef<() => void>(null);
@@ -147,7 +147,12 @@ export const UploadFile = ({
 											? 'Deselect all'
 											: 'Select all'}
 									</SecondaryButton>
-									<SecondaryButton onClick={() => setOpened(true)}>
+									<SecondaryButton
+										onClick={() => {
+											setOpened(true);
+											setValue(null);
+										}}
+									>
 										Move to
 									</SecondaryButton>
 									<SecondaryButton onClick={handleCancelPick}>
@@ -227,9 +232,12 @@ export const UploadFile = ({
 						placeholder="Move To"
 						name={'newFilesWorkspaceId'}
 						data={workspacesList}
+						value={value}
+						onChange={setValue}
 					/>
 					<PrimaryButton
 						my={12}
+						disabled={!value?.length}
 						type={'submit'}
 						name={'intent'}
 						value={'moveFiles'}
