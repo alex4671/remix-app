@@ -16,6 +16,7 @@ import {
 } from '@remix-run/react';
 import type { ReactNode } from 'react';
 import { useHydrated } from 'remix-utils';
+import { Banner } from '~/components/Banner/Banner';
 import { Navbar } from '~/components/Navbar/Navbar';
 import { useLoadingProgress } from '~/hooks/useLoadingProgress';
 import { useNotification } from '~/hooks/useNotification';
@@ -147,6 +148,7 @@ export default function App() {
 					autoReset
 				/>
 				<NotificationsProvider position={'top-center'}>
+					<Banner />
 					<Container
 						size={'xl'}
 						px={{ base: '12' }}
