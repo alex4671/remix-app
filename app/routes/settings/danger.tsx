@@ -1,6 +1,5 @@
 import type { ActionArgs, MetaFunction } from '@remix-run/node';
 import { DeleteAccount } from '~/components/Settings/Danger/DeleteAccount';
-import { deleteUserById } from '~/models/user.server';
 import { logout, requireUserId } from '~/server/session.server';
 
 export const meta: MetaFunction = () => {
@@ -12,7 +11,7 @@ export const meta: MetaFunction = () => {
 export const action = async ({ request }: ActionArgs) => {
 	const userId = await requireUserId(request);
 
-	await deleteUserById(userId);
+	// await deleteUserById(userId);
 	// todo delete all user data
 	console.log('Account deleted...');
 

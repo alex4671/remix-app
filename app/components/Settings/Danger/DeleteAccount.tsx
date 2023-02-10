@@ -32,7 +32,7 @@ export const DeleteAccount = () => {
 							/>
 							<DangerButton
 								type="submit"
-								disabled={isBtnDisabled}
+								disabled={true}
 								leftIcon={<IconAlertCircle size={'16'} />}
 							>
 								Delete account
