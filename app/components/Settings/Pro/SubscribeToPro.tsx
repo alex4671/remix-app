@@ -61,7 +61,7 @@ export const SubscribeToPro = () => {
 			<Box p={'lg'}>
 				<Group>
 					<Title order={2}>Subscribe to pro</Title>
-					<Badge color={'gray'}>Free</Badge>
+					<Badge color={'gray'}>Basic</Badge>
 				</Group>
 				<Text color={'dimmed'}>Get access to all premium features</Text>
 				<Box my={12}>

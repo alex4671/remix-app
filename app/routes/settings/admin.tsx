@@ -43,7 +43,7 @@ export default function Admin() {
 				</Anchor>
 			</td>
 			<td>{dayjs(user.createdAt).format('DD/MM/YYYY')}</td>
-			<td>{user.payment ? 'Pro' : 'Free'}</td>
+			<td>{user.payment ? 'Pro' : 'Basic'}</td>
 		</tr>
 	));
 
