@@ -11,6 +11,7 @@ import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
 import { IconFiles, IconSettings } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
+import type { SyntheticEvent } from 'react';
 import type { loader, WorkspacesLoader } from '~/routes';
 
 interface Props {
@@ -21,11 +22,12 @@ export const WorkspacesListItem = ({ workspace }: Props) => {
 	const { user } = useLoaderData<typeof loader>();
 	const navigate = useNavigate();
 	const location = useLocation();
+
 	const handleGoWorkspace = (workspaceId: string) => {
 		navigate(`./media/${workspaceId}`);
 	};
 
-	const handleGoSettings = (event: any, workspaceId: string) => {
+	const handleGoSettings = (event: SyntheticEvent, workspaceId: string) => {
 		event.stopPropagation();
 		navigate(`/settings/workspaces/${workspaceId}`, {
 			state: location.pathname,
@@ -53,9 +55,7 @@ export const WorkspacesListItem = ({ workspace }: Props) => {
 				>
 					{workspace.name}
 				</Text>
-				<ActionIcon
-					onClick={(event: any) => handleGoSettings(event, workspace.id)}
-				>
+				<ActionIcon onClick={(event) => handleGoSettings(event, workspace.id)}>
 					<IconSettings size={16} />
 				</ActionIcon>
 			</Group>

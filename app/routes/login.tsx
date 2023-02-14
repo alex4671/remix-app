@@ -42,6 +42,7 @@ const schema = z.object({
 		.min(8, { message: 'Password must be at least 8 characters' }),
 	redirectTo: z.string(),
 	remember: CheckboxAsString,
+	// z.preprocess((value) => value === 'yes', z.boolean().optional()),
 });
 
 export const action: ActionFunction = async ({ request }) => {
