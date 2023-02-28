@@ -116,6 +116,11 @@ export const NavbarLinks = () => {
 			isActive: location.pathname.includes('/settings/'),
 			name: 'Settings',
 		},
+		// {
+		// 	to: 'ai',
+		// 	isActive: location.pathname.includes('/ai'),
+		// 	name: 'AI',
+		// },
 		{
 			to: 'pro',
 			isActive:

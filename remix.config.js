@@ -1,5 +1,6 @@
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
+	serverDependenciesToBundle: ['replicate', 'camelcase-keys'],
 	ignoredRouteFiles: ['**/.*'],
 	// appDirectory: "app",
 	// assetsBuildDirectory: "public/build",

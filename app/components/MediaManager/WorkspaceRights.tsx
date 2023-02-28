@@ -128,7 +128,7 @@ export const WorkspaceRights = ({ rights, collaboratorId, isOwner }: Props) => {
 									onChange={(event) =>
 										setWorkspaceRights({
 											upload: workspaceRights.upload,
-											delete: workspaceRights?.delete,
+											delete: workspaceRights.delete,
 											comment: event.currentTarget.checked,
 										})
 									}
