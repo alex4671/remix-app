@@ -7,6 +7,7 @@ import {
 	IconCreditCard,
 	IconFiles,
 	IconFolder,
+	IconNotes,
 	IconUser,
 	IconUserExclamation,
 } from '@tabler/icons-react';
@@ -97,6 +98,16 @@ export const SettingsLinks = () => {
 				})}
 				variant="filled"
 				prefetch={'intent'}
+			/>
+			<NavLink
+				component={Link}
+				to="./changelog"
+				label="Changelog"
+				icon={<IconNotes size={16} />}
+				className={cx(classes.link, {
+					[classes.linkActive]: location.pathname.includes('changelog'),
+				})}
+				variant="filled"
 			/>
 			<NavLink
 				component={Link}
