@@ -2,6 +2,7 @@ import { Group, Paper, Text, Title } from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
+import { generateKeyBetween } from 'fractional-indexing';
 import { TabLink } from '~/components/Settings/TabLink';
 import { CreateNewWorkspace } from '~/components/Settings/Workspaces/CreateNewWorkspace';
 import { EventType, useSubscription } from '~/hooks/useSubscription';
@@ -12,7 +13,6 @@ import {
 } from '~/models/workspace.server';
 import { emitter } from '~/server/emitter.server';
 import { requireUser } from '~/server/session.server';
-import { generateKeyBetween } from '~/utils/generateIndex';
 import { useUser } from '~/utils/utils';
 
 export const meta: MetaFunction = () => {

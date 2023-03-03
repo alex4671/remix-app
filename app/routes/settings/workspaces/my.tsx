@@ -16,13 +16,13 @@ import { Box, Title } from '@mantine/core';
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
+import { generateKeyBetween } from 'fractional-indexing';
 import { AnimatePresence } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 import { WorkspaceItem } from '~/components/Settings/Workspaces/WorkspaceItem';
 import { getUserWorkspacesById } from '~/models/workspace.server';
 import { requireUser } from '~/server/session.server';
-import { generateKeyBetween } from '~/utils/generateIndex';
 
 export const loader = async ({ request }: LoaderArgs) => {
 	const user = await requireUser(request);

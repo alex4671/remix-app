@@ -35,7 +35,7 @@ export default function Changelog() {
 				<Title order={2}>Changelog</Title>
 				<Text color={'dimmed'}>What we are working on</Text>
 				<Box my={12}>
-					<Accordion variant="separated">
+					<Accordion>
 						{changelog.map((c) => (
 							<Accordion.Item
 								key={c.id}
