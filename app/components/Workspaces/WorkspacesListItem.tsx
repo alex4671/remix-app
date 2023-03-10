@@ -7,11 +7,17 @@ import {
 	Text,
 	Tooltip,
 } from '@mantine/core';
-import { useLoaderData, useLocation, useNavigate } from '@remix-run/react';
+import {
+	PrefetchPageLinks,
+	useLoaderData,
+	useLocation,
+	useNavigate,
+} from '@remix-run/react';
 import { IconFiles, IconSettings } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import type { SyntheticEvent } from 'react';
+import { useState } from 'react';
 import type { loader, WorkspacesLoader } from '~/routes';
 
 interface Props {
@@ -22,6 +28,8 @@ export const WorkspacesListItem = ({ workspace }: Props) => {
 	const { user } = useLoaderData<typeof loader>();
 	const navigate = useNavigate();
 	const location = useLocation();
+
+	const [hoveredId, setHoveredId] = useState<string | null>(null);
 
 	const handleGoWorkspace = (workspaceId: string) => {
 		navigate(`./media/${workspaceId}`);
@@ -35,117 +43,124 @@ export const WorkspacesListItem = ({ workspace }: Props) => {
 	};
 
 	return (
-		<Paper
-			component={motion.div}
-			layout
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1 }}
-			exit={{ opacity: 0 }}
-			transition={{ opacity: { duration: 0.3 } }}
-			p="md"
-			withBorder
-			onClick={() => handleGoWorkspace(workspace.id)}
-			sx={{ cursor: 'pointer' }}
-		>
-			<Group position={'apart'}>
-				<Text
-					size={'lg'}
-					truncate
-					w={'80%'}
-				>
-					{workspace.name}
-				</Text>
-				<ActionIcon onClick={(event) => handleGoSettings(event, workspace.id)}>
-					<IconSettings size={16} />
-				</ActionIcon>
-			</Group>
-			<Group
-				mt={12}
-				position={'apart'}
+		<>
+			<Paper
+				component={motion.div}
+				layout
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				exit={{ opacity: 0 }}
+				transition={{ opacity: { duration: 0.3 } }}
+				p="md"
+				withBorder
+				onClick={() => handleGoWorkspace(workspace.id)}
+				sx={{ cursor: 'pointer' }}
+				onMouseEnter={() => setHoveredId(workspace.id)}
+				onMouseLeave={() => setHoveredId(null)}
 			>
-				{user.email === workspace.owner.email ? (
-					<Badge color={'emerald'}>You</Badge>
-				) : (
-					<Badge color={'blue'}>{workspace.owner.email}</Badge>
-				)}
-				<Text
-					size={'sm'}
-					color={'dimmed'}
+				<Group position={'apart'}>
+					<Text
+						size={'lg'}
+						truncate
+						w={'80%'}
+					>
+						{workspace.name}
+					</Text>
+					<ActionIcon
+						onClick={(event) => handleGoSettings(event, workspace.id)}
+					>
+						<IconSettings size={16} />
+					</ActionIcon>
+				</Group>
+				<Group
+					mt={12}
+					position={'apart'}
 				>
-					{dayjs().to(dayjs(workspace.createdAt))}
-				</Text>
-			</Group>
-			<Group
-				mt={12}
-				position={'apart'}
-			>
-				<Group spacing={4}>
-					<IconFiles
-						size={16}
-						stroke={1}
-					/>
+					{user.email === workspace.owner.email ? (
+						<Badge color={'emerald'}>You</Badge>
+					) : (
+						<Badge color={'blue'}>{workspace.owner.email}</Badge>
+					)}
 					<Text
 						size={'sm'}
 						color={'dimmed'}
 					>
-						{workspace.media.length}
+						{dayjs().to(dayjs(workspace.createdAt))}
 					</Text>
 				</Group>
-				{workspace.collaborator.length ? (
-					<Tooltip.Group
-						openDelay={300}
-						closeDelay={100}
-					>
-						<Avatar.Group spacing="sm">
-							{workspace.collaborator
-								.filter((c) => c.user.email !== user.email)
-								.slice(0, 2)
-								.map((c) => (
+				<Group
+					mt={12}
+					position={'apart'}
+				>
+					<Group spacing={4}>
+						<IconFiles
+							size={16}
+							stroke={1}
+						/>
+						<Text
+							size={'sm'}
+							color={'dimmed'}
+						>
+							{workspace.media.length}
+						</Text>
+					</Group>
+					{workspace.collaborator.length ? (
+						<Tooltip.Group
+							openDelay={300}
+							closeDelay={100}
+						>
+							<Avatar.Group spacing="sm">
+								{workspace.collaborator
+									.filter((c) => c.user.email !== user.email)
+									.slice(0, 2)
+									.map((c) => (
+										<Tooltip
+											key={c.id}
+											label={c.user.email}
+											withArrow
+										>
+											<Avatar
+												src={c.user.avatarUrl}
+												radius="xl"
+												size={'sm'}
+											/>
+										</Tooltip>
+									))}
+								{workspace.collaborator
+									.filter((c) => c.user.email !== user.email)
+									.slice(2).length ? (
 									<Tooltip
-										key={c.id}
-										label={c.user.email}
 										withArrow
+										label={
+											<>
+												{workspace.collaborator
+													.filter((c) => c.user.email !== user.email)
+													.slice(2)
+													.map((c) => (
+														<div key={c.id}>{c.user.email}</div>
+													))}
+											</>
+										}
 									>
 										<Avatar
-											src={c.user.avatarUrl}
 											radius="xl"
 											size={'sm'}
-										/>
+										>
+											+
+											{
+												workspace.collaborator
+													.filter((c) => c.user.email !== user.email)
+													.slice(2).length
+											}
+										</Avatar>
 									</Tooltip>
-								))}
-							{workspace.collaborator
-								.filter((c) => c.user.email !== user.email)
-								.slice(2).length ? (
-								<Tooltip
-									withArrow
-									label={
-										<>
-											{workspace.collaborator
-												.filter((c) => c.user.email !== user.email)
-												.slice(2)
-												.map((c) => (
-													<div key={c.id}>{c.user.email}</div>
-												))}
-										</>
-									}
-								>
-									<Avatar
-										radius="xl"
-										size={'sm'}
-									>
-										+
-										{
-											workspace.collaborator
-												.filter((c) => c.user.email !== user.email)
-												.slice(2).length
-										}
-									</Avatar>
-								</Tooltip>
-							) : null}
-						</Avatar.Group>
-					</Tooltip.Group>
-				) : null}
-			</Group>
-		</Paper>
+								) : null}
+							</Avatar.Group>
+						</Tooltip.Group>
+					) : null}
+				</Group>
+			</Paper>
+			<PrefetchPageLinks page={`/media/${hoveredId}`} />
+		</>
 	);
 };
