@@ -128,7 +128,7 @@ export default function LoginPage() {
 						</Text>
 					}
 					required
-					defaultValue={'alex2@alex.com'}
+					defaultValue={'test@alex.com'}
 					error={actionData?.errors?.emailError}
 					pb={actionData?.errors?.emailError ? 0 : 20}
 					withAsterisk={false}
