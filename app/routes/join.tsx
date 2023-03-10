@@ -72,6 +72,16 @@ export const action: ActionFunction = async ({ request }) => {
 
 	console.log('inviteLink', inviteLink);
 
+	// await emailQueue.add(
+	// 	`${user.email} notify queue`,
+	// 	{
+	// 		emailAddress: 'email',
+	// 	},
+	// 	{
+	// 		delay: 30000, // 30 sec
+	// 	},
+	// );
+
 	// await postmarkClient.sendEmail({
 	//   "From": "hi@alexkulchenko.com",
 	//   "To": email,

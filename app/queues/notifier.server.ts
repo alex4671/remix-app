@@ -29,3 +29,5 @@ export const notifierQueue = Queue<QueueData>('notifier', async (job) => {
 	// console.log(`Email sent to ${job.data.emailAddress}`);
 	console.log(`Users count ${usersCount}`);
 });
+
+export const emailQueue = Queue('email', async (job) => {});
