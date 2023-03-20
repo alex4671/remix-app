@@ -37,8 +37,6 @@ export const meta: MetaFunction = () => ({
 });
 
 export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
-	// only refetch if changing theme, logout and login
-
 	// console.log('args', args);
 
 	return (
@@ -49,8 +47,6 @@ export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
 		args?.formAction === '/settings/account' ||
 		args?.formAction === '/settings/danger'
 	);
-	// || submission?.action === undefined
-	// || Boolean(submission?.action.includes("/media"))
 };
 
 export async function loader({ request, params }: LoaderArgs) {
