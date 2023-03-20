@@ -83,8 +83,7 @@ export const meta: MetaFunction = () => {
 export default function LoginPage() {
 	const [searchParams] = useSearchParams();
 	const navigation = useNavigation();
-	const isLoading =
-		navigation.state === 'submitting' || navigation.state === 'loading';
+	const isLoading = navigation.state === 'submitting';
 
 	const redirectTo = searchParams.get('redirectTo') || '/';
 	const actionData = useActionData<typeof action>();

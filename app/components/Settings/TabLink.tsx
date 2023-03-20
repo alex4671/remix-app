@@ -16,6 +16,7 @@ export const TabLink = ({ to, title, disabled = false }: Props) => {
 			to={`.${to}`}
 			variant={location.pathname.includes(to) ? 'filled' : 'subtle'}
 			disabled={disabled}
+			prefetch="intent"
 			// sx={(theme) => ({
 			// 	display: 'block',
 			// 	lineHeight: 1,

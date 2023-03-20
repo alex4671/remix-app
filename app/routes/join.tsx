@@ -108,8 +108,7 @@ export const meta: MetaFunction = () => {
 export default function Join() {
 	const [searchParams] = useSearchParams();
 	const navigation = useNavigation();
-	const isLoading =
-		navigation.state === 'submitting' || navigation.state === 'loading';
+	const isLoading = navigation.state === 'submitting';
 
 	const redirectTo = searchParams.get('redirectTo') ?? undefined;
 	const actionData = useActionData<typeof action>();
