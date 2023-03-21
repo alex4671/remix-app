@@ -4,7 +4,6 @@ import { IconShield } from '@tabler/icons';
 import {
 	IconAlertCircle,
 	IconBell,
-	IconCalendarEvent,
 	IconCreditCard,
 	IconFiles,
 	IconFolder,
@@ -110,6 +109,7 @@ export const SettingsLinks = () => {
 						location.pathname.includes('settings/changelog'),
 				})}
 				variant="filled"
+				prefetch={'intent'}
 			/>
 			<NavLink
 				component={Link}
@@ -120,6 +120,7 @@ export const SettingsLinks = () => {
 					[classes.linkActive]: location.pathname.includes('security'),
 				})}
 				variant="filled"
+				prefetch={'intent'}
 			/>
 			<NavLink
 				component={Link}
@@ -130,6 +131,7 @@ export const SettingsLinks = () => {
 					[classes.linkActive]: location.pathname.includes('danger'),
 				})}
 				variant="filled"
+				prefetch={'intent'}
 			/>
 			{user.email === 'alex@alex.com' ? (
 				<>
@@ -143,6 +145,7 @@ export const SettingsLinks = () => {
 							[classes.linkActive]: location.pathname.includes('admin'),
 						})}
 						variant="filled"
+						prefetch={'intent'}
 					/>
 					<NavLink
 						component={Link}
@@ -154,16 +157,6 @@ export const SettingsLinks = () => {
 						})}
 						variant="filled"
 						prefetch={'intent'}
-					/>
-					<NavLink
-						component={Link}
-						to="./scheduler"
-						label="Scheduler"
-						icon={<IconCalendarEvent size={16} />}
-						className={cx(classes.link, {
-							[classes.linkActive]: location.pathname.includes('scheduler'),
-						})}
-						variant="filled"
 					/>
 				</>
 			) : null}

@@ -1,12 +1,4 @@
-import {
-	ActionIcon,
-	Box,
-	Button,
-	Group,
-	Paper,
-	Text,
-	Title,
-} from '@mantine/core';
+import { ActionIcon, Box, Button, Group, Text, Title } from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
@@ -113,62 +105,56 @@ export default function Scheduler() {
 
 	return (
 		<>
-			<Paper
-				shadow="0"
-				withBorder
-				mb={12}
-			>
-				<Box p={'lg'}>
-					<Group spacing={6}>
-						<Title order={2}>Title</Title>
-					</Group>
-					<Text color={'dimmed'}>Subtitle</Text>
-					<Box my={12}>
-						<fetcher.Form method={'post'}>
-							<Button
-								type={'submit'}
-								name={'intent'}
-								value={'addJob'}
-							>
-								Add job
-							</Button>
-						</fetcher.Form>
-					</Box>
-					<Box py={12}>
-						{getActive?.map((active) => (
-							<Group
-								key={active.id}
-								my={'sm'}
-							>
-								<Text>
-									{active.id} - {active.name}
-								</Text>
-								<fetcher.Form method={'post'}>
-									<input
-										type="hidden"
-										name={'jobId'}
-										value={active.id}
-									/>
-									<input
-										type="hidden"
-										name={'repeatJobKey'}
-										value={active.repeatJobKey}
-									/>
-									<ActionIcon
-										color="red"
-										variant="light"
-										type={'submit'}
-										name={'intent'}
-										value={'removeJob'}
-									>
-										<IconX size={14} />
-									</ActionIcon>
-								</fetcher.Form>
-							</Group>
-						))}
-					</Box>
+			<Box p={'lg'}>
+				<Group spacing={6}>
+					<Title order={2}>Scheduler</Title>
+				</Group>
+				<Text color={'dimmed'}>Testing task scheduler</Text>
+				<Box my={12}>
+					<fetcher.Form method={'post'}>
+						<Button
+							type={'submit'}
+							name={'intent'}
+							value={'addJob'}
+						>
+							Add job
+						</Button>
+					</fetcher.Form>
 				</Box>
-			</Paper>
+				<Box py={12}>
+					{getActive?.map((active) => (
+						<Group
+							key={active.id}
+							my={'sm'}
+						>
+							<Text>
+								{active.id} - {active.name}
+							</Text>
+							<fetcher.Form method={'post'}>
+								<input
+									type="hidden"
+									name={'jobId'}
+									value={active.id}
+								/>
+								<input
+									type="hidden"
+									name={'repeatJobKey'}
+									value={active.repeatJobKey}
+								/>
+								<ActionIcon
+									color="red"
+									variant="light"
+									type={'submit'}
+									name={'intent'}
+									value={'removeJob'}
+								>
+									<IconX size={14} />
+								</ActionIcon>
+							</fetcher.Form>
+						</Group>
+					))}
+				</Box>
+			</Box>
 		</>
 	);
 }

@@ -84,6 +84,10 @@ export default function Admin() {
 								to={'/changelog'}
 								title={'Changelog'}
 							/>
+							<TabLink
+								to={'/scheduler'}
+								title={'Scheduler'}
+							/>
 						</Group>
 						<Outlet />
 					</Box>
