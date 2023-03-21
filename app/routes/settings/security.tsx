@@ -1,4 +1,12 @@
-import { ActionIcon, Box, Paper, Table, Text, Title } from '@mantine/core';
+import {
+	ActionIcon,
+	Box,
+	Paper,
+	ScrollArea,
+	Table,
+	Text,
+	Title,
+} from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
@@ -94,18 +102,33 @@ export default function SecurityLog() {
 					account.
 				</Text>
 				<Box my={12}>
-					<Table withBorder>
-						<thead>
-							<tr>
-								<th>Actor</th>
-								<th>Action</th>
-								<th>IP address</th>
-								<th>Date</th>
-								<th>Delete</th>
-							</tr>
-						</thead>
-						<tbody>{rows}</tbody>
-					</Table>
+					{userSecurityLog.length ? (
+						<ScrollArea>
+							<Table
+								withBorder
+								sx={{ minWidth: 576 }}
+							>
+								<thead>
+									<tr>
+										<th>Actor</th>
+										<th>Action</th>
+										<th>IP address</th>
+										<th>Date</th>
+										<th>Delete</th>
+									</tr>
+								</thead>
+								<tbody>{rows}</tbody>
+							</Table>
+						</ScrollArea>
+					) : (
+						<Title
+							order={5}
+							align={'center'}
+							my={24}
+						>
+							Currently no log data
+						</Title>
+					)}
 				</Box>
 			</Box>
 		</Paper>
