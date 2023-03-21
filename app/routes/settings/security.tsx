@@ -1,10 +1,15 @@
-import { Box, Paper, Table, Text, Title } from '@mantine/core';
-import type { LoaderArgs, MetaFunction } from '@remix-run/node';
+import { ActionIcon, Box, Paper, Table, Text, Title } from '@mantine/core';
+import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useFetcher, useLoaderData } from '@remix-run/react';
+import { IconTrash } from '@tabler/icons';
 import dayjs from 'dayjs';
-import { getUserSecurityLog } from '~/models/security.server';
-import { requireUser } from '~/server/session.server';
+import { HiddenSessionId } from '~/components/Utils/HiddenSessionId';
+import {
+	deleteSecurityLogEntry,
+	getUserSecurityLog,
+} from '~/models/security.server';
+import { logout, requireUser, requireUserId } from '~/server/session.server';
 
 export const meta: MetaFunction = () => {
 	return {
@@ -21,10 +26,33 @@ export const loader = async ({ request }: LoaderArgs) => {
 	});
 };
 
+export const action = async ({ request }: ActionArgs) => {
+	await requireUserId(request);
+
+	const formData = await request.formData();
+	const intent = formData.get('intent');
+
+	if (intent === 'deleteLogEntry') {
+		const logId = formData.get('logId')?.toString() ?? '';
+
+		try {
+			await deleteSecurityLogEntry(logId);
+			return json({ success: true, intent, message: 'Log entry deleted' });
+		} catch (e) {
+			return json({
+				success: false,
+				intent,
+				message: 'Error deleting log entry',
+			});
+		}
+	}
+
+	return logout(request);
+};
+
 export default function SecurityLog() {
 	const { userSecurityLog } = useLoaderData<typeof loader>();
-
-	console.log('userSecurityLog', userSecurityLog);
+	const fetcher = useFetcher();
 
 	const rows = userSecurityLog.map((log) => (
 		<tr key={log.id}>
@@ -32,8 +60,27 @@ export default function SecurityLog() {
 			<td>{log.action}</td>
 			<td>{log.ipAddress}</td>
 			<td>{dayjs(log.createdAt).format('YY-MM-DD H:mm:ss')}</td>
+			<td>
+				<fetcher.Form method={'post'}>
+					<input
+						type="hidden"
+						name={'logId'}
+						value={log.id}
+					/>
+					<HiddenSessionId />
+					<ActionIcon
+						type={'submit'}
+						name={'intent'}
+						value={'deleteLogEntry'}
+						color={'red'}
+					>
+						<IconTrash size={16} />
+					</ActionIcon>
+				</fetcher.Form>
+			</td>
 		</tr>
 	));
+
 	return (
 		<Paper
 			shadow="0"
@@ -54,6 +101,7 @@ export default function SecurityLog() {
 								<th>Action</th>
 								<th>IP address</th>
 								<th>Date</th>
+								<th>Delete</th>
 							</tr>
 						</thead>
 						<tbody>{rows}</tbody>

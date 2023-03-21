@@ -34,3 +34,11 @@ export const createSecurityLogEntry = (
 		},
 	});
 };
+
+export const deleteSecurityLogEntry = (id: SecurityLog['id']) => {
+	return prisma.securityLog.delete({
+		where: {
+			id,
+		},
+	});
+};
