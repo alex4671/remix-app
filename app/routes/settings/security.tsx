@@ -17,7 +17,7 @@ import {
 	deleteSecurityLogEntry,
 	getUserSecurityLog,
 } from '~/models/security.server';
-import { logout, requireUser, requireUserId } from '~/server/session.server';
+import { requireUser, requireUserId } from '~/server/session.server';
 
 export const meta: MetaFunction = () => {
 	return {
@@ -55,7 +55,7 @@ export const action = async ({ request }: ActionArgs) => {
 		}
 	}
 
-	return logout(request);
+	return json({});
 };
 
 export default function SecurityLog() {

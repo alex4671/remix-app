@@ -106,7 +106,8 @@ export const SettingsLinks = () => {
 				label="Changelog"
 				icon={<IconNotes size={16} />}
 				className={cx(classes.link, {
-					[classes.linkActive]: location.pathname.includes('changelog'),
+					[classes.linkActive]:
+						location.pathname.includes('settings/changelog'),
 				})}
 				variant="filled"
 			/>
