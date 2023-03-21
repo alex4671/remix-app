@@ -1,4 +1,13 @@
-import { Anchor, Box, Group, Paper, Table, Text, Title } from '@mantine/core';
+import {
+	Anchor,
+	Box,
+	Group,
+	Paper,
+	ScrollArea,
+	Table,
+	Text,
+	Title,
+} from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
@@ -106,16 +115,21 @@ export default function Admin() {
 					<Text color={'dimmed'}>List of all users</Text>
 
 					<Box py={12}>
-						<Table>
-							<thead>
-								<tr>
-									<th>User</th>
-									<th>Created</th>
-									<th>Subscription</th>
-								</tr>
-							</thead>
-							<tbody>{rows}</tbody>
-						</Table>
+						<ScrollArea>
+							<Table
+								withBorder
+								sx={{ minWidth: 576 }}
+							>
+								<thead>
+									<tr>
+										<th>User</th>
+										<th>Created</th>
+										<th>Subscription</th>
+									</tr>
+								</thead>
+								<tbody>{rows}</tbody>
+							</Table>
+						</ScrollArea>
 					</Box>
 				</Box>
 			</Paper>
