@@ -1,5 +1,6 @@
 import { createStyles, Divider, NavLink, Stack } from '@mantine/core';
 import { Link, useLocation } from '@remix-run/react';
+import { IconShield } from '@tabler/icons';
 import {
 	IconAlertCircle,
 	IconBell,
@@ -106,6 +107,16 @@ export const SettingsLinks = () => {
 				icon={<IconNotes size={16} />}
 				className={cx(classes.link, {
 					[classes.linkActive]: location.pathname.includes('changelog'),
+				})}
+				variant="filled"
+			/>
+			<NavLink
+				component={Link}
+				to="./security"
+				label="Security log"
+				icon={<IconShield size={16} />}
+				className={cx(classes.link, {
+					[classes.linkActive]: location.pathname.includes('security'),
 				})}
 				variant="filled"
 			/>

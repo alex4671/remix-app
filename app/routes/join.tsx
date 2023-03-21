@@ -20,9 +20,14 @@ import {
 	useSearchParams,
 } from '@remix-run/react';
 import { useEffect, useRef } from 'react';
+import { getClientIPAddress } from 'remix-utils';
 import { z } from 'zod';
 import { parseFormSafe } from 'zodix';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
+import {
+	createSecurityLogEntry,
+	SecurityLogActions,
+} from '~/models/security.server';
 import {
 	createUser,
 	generateInviteLink,
@@ -90,6 +95,13 @@ export const action: ActionFunction = async ({ request }) => {
 	//   "TextBody": "Hello from Postmark!",
 	//   "MessageStream": "outbound"
 	// })
+
+	let ipAddress = getClientIPAddress(request);
+	await createSecurityLogEntry(
+		user.id,
+		SecurityLogActions.USER_SIGNUP,
+		ipAddress ?? 'localhost', // todo not add if no ip address
+	);
 
 	return createUserSession({
 		request,

@@ -44,6 +44,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function WorkspacesIndex() {
 	const { user, workspaces } = useLoaderData<typeof loader>();
+
 	const [checked, setChecked] = useState(false);
 
 	const [searchValue, setSearchValue] = useInputState('');
@@ -65,6 +66,37 @@ export default function WorkspacesIndex() {
 
 	return (
 		<Box>
+			{/*<Badge*/}
+			{/*	variant={'outline'}*/}
+			{/*	sx={{*/}
+			{/*		paddingRight: 3,*/}
+			{/*		height: '28px',*/}
+			{/*	}}*/}
+			{/*	leftSection={*/}
+			{/*		<Text*/}
+			{/*			size={'xs'}*/}
+			{/*			fw={700}*/}
+			{/*		>*/}
+			{/*			Action:*/}
+			{/*		</Text>*/}
+			{/*	}*/}
+			{/*	rightSection={*/}
+			{/*		<ActionIcon*/}
+			{/*			size={14}*/}
+			{/*			variant="transparent"*/}
+			{/*			sx={{ ...theme.fn.hover({ color: theme.colors.red[3] }) }}*/}
+			{/*		>*/}
+			{/*			<IconX />*/}
+			{/*		</ActionIcon>*/}
+			{/*	}*/}
+			{/*>*/}
+			{/*	<Text*/}
+			{/*		size={'xs'}*/}
+			{/*		fw={400}*/}
+			{/*	>*/}
+			{/*		user.signed_out*/}
+			{/*	</Text>*/}
+			{/*</Badge>*/}
 			<Grid>
 				<Grid.Col
 					xs={12}

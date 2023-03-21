@@ -22,9 +22,14 @@ import {
 	useSearchParams,
 } from '@remix-run/react';
 import { useEffect, useRef } from 'react';
+import { getClientIPAddress } from 'remix-utils';
 import { z } from 'zod';
 import { CheckboxAsString, parseFormSafe } from 'zodix';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
+import {
+	createSecurityLogEntry,
+	SecurityLogActions,
+} from '~/models/security.server';
 import { verifyLogin } from '~/models/user.server';
 import { createUserSession, getUserId } from '~/server/session.server';
 import { errorAtPath } from '~/utils/utils';
@@ -65,6 +70,13 @@ export const action: ActionFunction = async ({ request }) => {
 			errors: { emailError: 'Invalid email or password' },
 		});
 	}
+
+	let ipAddress = getClientIPAddress(request);
+	await createSecurityLogEntry(
+		user.id,
+		SecurityLogActions.USER_LOGIN,
+		ipAddress ?? 'localhost', // todo not add if no ip address
+	);
 
 	return createUserSession({
 		request,

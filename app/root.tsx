@@ -135,6 +135,14 @@ export default function App() {
 					// 	}),
 					// },
 					...mantineTheme,
+					// globalStyles: (theme) => ({
+					// 	body: {
+					// 		backgroundColor:
+					// 			theme.colorScheme === 'dark'
+					// 				? theme.colors.dark[7]
+					// 				: theme.colors.gray[1],
+					// 	},
+					// }),
 				}}
 				withGlobalStyles
 				withNormalizeCSS
