@@ -50,7 +50,7 @@ export default function User() {
 		<tr key={fb.id}>
 			<td>{fb.userEmail}</td>
 			<td>{fb.type}</td>
-			<td>{fb.feedback}</td> {/* todo add truncate and modal */}
+			<td>{fb.feedback}</td>
 			<td>{dayjs(fb.createdAt).format('YY-MM-DD H:mm:ss')}</td>
 			<td>
 				<fetcher.Form method={'post'}>
@@ -99,7 +99,7 @@ export default function User() {
 					align={'center'}
 					my={24}
 				>
-					Currently no log data
+					Currently no feedback data
 				</Title>
 			)}
 		</Box>
