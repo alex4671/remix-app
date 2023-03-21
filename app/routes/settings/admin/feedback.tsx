@@ -41,10 +41,8 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function User() {
-	const { user, feedback } = useLoaderData<typeof loader>();
+	const { feedback } = useLoaderData<typeof loader>();
 	const fetcher = useFetcher();
-
-	console.log('feedback', feedback);
 
 	const rows = feedback.map((fb) => (
 		<tr key={fb.id}>
