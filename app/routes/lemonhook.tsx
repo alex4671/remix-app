@@ -10,7 +10,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 	await nodejsWebHookHandler({
 		async onData(payload) {
-			console.log(JSON.stringify(payload, null, 2));
+			// console.log(JSON.stringify(payload, null, 2));
 
 			if (payload.event_name === 'order_created') {
 				console.log('order_created', payload.data.attributes);
