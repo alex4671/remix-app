@@ -3,7 +3,6 @@ import { json } from '@remix-run/node';
 import { nodejsWebHookHandler } from '~/utils/lemon.server';
 
 export const action = async ({ request }: ActionArgs) => {
-	const text = await request.text();
 	// const urlParams = new URLSearchParams(text);
 	// const payload = Object.fromEntries(urlParams);
 
