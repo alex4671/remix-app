@@ -1,7 +1,8 @@
-// import type { ButtonProps} from "@mantine/core";
 import { Button, useMantineTheme } from '@mantine/core';
 
 // type ButtonType = ButtonProps[] & {children?: string}
+
+// interface PrimaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export const PrimaryButton = (props: any) => {
 	const theme = useMantineTheme();

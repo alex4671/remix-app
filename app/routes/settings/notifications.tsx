@@ -62,6 +62,8 @@ export default function Notifications() {
 	const { userNotifications } = useLoaderData<typeof loader>();
 	const fetcher = useFetcher();
 
+	console.log('userNotifications', userNotifications);
+
 	return (
 		<Paper
 			shadow="0"
