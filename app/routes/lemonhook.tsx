@@ -3,11 +3,6 @@ import { json } from '@remix-run/node';
 import { nodejsWebHookHandler } from '~/utils/lemon.server';
 
 export const action = async ({ request }: ActionArgs) => {
-	// const urlParams = new URLSearchParams(text);
-	// const payload = Object.fromEntries(urlParams);
-
-	const secret = '1231233123'; // todo check with wrong signature
-
 	const success = await nodejsWebHookHandler({
 		async onData(payload) {
 			// console.log(JSON.stringify(payload, null, 2));
@@ -45,7 +40,6 @@ export const action = async ({ request }: ActionArgs) => {
 			// }
 		},
 		request,
-		secret,
 	});
 
 	console.log('success', success);

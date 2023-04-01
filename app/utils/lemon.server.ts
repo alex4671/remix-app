@@ -1,18 +1,21 @@
 import crypto from 'crypto';
+import invariant from 'tiny-invariant';
+
+const { LEMON_SECRET } = process.env;
+
+invariant(LEMON_SECRET, 'LEMON_SECRET must be set');
 
 export async function nodejsWebHookHandler<CustomData = any>({
 	request,
-	secret,
 	onData,
 }: {
 	request: Request;
-	secret: string;
 	onData: (data: DiscriminatedWebhookPayload<CustomData>) => any;
 }) {
 	const text = await request.text();
 
 	try {
-		const hmac = crypto.createHmac('sha256', secret);
+		const hmac = crypto.createHmac('sha256', LEMON_SECRET!);
 		const digest = Buffer.from(hmac.update(text).digest('hex'), 'utf8');
 		const signature = Buffer.from(
 			request.headers.get('X-Signature') || '',
