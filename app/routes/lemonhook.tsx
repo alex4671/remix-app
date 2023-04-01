@@ -9,10 +9,8 @@ export const action = async ({ request }: ActionArgs) => {
 
 	const secret = '1231233123';
 
-	let data = JSON.stringify(request.body);
-
 	const hmac = crypto.createHmac('sha256', secret);
-	const digest = Buffer.from(hmac.update(data).digest('hex'), 'utf8');
+	const digest = Buffer.from(hmac.update(text).digest('hex'), 'utf8');
 	const signature = Buffer.from(
 		request.headers.get('X-Signature') || '',
 		'utf8',
