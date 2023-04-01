@@ -1,5 +1,4 @@
 import type { ActionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { nodejsWebHookHandler } from '~/utils/lemon.server';
 
 export const action = async ({ request }: ActionArgs) => {
@@ -46,6 +45,4 @@ export const action = async ({ request }: ActionArgs) => {
 		request,
 		secret,
 	});
-
-	return json({ success: true }, 200);
 };

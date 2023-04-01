@@ -21,6 +21,7 @@ export async function nodejsWebHookHandler<CustomData = any>({
 		);
 
 		if (!crypto.timingSafeEqual(digest, signature)) {
+			console.log('invalid webhook');
 			return json({ message: 'Wrong signature' }, { status: 400 });
 		}
 
