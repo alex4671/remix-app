@@ -1,17 +1,14 @@
 import { json } from '@remix-run/node';
 import crypto from 'crypto';
-import type { Readable } from 'stream';
 
 export async function nodejsWebHookHandler<CustomData = any>({
 	request,
 	secret,
 	onData,
-	onError = console.error,
 }: {
 	request: Request;
 	secret: string;
 	onData: (data: DiscriminatedWebhookPayload<CustomData>) => any;
-	onError?: (error: Error) => any;
 }) {
 	const text = await request.text();
 
@@ -24,27 +21,19 @@ export async function nodejsWebHookHandler<CustomData = any>({
 		);
 
 		if (!crypto.timingSafeEqual(digest, signature)) {
-			throw new Error('Invalid signature.');
+			return json({ message: 'Wrong signature' }, { status: 400 });
 		}
 
 		const payload: WebhookPayload = JSON.parse(text);
 
 		const eventName = payload.meta.event_name;
-		const customData = payload.meta.custom_data;
+		// const customData = payload.meta.custom_data;
 
 		await onData({ event_name: eventName, ...payload } as any);
 		return json({});
 	} catch (e: any) {
-		return json({}, { status: 400 });
+		return json({ message: 'Some error' }, { status: 400 });
 	}
-}
-
-async function buffer(readable: Readable) {
-	const chunks: any[] = [];
-	for await (const chunk of readable) {
-		chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-	}
-	return Buffer.concat(chunks);
 }
 
 type SubscriptionEventNames =
