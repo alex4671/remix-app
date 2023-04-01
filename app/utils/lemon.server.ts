@@ -1,4 +1,3 @@
-import { json } from '@remix-run/node';
 import crypto from 'crypto';
 
 export async function nodejsWebHookHandler<CustomData = any>({
@@ -22,10 +21,7 @@ export async function nodejsWebHookHandler<CustomData = any>({
 
 		if (!crypto.timingSafeEqual(digest, signature)) {
 			console.log('invalid webhook');
-			return json(
-				{ success: false, message: 'Wrong signature' },
-				{ status: 400 },
-			);
+			return false;
 		}
 
 		const payload: WebhookPayload = JSON.parse(text);
@@ -34,9 +30,9 @@ export async function nodejsWebHookHandler<CustomData = any>({
 		// const customData = payload.meta.custom_data;
 
 		await onData({ event_name: eventName, ...payload } as any);
-		return json({ success: true });
+		return true;
 	} catch (e: any) {
-		return json({ success: false, message: 'Some error' }, { status: 400 });
+		return false;
 	}
 }
 

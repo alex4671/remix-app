@@ -1,4 +1,5 @@
 import type { ActionArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { nodejsWebHookHandler } from '~/utils/lemon.server';
 
 export const action = async ({ request }: ActionArgs) => {
@@ -7,19 +8,20 @@ export const action = async ({ request }: ActionArgs) => {
 
 	const secret = '1231233123'; // todo check with wrong signature
 
-	await nodejsWebHookHandler({
+	const success = await nodejsWebHookHandler({
 		async onData(payload) {
 			// console.log(JSON.stringify(payload, null, 2));
 
 			if (payload.event_name === 'order_created') {
-				console.log('order_created', payload.data.attributes);
+				// console.log('order_created', payload.data.attributes);
+				console.log('order_created');
 			}
 			if (payload.event_name === 'subscription_created') {
-				console.log('subscription_created', payload.data.attributes);
+				console.log('subscription_created');
 			}
 
 			if (payload.event_name === 'subscription_updated') {
-				console.log('subscription_updated', payload.data.attributes);
+				console.log('subscription_updated');
 			}
 
 			// else if (
@@ -45,4 +47,15 @@ export const action = async ({ request }: ActionArgs) => {
 		request,
 		secret,
 	});
+
+	console.log('success', success);
+
+	if (success) {
+		return json({ success: true });
+	} else {
+		return json(
+			{ success: false, message: 'Error processing webhook' },
+			{ status: 400 },
+		);
+	}
 };
