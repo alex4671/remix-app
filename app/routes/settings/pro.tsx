@@ -1,7 +1,8 @@
 import type { User } from '@invertase/node-paddle-sdk/src/types';
+import { Box, Button, Title } from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { ManageSubscriptionSettings } from '~/components/Settings/Pro/ManageSubscriptionSettings';
 import { PaymentTransactions } from '~/components/Settings/Pro/PaymentTransactions';
 import { SubscribeToPro } from '~/components/Settings/Pro/SubscribeToPro';
@@ -151,6 +152,18 @@ export default function Pro() {
 				<SubscribeToPro />
 			)}
 			<PaymentTransactions />
+
+			<Box>
+				<Title>Lemon</Title>
+				<Button
+					component={Link}
+					to={
+						'https://saas222.lemonsqueezy.com/checkout/buy/542ac9f2-b90f-4450-8bae-01e2a8f5652e'
+					}
+				>
+					Go Pro
+				</Button>
+			</Box>
 		</>
 	);
 }
