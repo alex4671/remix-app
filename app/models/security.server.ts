@@ -18,6 +18,9 @@ export const getUserSecurityLog = (userId: SecurityLog['userId']) => {
 				},
 			},
 		},
+		orderBy: {
+			createdAt: 'desc',
+		},
 	});
 };
 
