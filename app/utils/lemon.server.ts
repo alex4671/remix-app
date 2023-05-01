@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { LemonsqueezyClient } from 'lemonsqueezy.ts';
 import invariant from 'tiny-invariant';
 
 const { LEMON_SECRET } = process.env;
@@ -264,3 +265,14 @@ type SubscriptionStatus =
 	| 'unpaid'
 	| 'cancelled'
 	| 'expired';
+
+const key =
+	'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5NGQ1OWNlZi1kYmI4LTRlYTUtYjE3OC1kMjU0MGZjZDY5MTkiLCJqdGkiOiI5ZjRkMzVlMWFhNjE3ZjgzNGJmN2EyZGE3ZjI0MTIzYjc3NDNiYzJmOTk0ODViMmI5YTkyYTYwZmIwOTA2NDk5ZDgwMDhjMTdmOTM2MDEzMSIsImlhdCI6MTY4MDM3NjM1OS45ODQ0ODgsIm5iZiI6MTY4MDM3NjM1OS45ODQ0OSwiZXhwIjoxNzExOTk4NzU5Ljk3NjY0Mywic3ViIjoiNTMxNSIsInNjb3BlcyI6W119.xDigXhUXg1raIBSsyWmNbxMg6JQApvNHZaSJKZrUqq_4M5WlMLbtBSi5TkbL6ps6n7LXzw6FNtlZ7-wTHgxmY4t8n_OMZkww4kyjEjvAceJZRdY2fsXHSf6wwellCgT_ig1cr8cwyOyHJxNbEs_qyXZgLLm33U0gxK-FVQqzq3BKvTZoz9AXeuHijbpia9JhTaUiah_wYlgIS3FEaBb7lxKzZ6FRC0znptTVXOcXm0B-evIrsssviIBvRgSQA6cAXOu8um0e2M18WdpeTRVgcooAxoVHkQ69pF-mP1_nwNxirYVAccgHxYxy2l0o4cNWT7-u__t3IZjORODjO2cDc16hSwJwDeMTh-mL5zWXRfkQF-NAxMOyS50tNC9q2uriM7Uo2Q1Rup6FvB2qkJiaRIlEEnraDkRsDYtERx01ZBtEpIrIWYJdwYThKlELJxijxg4PbT708SKkmCAeO_AW-aVgitGqs99y1Lbj6h1tmorQE59PbYDVHdMRyWk0XSLb';
+
+const client = new LemonsqueezyClient(key);
+
+export const getLemonSubscriptions = async () => {
+	const lemonSubscriptions = await client.listAllSubscriptions();
+
+	return lemonSubscriptions;
+};

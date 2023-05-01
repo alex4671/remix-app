@@ -20,6 +20,7 @@ import {
 import { IconChevronLeft } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
+import { useEffect, useRef } from 'react';
 import invariant from 'tiny-invariant';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
@@ -259,6 +260,14 @@ export default function WorkspaceId() {
 	const { state } = useLocation();
 	const navigate = useNavigate();
 
+	const formRef = useRef<HTMLFormElement>(null);
+
+	useEffect(() => {
+		if (fetcher?.data) {
+			formRef?.current?.reset();
+		}
+	}, [fetcher?.data]);
+
 	useSubscription(`/api/subscriptions/workspaces/${user.id}`, [
 		EventType.DELETE_WORKSPACE,
 		EventType.INVITE_MEMBER,
@@ -360,7 +369,10 @@ export default function WorkspaceId() {
 			{isUserOwner ? (
 				<Group position="apart">
 					<HiddenSessionId />
-					<fetcher.Form method={'post'}>
+					<fetcher.Form
+						method={'post'}
+						ref={formRef}
+					>
 						<Group
 							spacing={'xs'}
 							mt={24}

@@ -1,5 +1,5 @@
 import type { User } from '@invertase/node-paddle-sdk/src/types';
-import { Box, Button, Title } from '@mantine/core';
+import { Box, Button, Group, Title } from '@mantine/core';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
@@ -12,7 +12,7 @@ import {
 } from '~/models/user.server';
 import { paddle } from '~/server/paddle.server';
 import { getUser } from '~/server/session.server';
-import { isNowBeforeDate } from '~/utils/utils';
+import { isNowBeforeDate, useUser } from '~/utils/utils';
 
 export const meta: MetaFunction = () => {
 	return {
@@ -141,8 +141,20 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function Pro() {
 	const { isSubscriptionActive } = useLoaderData<typeof loader>();
+	const user = useUser();
 
 	console.log('isSubscriptionActive', isSubscriptionActive);
+
+	// useEffect(() => {
+	// 	// @ts-ignore
+	// 	window?.createLemonSqueezy();
+	// }, []);
+
+	const handlePayment = () => {
+		window.LemonSqueezy.Url.Open(
+			`https://saas222.lemonsqueezy.com/checkout/buy/542ac9f2-b90f-4450-8bae-01e2a8f5652e?embed=1&checkout[email]=${user.email}`,
+		);
+	};
 
 	return (
 		<>
@@ -155,14 +167,30 @@ export default function Pro() {
 
 			<Box>
 				<Title>Lemon</Title>
-				<Button
-					component={Link}
-					to={
-						'https://saas222.lemonsqueezy.com/checkout/buy/542ac9f2-b90f-4450-8bae-01e2a8f5652e'
-					}
-				>
-					Go Pro
-				</Button>
+				<Group my={'lg'}>
+					<Button onClick={handlePayment}>Test</Button>
+					<Button
+						component={Link}
+						className="lemonsqueezy-button"
+						to={`https://saas222.lemonsqueezy.com/checkout/buy/542ac9f2-b90f-4450-8bae-01e2a8f5652e?embed=1&checkout[email]=${user.email}`}
+					>
+						Pro Monthly (9.99)
+					</Button>
+					<Button
+						component={Link}
+						className="lemonsqueezy-button"
+						to={`https://saas222.lemonsqueezy.com/checkout/buy/67798a14-9cb4-42a0-8987-7b0b1e7d5f96?embed=1&checkout[email]=${user.email}`}
+					>
+						Pro Yearly (99.00)
+					</Button>
+					<Button
+						component={Link}
+						className="lemonsqueezy-button"
+						to={`https://saas222.lemonsqueezy.com/checkout/buy/67798a14-9cb4-42a0-8987-7b0b1e7d5f96?embed=1&checkout[email]=${user.email}`}
+					>
+						Inline
+					</Button>
+				</Group>
 			</Box>
 		</>
 	);

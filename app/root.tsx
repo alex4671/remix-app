@@ -84,6 +84,10 @@ const Document = ({
 			<body>
 				{isHydrated ? children : null}
 				<ScrollRestoration />
+				<script
+					src="https://app.lemonsqueezy.com/js/lemon.js"
+					defer
+				></script>
 				<Scripts />
 				<LiveReload />
 			</body>
