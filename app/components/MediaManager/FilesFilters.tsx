@@ -1,21 +1,30 @@
 import {
 	ActionIcon,
 	Badge,
+	Box,
 	Button,
 	Drawer,
 	Grid,
 	Group,
+	Popover,
 	Select,
 	Stack,
+	Switch,
 	TextInput,
 } from '@mantine/core';
 import type { DateRangePickerValue } from '@mantine/dates';
 import { DateRangePicker } from '@mantine/dates';
-import { useLoaderData, useSearchParams } from '@remix-run/react';
+import {
+	useFetcher,
+	useLoaderData,
+	useParams,
+	useSearchParams,
+} from '@remix-run/react';
 import {
 	IconCircleX,
 	IconLayoutGrid,
 	IconLayoutList,
+	IconShare,
 	IconX,
 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
@@ -46,6 +55,8 @@ export const FilesFilters = ({
 	setViewType,
 }: Props) => {
 	const { userFiles } = useLoaderData<typeof loader>();
+	const params = useParams();
+	const fetcher = useFetcher();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const defaultFrom = searchParams.get('from');
 	const defaultTo = searchParams.get('to');
@@ -98,6 +109,20 @@ export const FilesFilters = ({
 		}
 	};
 	const [opened, setOpened] = useState(false);
+
+	const handleMakePublic = (event: any) => {
+		const { checked } = event.currentTarget;
+
+		// fetcher.submit(
+		// 	{
+		// 		intent: 'togglePublic',
+		// 		checked,
+		// 		sessionId: sessionStorage.getItem('sessionId') ?? nanoid(),
+		// 	},
+		// 	{ method: 'post', replace: true },
+		// );
+	};
+
 	return (
 		<>
 			<Grid my={24}>
@@ -126,6 +151,29 @@ export const FilesFilters = ({
 					sm={6}
 				>
 					<Group position={'right'}>
+						<Popover
+							position="bottom"
+							withArrow
+							shadow="md"
+						>
+							<Popover.Target>
+								<ActionIcon>
+									<IconShare size={18} />
+								</ActionIcon>
+							</Popover.Target>
+							<Popover.Dropdown>
+								<Box>
+									<Switch
+										labelPosition="left"
+										label="Share this workspace to public"
+										name={'isPublic'}
+										// checked={file.public}
+										onChange={(event) => handleMakePublic(event)}
+										my={'lg'}
+									/>
+								</Box>
+							</Popover.Dropdown>
+						</Popover>
 						<Group spacing={4}>
 							<ActionIcon
 								variant={viewType === 'grid' ? 'filled' : 'subtle'}

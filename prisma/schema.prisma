@@ -64,6 +64,7 @@ model Workspace {
   sortIndex    String
   collaborator Collaborator[]
   media        Media[]
+  public       Boolean        @default(false)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 
