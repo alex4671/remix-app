@@ -15,7 +15,6 @@ import replicate from '~/server/replicate.server';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { IconUpload } from '@tabler/icons-react';
 import { useRef, useState } from 'react';
-import invariant from 'tiny-invariant';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { generateSignedUrl } from '~/models/storage.server';
@@ -31,12 +30,6 @@ export const action = async ({ request }: ActionArgs) => {
 
 	if (intent === 'uploadFiles') {
 		const { CLOUDFLARE_PUBLIC_FILE_URL, BUCKET_NAME } = process.env;
-
-		invariant(BUCKET_NAME, 'BUCKET_NAME must be set');
-		invariant(
-			CLOUDFLARE_PUBLIC_FILE_URL,
-			'CLOUDFLARE_PUBLIC_FILE_URL must be set',
-		);
 
 		const files = formData.getAll('file') as File[];
 

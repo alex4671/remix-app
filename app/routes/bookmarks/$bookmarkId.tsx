@@ -2,7 +2,6 @@ import { Title, TypographyStylesProvider } from '@mantine/core';
 import type { LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import invariant from 'tiny-invariant';
 import { getBookmarkById } from '~/models/bookmarks.server';
 import { requireUser } from '~/server/session.server';
 import { getArticle } from '~/utils/parser.server';
@@ -10,9 +9,8 @@ import { getArticle } from '~/utils/parser.server';
 export const loader = async ({ request, params }: LoaderArgs) => {
 	await requireUser(request);
 	const bookmarkId = params.bookmarkId;
-	invariant(typeof bookmarkId === 'string', 'Bookmark Id must be provided');
 
-	const bookmark = await getBookmarkById(bookmarkId);
+	const bookmark = await getBookmarkById(bookmarkId!);
 
 	if (!bookmark) {
 		return redirect('/bookmarks');

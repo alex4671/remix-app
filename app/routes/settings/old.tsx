@@ -21,7 +21,6 @@ import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react';
 import { IconCurrencyDollar } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import invariant from 'tiny-invariant';
 import usePaddle from '~/hooks/usePaddle';
 import { paddle } from '~/server/paddle.server';
 import { requireUser } from '~/server/session.server';
@@ -86,9 +85,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 	const user = await requireUser(request);
 
-	invariant(user.payment);
-
-	const subscriptionId = user.payment.subscriptionId;
+	const subscriptionId = user.payment?.subscriptionId;
 	console.log('intent', intent);
 
 	if (intent === 'payExtra') {

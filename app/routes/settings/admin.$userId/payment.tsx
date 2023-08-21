@@ -20,7 +20,6 @@ import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react';
 import { IconCurrencyDollar } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import invariant from 'tiny-invariant';
 import usePaddle from '~/hooks/usePaddle';
 import { prisma } from '~/server/db.server';
 import { paddle } from '~/server/paddle.server';
@@ -42,7 +41,6 @@ const planPrices: Record<string, string> = {
 export const loader = async ({ request, params }: LoaderArgs) => {
 	await requireUser(request);
 	const userId = params.userId;
-	invariant(typeof userId === 'string', 'User Id must be provided');
 	const user = await prisma.user.findUnique({
 		where: {
 			id: userId,

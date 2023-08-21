@@ -19,15 +19,13 @@ import {
 } from '@remix-run/react';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { useEffect, useRef } from 'react';
-import invariant from 'tiny-invariant';
 import { resetPassword, validateResetToken } from '~/models/user.server';
 
 export async function loader({ request, params }: LoaderArgs) {
 	// await isUserConfirmed(request)
-	invariant(params.token, 'Id must be provided');
 
 	try {
-		const userEmail = await validateResetToken(params.token);
+		const userEmail = await validateResetToken(params.token!);
 
 		console.log('isValidInvite', userEmail);
 
@@ -43,8 +41,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 	const formData = await request.formData();
 	const password = formData.get('password');
 
-	invariant(params.token, 'Id must be provided');
-
 	if (typeof password !== 'string') {
 		return json(
 			{ errors: { password: 'Password is required' } },
@@ -59,9 +55,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 		);
 	}
 
-	invariant(params.token, 'Id must be provided');
-
-	const userEmail = await validateResetToken(params.token);
+	const userEmail = await validateResetToken(params.token!);
 
 	if (userEmail) {
 		await resetPassword(userEmail, password);

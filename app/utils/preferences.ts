@@ -1,15 +1,12 @@
 // // Need to create a cookie we can use to manage anonymous preferences
 import { createCookie } from '@remix-run/node';
-import invariant from 'tiny-invariant';
-
-invariant(process.env.SESSION_SECRET, 'SESSION_SECRET must be set');
 
 export const anonUserPreferences = createCookie('anonUserPreferences', {
 	httpOnly: true,
 	maxAge: 60 * 60 * 24 * 365, // 1 year
 	path: '/',
 	sameSite: 'strict',
-	secrets: [process.env.SESSION_SECRET],
+	secrets: [process.env.SESSION_SECRET!],
 	secure: process.env.NODE_ENV === 'production',
 });
 //

@@ -1,7 +1,6 @@
 import type { ActionArgs, MetaFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
-import invariant from 'tiny-invariant';
 import { GenericCatchBoundary } from '~/components/Errors/GenericCatchBoundary';
 import { GenericErrorBoundary } from '~/components/Errors/GenericErrorBoundary';
 import { deleteFile, saveFile, togglePublic } from '~/models/media.server';
@@ -23,11 +22,6 @@ export const action = async ({ request }: ActionArgs) => {
 
 	if (intent === 'uploadRecording') {
 		const { CLOUDFLARE_PUBLIC_FILE_URL } = process.env;
-
-		invariant(
-			CLOUDFLARE_PUBLIC_FILE_URL,
-			'CLOUDFLARE_PUBLIC_FILE_URL must be set',
-		);
 
 		const file = formData.get('file') as File;
 

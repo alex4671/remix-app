@@ -1,10 +1,7 @@
 import crypto from 'crypto';
 import { LemonsqueezyClient } from 'lemonsqueezy.ts';
-import invariant from 'tiny-invariant';
 
 const { LEMON_SECRET } = process.env;
-
-invariant(LEMON_SECRET, 'LEMON_SECRET must be set');
 
 export async function nodejsWebHookHandler<CustomData = any>({
 	request,

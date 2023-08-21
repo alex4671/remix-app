@@ -1,13 +1,10 @@
 import type { LoaderArgs } from '@remix-run/node';
-import invariant from 'tiny-invariant';
 import { EventType } from '~/hooks/useSubscription';
 import { emitter } from '~/server/emitter.server';
 import { eventStream } from '~/utils/eventStream';
 
 export const loader = ({ request, params }: LoaderArgs) => {
 	return eventStream(request, (send) => {
-		invariant(typeof params.userId === 'string', 'User id must be provided');
-
 		const handler1 = (userId: string[], sessionId: string) => {
 			if (userId.includes(params.userId ?? '')) {
 				send(EventType.CREATE_WORKSPACE, sessionId);

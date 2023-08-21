@@ -4,7 +4,6 @@ import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import invariant from 'tiny-invariant';
 import { FilesFilters } from '~/components/MediaManager/FilesFilters';
 import { FilesGrid } from '~/components/MediaManager/FilesGrid';
 import { FilesList } from '~/components/MediaManager/FilesList';
@@ -41,11 +40,10 @@ export type WorkspaceLoader = SerializeFrom<typeof loader>;
 export const loader = async ({ request, params }: LoaderArgs) => {
 	const user = await requireUser(request);
 	const workspaceId = params.workspaceId;
-	invariant(typeof workspaceId === 'string', 'Workspace Id must be provided');
 
 	const isUserAllowedView = await isUserAllowedViewWorkspace(
 		user.id,
-		workspaceId,
+		workspaceId!,
 	);
 
 	if (!isUserAllowedView) {
@@ -66,7 +64,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 		: undefined;
 
 	const userFiles = await getWorkspaceFilesById(
-		workspaceId,
+		workspaceId!,
 		from,
 		to,
 		defaultOrder,
@@ -95,16 +93,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
 	const workspaceId = params.workspaceId;
-	invariant(typeof workspaceId === 'string', 'Workspace Id must be provided');
 	const user = await requireUser(request);
 	const { CLOUDFLARE_PUBLIC_FILE_URL } = process.env;
 
-	invariant(
-		CLOUDFLARE_PUBLIC_FILE_URL,
-		'CLOUDFLARE_PUBLIC_FILE_URL must be set',
-	);
-
-	const workspace = await getWorkspacesById(workspaceId);
+	const workspace = await getWorkspacesById(workspaceId!);
 
 	const set = new Set();
 	workspace?.collaborator.map((c) => set.add(c.userId));
@@ -149,7 +141,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 			try {
 				const signedUrl = await generateSignedUrl(file.type, key);
 				await fetch(signedUrl, { method: 'PUT', body: file });
-				const fileUrl = `${CLOUDFLARE_PUBLIC_FILE_URL}/${key}`;
+				const fileUrl = `${CLOUDFLARE_PUBLIC_FILE_URL}/${key}`; // todo save only s3 key
 				filesToDB.push({
 					userId: user.id,
 					fileUrl,

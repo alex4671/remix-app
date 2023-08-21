@@ -2,7 +2,6 @@ import { render } from '@react-email/render';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import invariant from 'tiny-invariant';
 import { AvatarUpload } from '~/components/Settings/Account/AvatarUpload';
 import { ChangePassword } from '~/components/Settings/Account/ChangePassword';
 import { UserInfo } from '~/components/Settings/Account/UserInfo';
@@ -33,11 +32,6 @@ export async function loader({ request }: LoaderArgs) {
 export const action = async ({ request }: ActionArgs) => {
 	const user = await requireUser(request);
 	const { CLOUDFLARE_PUBLIC_FILE_URL } = process.env;
-
-	invariant(
-		CLOUDFLARE_PUBLIC_FILE_URL,
-		'CLOUDFLARE_PUBLIC_FILE_URL must be set',
-	);
 
 	const formData = await request.formData();
 	const intent = formData.get('intent');

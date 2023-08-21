@@ -15,7 +15,6 @@ import Underline from '@tiptap/extension-underline';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useEffect, useState } from 'react';
-import invariant from 'tiny-invariant';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { getNoteById } from '~/models/notes.server';
@@ -24,9 +23,8 @@ import { requireUser } from '~/server/session.server';
 export const loader = async ({ request, params }: LoaderArgs) => {
 	await requireUser(request);
 	const noteId = params.noteId;
-	invariant(typeof noteId === 'string', 'Note Id must be provided');
 
-	const note = await getNoteById(noteId);
+	const note = await getNoteById(noteId!);
 
 	if (!note) {
 		return redirect('/notes');

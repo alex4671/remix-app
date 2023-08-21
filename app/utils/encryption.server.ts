@@ -1,12 +1,9 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import invariant from 'tiny-invariant';
 
 const { ENCRYPTION_SECRET } = process.env;
 
-invariant(ENCRYPTION_SECRET, 'ENCRYPTION_SECRET must be set');
-
-const ENCRYPTION_KEY = crypto.scryptSync(ENCRYPTION_SECRET, 'salt', 32);
+const ENCRYPTION_KEY = crypto.scryptSync(ENCRYPTION_SECRET!, 'salt', 32);
 
 const ALGORITHM = 'aes-256-ctr';
 const IV_LENGTH = 16;

@@ -3,7 +3,6 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react';
 import { IconChevronLeft } from '@tabler/icons-react';
-import invariant from 'tiny-invariant';
 import { SecondaryButton } from '~/components/Buttons/SecondaryButton';
 import { TabLink } from '~/components/Settings/TabLink';
 import { prisma } from '~/server/db.server';
@@ -12,7 +11,6 @@ import { requireUser } from '~/server/session.server';
 export const loader = async ({ request, params }: LoaderArgs) => {
 	await requireUser(request);
 	const userId = params.userId;
-	invariant(typeof userId === 'string', 'User Id must be provided');
 	const user = await prisma.user.findUnique({
 		where: {
 			id: userId,

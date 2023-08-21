@@ -3,7 +3,6 @@ import type { LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import { IconChevronLeft } from '@tabler/icons-react';
-import invariant from 'tiny-invariant';
 import { SecondaryButton } from '~/components/Buttons/SecondaryButton';
 import { getRecordById } from '~/models/media.server';
 import { requireUser } from '~/server/session.server';
@@ -17,9 +16,8 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ request, params }: LoaderArgs) => {
 	await requireUser(request);
 	const recordId = params.recordId;
-	invariant(typeof recordId === 'string', 'Record Id must be provided');
 
-	const record = await getRecordById(recordId);
+	const record = await getRecordById(recordId!);
 
 	if (!record) {
 		return redirect('/recorder');

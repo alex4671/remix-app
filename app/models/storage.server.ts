@@ -4,13 +4,9 @@ import {
 	PutObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import invariant from 'tiny-invariant';
 import { client } from '~/server/s3.server';
 
 const { BUCKET_NAME, CLOUDFLARE_PUBLIC_FILE_URL } = process.env;
-
-invariant(BUCKET_NAME, 'BUCKET_NAME must be set');
-invariant(CLOUDFLARE_PUBLIC_FILE_URL, 'CLOUDFLARE_PUBLIC_FILE_URL must be set');
 
 export const generateSignedUrl = async (contentType: string, key: string) => {
 	const command = new PutObjectCommand({

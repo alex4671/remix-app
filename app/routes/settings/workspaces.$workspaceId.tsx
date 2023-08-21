@@ -21,7 +21,6 @@ import { IconChevronLeft } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useEffect, useRef } from 'react';
-import invariant from 'tiny-invariant';
 import { DangerButton } from '~/components/Buttons/DangerButtom';
 import { PrimaryButton } from '~/components/Buttons/PrimaryButton';
 import { SecondaryButton } from '~/components/Buttons/SecondaryButton';
@@ -72,7 +71,6 @@ export const action = async ({ request, params }: ActionArgs) => {
 	const intent = formData.get('intent');
 
 	const workspaceId = params.workspaceId;
-	invariant(typeof workspaceId === 'string', 'Workspace Id must be provided');
 
 	if (intent === 'inviteMember') {
 		const memberEmail = formData.get('memberEmail')?.toString() ?? '';
@@ -88,7 +86,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 					message: `You can't invite yourself`,
 				});
 			}
-			const collaborators = await getCollaborators(workspaceId);
+			const collaborators = await getCollaborators(workspaceId!);
 
 			const collaboratorsIds = collaborators?.map((c) => c.userId);
 
@@ -103,7 +101,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 					});
 				}
 
-				await createCollaborator(workspaceId, userToInvite.id);
+				await createCollaborator(workspaceId!, userToInvite.id);
 
 				emitter.emit(
 					EventType.INVITE_MEMBER,
@@ -154,7 +152,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 		const sessionId = formData.get('sessionId')?.toString() ?? '';
 
 		try {
-			const workspaceToDelete = await deleteWorkspace(workspaceId);
+			const workspaceToDelete = await deleteWorkspace(workspaceId!);
 			const set = new Set();
 			workspaceToDelete.collaborator.map((c) => set.add(c.userId));
 
@@ -211,7 +209,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 				collaboratorId,
 				workspaceRights,
 			);
-			const workspace = await getWorkspacesById(workspaceId);
+			const workspace = await getWorkspacesById(workspaceId!);
 
 			const set = new Set();
 			workspace?.collaborator.map((c) => set.add(c.userId));
@@ -233,7 +231,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 		const sessionId = formData.get('sessionId')?.toString() ?? '';
 
 		try {
-			const workspaceUpdate = await updateWorkspaceName(workspaceId, newName);
+			const workspaceUpdate = await updateWorkspaceName(workspaceId!, newName);
 
 			const set = new Set();
 			workspaceUpdate.collaborator.map((c) => set.add(c.userId));
