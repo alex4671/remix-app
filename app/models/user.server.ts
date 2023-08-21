@@ -1,7 +1,6 @@
 import type { Password, User } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { sign, verify } from 'jsonwebtoken';
-import invariant from 'tiny-invariant';
 import { prisma } from '~/server/db.server';
 import { getUserId, requireUserId } from '~/server/session.server';
 import { isNowBeforeDate } from '~/utils/utils';
@@ -13,10 +12,6 @@ interface InviteToken {
 interface ResetToken {
 	email: string;
 }
-
-const { APP_SECRET } = process.env;
-
-invariant(APP_SECRET, 'APP_SECRET must be set');
 
 export type { User } from '@prisma/client';
 
@@ -255,7 +250,7 @@ export const generateInviteLink = async (
 	url: string,
 	userId: string,
 ): Promise<string> => {
-	const token = sign({ userId }, APP_SECRET);
+	const token = sign({ userId }, process.env.APP_SECRET!);
 
 	const { origin } = new URL(url);
 
@@ -268,7 +263,7 @@ export const validateInviteLink = async (
 ): Promise<boolean> => {
 	const userId = await requireUserId(request);
 
-	const verifiedToken = verify(token, APP_SECRET) as InviteToken;
+	const verifiedToken = verify(token, process.env.APP_SECRET!) as InviteToken;
 
 	const isVerified = verifiedToken.userId === userId;
 
@@ -283,7 +278,7 @@ export const generateResetToken = async (
 	url: string,
 	email: string,
 ): Promise<string> => {
-	const token = sign({ email }, APP_SECRET);
+	const token = sign({ email }, process.env.APP_SECRET!);
 
 	const { origin } = new URL(url);
 
@@ -293,7 +288,7 @@ export const generateResetToken = async (
 export const validateResetToken = async (
 	token: string,
 ): Promise<string | undefined> => {
-	const verifiedToken = verify(token, APP_SECRET) as ResetToken;
+	const verifiedToken = verify(token, process.env.APP_SECRET!) as ResetToken;
 
 	const user = await getUserByEmail(verifiedToken.email);
 
