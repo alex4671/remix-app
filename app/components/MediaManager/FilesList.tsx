@@ -73,6 +73,26 @@ export const FilesList = ({
 		);
 	};
 
+	const handleDownloadFile = async (fileUrl: string, fileName: string) => {
+		const response = await fetch(fileUrl, { mode: 'no-cors' });
+		const blob = await response.blob();
+
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+
+		a.href = url;
+		a.download = fileName;
+
+		const handleOnDownload = () => {
+			setTimeout(() => {
+				URL.revokeObjectURL(url);
+				a.removeEventListener('click', handleOnDownload);
+			}, 200);
+		};
+
+		a.addEventListener('click', handleOnDownload, false);
+		a.click();
+	};
 	// todo refactor component
 	// todo add type
 	return (
@@ -228,10 +248,9 @@ export const FilesList = ({
 										</Popover>
 
 										<ActionIcon
-											component={'a'}
-											href={file.fileUrl}
-											download
-											target={'_blank'}
+											onClick={() =>
+												handleDownloadFile(file.fileUrl, file.name)
+											}
 										>
 											<IconDownload size={18} />
 										</ActionIcon>
